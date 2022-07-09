@@ -1,10 +1,30 @@
 import React from 'react';
-import {Switch, Text, View} from 'react-native';
+import {Button, Switch, Text, View} from 'react-native';
 
 import BackgroundGeolocation, {
   Location,
   Subscription,
 } from 'react-native-background-geolocation';
+
+const getCurrentLoc = async (enabled, setLocation) => {
+  if (!enabled) {
+    console.log('Not enabled');
+    return;
+  }
+  console.log('Getting current pos');
+  let loc = await BackgroundGeolocation.getCurrentPosition({
+    timeout: 30, // 30 second timeout to fetch location
+    maximumAge: 5000, // Accept the last-known-location if not older than 5000 ms.
+    desiredAccuracy: 10, // Try to fetch a location with an accuracy of `10` meters.
+    samples: 3, // How many location samples to attempt.
+    extras: {
+      // Custom meta-data.
+      route_id: 123,
+    },
+  });
+  console.log('[getLocation]', loc.coords);
+  setLocation(JSON.stringify(loc, null, 2));
+};
 
 const GeoTest = () => {
   const [enabled, setEnabled] = React.useState(false);
@@ -12,26 +32,26 @@ const GeoTest = () => {
 
   React.useEffect(() => {
     /// 1.  Subscribe to events.
-    const onLocation: Subscription = BackgroundGeolocation.onLocation(loc => {
-      console.log('[onLocation]', loc);
-      setLocation(JSON.stringify(loc, null, 2));
-    });
+    // const onLocation: Subscription = BackgroundGeolocation.onLocation(loc => {
+    //   console.log('[onLocation]', loc);
+    //   setLocation(JSON.stringify(loc, null, 2));
+    // });
 
-    const onMotionChange: Subscription = BackgroundGeolocation.onMotionChange(
-      event => {
-        console.log('[onMotionChange]', event);
-      },
-    );
+    // const onMotionChange: Subscription = BackgroundGeolocation.onMotionChange(
+    //   event => {
+    //     console.log('[onMotionChange]', event);
+    //   },
+    // );
 
-    const onActivityChange: Subscription =
-      BackgroundGeolocation.onActivityChange(event => {
-        console.log('[onMotionChange]', event);
-      });
+    // const onActivityChange: Subscription =
+    //   BackgroundGeolocation.onActivityChange(event => {
+    //     console.log('[onMotionChange]', event);
+    //   });
 
-    const onProviderChange: Subscription =
-      BackgroundGeolocation.onProviderChange(event => {
-        console.log('[onProviderChange]', event);
-      });
+    // const onProviderChange: Subscription =
+    //   BackgroundGeolocation.onProviderChange(event => {
+    //     console.log('[onProviderChange]', event);
+    //   });
 
     /// 2. ready the plugin.
     BackgroundGeolocation.ready({
@@ -63,30 +83,16 @@ const GeoTest = () => {
         '- BackgroundGeolocation is configured and ready: ',
         state.enabled,
       );
-      console.log('Getting current pos');
-      BackgroundGeolocation.getCurrentPosition({
-        timeout: 30, // 30 second timeout to fetch location
-        maximumAge: 5000, // Accept the last-known-location if not older than 5000 ms.
-        desiredAccuracy: 10, // Try to fetch a location with an accuracy of `10` meters.
-        samples: 3, // How many location samples to attempt.
-        extras: {
-          // Custom meta-data.
-          route_id: 123,
-        },
-      }).then(loc => {
-        console.log('[getLocation]', loc);
-        setLocation(JSON.stringify(loc, null, 2));
-      });
     });
 
     return () => {
       // Remove BackgroundGeolocation event-subscribers when the View is removed or refreshed
       // during development live-reload.  Without this, event-listeners will accumulate with
       // each refresh during live-reload.
-      onLocation.remove();
-      onMotionChange.remove();
-      onActivityChange.remove();
-      onProviderChange.remove();
+      // onLocation.remove();
+      // onMotionChange.remove();
+      // onActivityChange.remove();
+      // onProviderChange.remove();
     };
   }, []);
 
@@ -104,6 +110,10 @@ const GeoTest = () => {
     <View style={{alignItems: 'center'}}>
       <Text>Click to enable BackgroundGeolocation</Text>
       <Switch value={enabled} onValueChange={setEnabled} />
+      <Button
+        onPress={() => getCurrentLoc(enabled, setLocation)}
+        title="Click to get current location"
+      />
       <Text style={{fontFamily: 'monospace', fontSize: 12}}>{location}</Text>
     </View>
   );
