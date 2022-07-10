@@ -63,20 +63,6 @@ const GeoTest = () => {
         '- BackgroundGeolocation is configured and ready: ',
         state.enabled,
       );
-      console.log('Getting current pos');
-      BackgroundGeolocation.getCurrentPosition({
-        timeout: 30, // 30 second timeout to fetch location
-        maximumAge: 5000, // Accept the last-known-location if not older than 5000 ms.
-        desiredAccuracy: 10, // Try to fetch a location with an accuracy of `10` meters.
-        samples: 3, // How many location samples to attempt.
-        extras: {
-          // Custom meta-data.
-          route_id: 123,
-        },
-      }).then(loc => {
-        console.log('[getLocation]', loc);
-        setLocation(JSON.stringify(loc, null, 2));
-      });
     });
 
     return () => {
