@@ -27,6 +27,7 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 
 import GeoTest from './GeoTest';
+import Map from './Map';
 
 const Section = ({children, title}): Node => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -61,7 +62,10 @@ const App: () => Node = () => {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
-  return <GeoTest />;
+  return <>
+    <GeoTest />
+    <Map />
+  </>;
 };
 
 const styles = StyleSheet.create({
