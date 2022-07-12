@@ -107,7 +107,7 @@ const GeoTest = () => {
   }, [enabled]);
 
   return (
-    <View style={{alignItems: 'center'}}>
+    <View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
       <Text>Click to enable BackgroundGeolocation</Text>
       <Switch value={enabled} onValueChange={setEnabled} />
       <Button

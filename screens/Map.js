@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const Map = () => {
+const Map = ({navigation}) => {
   return <View style={styles.container}>
     <MapView
       provider={PROVIDER_GOOGLE} // remove if not using Google Maps
