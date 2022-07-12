@@ -28,6 +28,7 @@ import {
 
 import GeoTest from './GeoTest';
 import Map from './Map';
+import BluetoothTest from './BluetoothTest';
 
 const Section = ({children, title}): Node => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -64,6 +65,7 @@ const App: () => Node = () => {
 
   return <>
     <GeoTest />
+    <BluetoothTest />
     <Map />
   </>;
 };
