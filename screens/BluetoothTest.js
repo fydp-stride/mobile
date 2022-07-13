@@ -67,7 +67,7 @@ const BluetoothTest = () => {
 		if (results.length == 0) {
 		  console.log('No connected peripherals')
 		}
-		console.log(results);
+		// console.log(results);
 		for (var i = 0; i < results.length; i++) {
 		  var peripheral = results[i];
 		  peripheral.connected = true;
@@ -209,45 +209,45 @@ const BluetoothTest = () => {
 	}
   
 	return (
-	  <>
-		<StatusBar barStyle="dark-content" />
-		<SafeAreaView>
-		  <ScrollView
-			contentInsetAdjustmentBehavior="automatic"
-			style={styles.scrollView}>
-			{global.HermesInternal == null ? null : (
-			  <View style={styles.engine}>
-				<Text style={styles.footer}>Engine: Hermes</Text>
-			  </View>
-			)}
-			<View style={styles.body}>
-			  
-			  <View style={{margin: 10}}>
-				<Button 
-				  title={'Scan Bluetooth (' + (isScanning ? 'on' : 'off') + ')'}
-				  onPress={() => startScan() } 
-				/>            
-			  </View>
-  
-			  <View style={{margin: 10}}>
-				<Button title="Retrieve connected peripherals" onPress={() => retrieveConnected() } />
-			  </View>
-  
-			  {(list.length == 0) &&
-				<View style={{flex:1, margin: 20}}>
-				  <Text style={{textAlign: 'center'}}>No peripherals</Text>
+		<View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
+			<StatusBar barStyle="dark-content" />
+			<SafeAreaView>
+			<ScrollView
+				contentInsetAdjustmentBehavior="automatic"
+				style={styles.scrollView}>
+				{global.HermesInternal == null ? null : (
+				<View style={styles.engine}>
+					<Text style={styles.footer}>Engine: Hermes</Text>
 				</View>
-			  }
-			
-			</View>              
-		  </ScrollView>
-		  <FlatList
-			  data={list}
-			  renderItem={({ item }) => renderItem(item) }
-			  keyExtractor={item => item.id}
-			/>              
-		</SafeAreaView>
-	  </>
+				)}
+				<View style={styles.body}>
+				
+				<View style={{margin: 10}}>
+					<Button 
+					title={'Scan Bluetooth (' + (isScanning ? 'on' : 'off') + ')'}
+					onPress={() => startScan() } 
+					/>            
+				</View>
+	
+				<View style={{margin: 10}}>
+					<Button title="Retrieve connected peripherals" onPress={() => retrieveConnected() } />
+				</View>
+	
+				{(list.length == 0) &&
+					<View style={{flex:1, margin: 20}}>
+					<Text style={{textAlign: 'center'}}>No peripherals</Text>
+					</View>
+				}
+				
+				</View>              
+			</ScrollView>
+			<FlatList
+				data={list}
+				renderItem={({ item }) => renderItem(item) }
+				keyExtractor={item => item.id}
+				/>              
+			</SafeAreaView>
+	  	</View>
 	);
   };
   

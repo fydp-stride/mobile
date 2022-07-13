@@ -26,9 +26,8 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-import GeoTest from './GeoTest';
-import Map from './Map';
-import BluetoothTest from './BluetoothTest';
+
+import MainContainer from './mainContainer';
 
 const Section = ({children, title}): Node => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -63,11 +62,7 @@ const App: () => Node = () => {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
-  return <>
-    <GeoTest />
-    <BluetoothTest />
-    <Map />
-  </>;
+  return <MainContainer/>;
 };
 
 const styles = StyleSheet.create({
