@@ -34,7 +34,7 @@ const BluetoothTest = () => {
   
 	const startScan = () => {
 	  if (!isScanning) {
-		BleManager.scan([], 3, true).then((results) => {
+		BleManager.scan([], 10, true).then((results) => {
 		  console.log('Scanning...');
 		  setIsScanning(true);
 		}).catch(err => {
@@ -78,11 +78,14 @@ const BluetoothTest = () => {
 	}
   
 	const handleDiscoverPeripheral = (peripheral) => {
-	  console.log('Got ble peripheral', peripheral);
+	  //console.log('Got ble peripheral', peripheral);
+	  const Accel_ID = "00:14:03:05:08:E8";
 	  if (!peripheral.name) {
 		peripheral.name = 'NO NAME';
 	  }
-	  peripherals.set(peripheral.id, peripheral);
+	  if (peripheral.advertising.isConnectable && peripheral.name !== 'NO NAME'){
+	  	peripherals.set(peripheral.id, peripheral);
+	  }
 	  setList(Array.from(peripherals.values()));
 	}
   
@@ -100,13 +103,26 @@ const BluetoothTest = () => {
 			}
 			console.log('Connected to ' + peripheral.id);
   
-  
+			// TODO: Receive Data??? See what this is doing.
 			setTimeout(() => {
-  
+			
 			  /* Test read current RSSI value */
+			  // take a look at read(peripheralId, serviceUUID, characteristicUUID) to receive data.
+			  // There is an example below about write.
 			  BleManager.retrieveServices(peripheral.id).then((peripheralData) => {
 				console.log('Retrieved peripheral services', peripheralData);
-  
+
+				// Read All Data when retrieving... 
+				for (let i = 0; i < peripheralData.characteristics.length; i++){
+					BleManager.read(peripheral.id, peripheralData.characteristics[0].service, peripheralData.characteristics[0].characteristic).then((readData) => {
+						console.log("Read DATA: " + readData);
+					})
+					.catch((error) => {
+						console.log(error);
+					});
+				}
+
+				// RSSI = Received signal strength indication
 				BleManager.readRSSI(peripheral.id).then((rssi) => {
 				  console.log('Retrieved actual RSSI value', rssi);
 				  let p = peripherals.get(peripheral.id);
@@ -165,10 +181,10 @@ const BluetoothTest = () => {
 	useEffect(() => {
 	  BleManager.start({showAlert: false});
   
-	  bleManagerEmitter.addListener('BleManagerDiscoverPeripheral', handleDiscoverPeripheral);
-	  bleManagerEmitter.addListener('BleManagerStopScan', handleStopScan );
-	  bleManagerEmitter.addListener('BleManagerDisconnectPeripheral', handleDisconnectedPeripheral );
-	  bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', handleUpdateValueForCharacteristic );
+	  const discoverPeripheralSubscription = bleManagerEmitter.addListener('BleManagerDiscoverPeripheral', handleDiscoverPeripheral);
+	  const stopScanSubscription = bleManagerEmitter.addListener('BleManagerStopScan', handleStopScan );
+	  const disconnectedPeripheralSubscription = bleManagerEmitter.addListener('BleManagerDisconnectPeripheral', handleDisconnectedPeripheral );
+	  const updateValueForCharacteristicSubscription = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', handleUpdateValueForCharacteristic );
   
 	  if (Platform.OS === 'android' && Platform.Version >= 23) {
 		PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION).then((result) => {
@@ -188,10 +204,10 @@ const BluetoothTest = () => {
 	  
 	  return (() => {
 		console.log('unmount');
-		bleManagerEmitter.remove('BleManagerDiscoverPeripheral', handleDiscoverPeripheral);
-		bleManagerEmitter.remove('BleManagerStopScan', handleStopScan );
-		bleManagerEmitter.remove('BleManagerDisconnectPeripheral', handleDisconnectedPeripheral );
-		bleManagerEmitter.remove('BleManagerDidUpdateValueForCharacteristic', handleUpdateValueForCharacteristic );
+		discoverPeripheralSubscription.remove();
+		stopScanSubscription.remove();
+		disconnectedPeripheralSubscription.remove();
+		updateValueForCharacteristicSubscription.remove();
 	  })
 	}, []);
   
