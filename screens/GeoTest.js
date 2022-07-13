@@ -1,5 +1,6 @@
 import React from 'react';
-import {Button, Switch, Text, View} from 'react-native';
+import { Switch, View} from 'react-native';
+import { Button, Text, Layout, Toggle} from '@ui-kitten/components';
 
 import BackgroundGeolocation, {
   Location,
@@ -107,15 +108,19 @@ const GeoTest = () => {
   }, [enabled]);
 
   return (
-    <View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
+    <Layout style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
       <Text>Click to enable BackgroundGeolocation</Text>
-      <Switch value={enabled} onValueChange={setEnabled} />
-      <Button
-        onPress={() => getCurrentLoc(enabled, setLocation)}
-        title="Click to get current location"
-      />
+      {/* <Toggle value={enabled} onChange={setEnabled}>
+        {evaProps => <Text {...evaProps}>Place your Text</Text>}
+      </Toggle> */}
+      <Toggle checked={enabled} onChange={setEnabled}>
+        {/* {evaProps => <Text {...evaProps}></Text>} */}
+      </Toggle>
+      <Button onPress={() => getCurrentLoc(enabled, setLocation)}>
+        <Text>Click to get current location</Text>
+      </Button>
       <Text style={{fontFamily: 'monospace', fontSize: 12}}>{location}</Text>
-    </View>
+    </Layout>
   );
 };
 

@@ -28,11 +28,14 @@ const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
 const BluetoothTest = () => {
 	const [isScanning, setIsScanning] = useState(false);
-	const peripherals = new Map();
 	const [list, setList] = useState([]);
+
+	const peripherals = new Map();
   
   
 	const startScan = () => {
+
+
 	  if (!isScanning) {
 		BleManager.scan([], 10, true).then((results) => {
 		  console.log('Scanning...');
@@ -180,13 +183,48 @@ const BluetoothTest = () => {
   
 	useEffect(() => {
 	  BleManager.start({showAlert: false});
-  
+
 	  const discoverPeripheralSubscription = bleManagerEmitter.addListener('BleManagerDiscoverPeripheral', handleDiscoverPeripheral);
 	  const stopScanSubscription = bleManagerEmitter.addListener('BleManagerStopScan', handleStopScan );
 	  const disconnectedPeripheralSubscription = bleManagerEmitter.addListener('BleManagerDisconnectPeripheral', handleDisconnectedPeripheral );
 	  const updateValueForCharacteristicSubscription = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', handleUpdateValueForCharacteristic );
-  
+
+	  bleManagerEmitter.addListener('BleManagerDiscoverPeripheral', handleDiscoverPeripheral);
+	  bleManagerEmitter.addListener('BleManagerStopScan', handleStopScan );
+	  bleManagerEmitter.addListener('BleManagerDisconnectPeripheral', handleDisconnectedPeripheral );
+	  bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', handleUpdateValueForCharacteristic );
+
+
 	  if (Platform.OS === 'android' && Platform.Version >= 23) {
+
+		PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT).then( (result) => {
+			if (result) {
+				console.log("BLUETOOTH_CONNECT is already given");
+			} else {
+				PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT).then((result) => {
+				  if (result) {
+					console.log("User accepts BLUETOOTH_CONNECT");
+				  } else {
+					console.log("User refuses BLUETOOTH_CONNECT");
+				  }
+				});
+			}
+		})
+
+		PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN).then( (result) => {
+			if (result) {
+				console.log("BLUETOOTH_SCAN is already given");
+			} else {
+				PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN).then((result) => {
+				  if (result) {
+					console.log("User accepts BLUETOOTH_SCAN");
+				  } else {
+					console.log("User refuses BLUETOOTH_SCAN");
+				  }
+				});
+			}
+		})
+
 		PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION).then((result) => {
 			if (result) {
 			  console.log("Permission is OK");
@@ -223,14 +261,48 @@ const BluetoothTest = () => {
 		</TouchableHighlight>
 	  );
 	}
-  
+	
 	return (
+		// <View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
+
+		// 	<View>
+		// 		<Button 
+		// 			title={'Scan Bluetooth (' + (isScanning ? 'on' : 'off') + ')'}
+		// 			onPress={() => startScan() } 
+		// 		/>
+		// 	</View>
+		// 	<View>
+		// 		<Button title="Retrieve connected peripherals" 
+		// 				onPress={() => retrieveConnected() } 
+		// 		/>
+		// 	</View>
+
+
+			
+		// 	{(list.length == 0) &&
+		// 			<View>
+		// 				<Text>No peripherals</Text>
+		// 			</View>
+		// 	}
+
+		// 	<View>
+		// 	<FlatList
+		// 		data={list}
+		// 		renderItem={({ item }) => renderItem(item) }
+		// 		keyExtractor={item => item.id}
+		// 	/>
+		// 	</View>
+			
+
+		// </View>
+
 		<View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
 			<StatusBar barStyle="dark-content" />
 			<SafeAreaView>
 			<ScrollView
 				contentInsetAdjustmentBehavior="automatic"
 				style={styles.scrollView}>
+
 				{global.HermesInternal == null ? null : (
 				<View style={styles.engine}>
 					<Text style={styles.footer}>Engine: Hermes</Text>
@@ -254,7 +326,6 @@ const BluetoothTest = () => {
 					<Text style={{textAlign: 'center'}}>No peripherals</Text>
 					</View>
 				}
-				
 				</View>              
 			</ScrollView>
 			<FlatList
