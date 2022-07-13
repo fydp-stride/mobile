@@ -4,10 +4,9 @@ import {
   ScrollView,
   StatusBar,
   StyleSheet,
-  Text,
   useColorScheme,
-  View,
 } from 'react-native';
+import { Layout, Text } from '@ui-kitten/components';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 
 const styles = StyleSheet.create({
@@ -24,7 +23,11 @@ const styles = StyleSheet.create({
 });
 
 const Map = ({navigation}) => {
-  return <View style={styles.container}>
+  return <Layout style={{...StyleSheet.absoluteFillObject,
+    height: 400,
+    width: 400,
+    justifyContent: 'flex-end',
+    alignItems: 'center',}}>
     <MapView
       provider={PROVIDER_GOOGLE} // remove if not using Google Maps
       style={styles.map}
@@ -35,7 +38,7 @@ const Map = ({navigation}) => {
         longitudeDelta: 0.0421,
       }}
     />
-  </View>;
+  </Layout>
 };
 
 export default Map;
