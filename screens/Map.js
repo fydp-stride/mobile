@@ -22,12 +22,16 @@ const styles = StyleSheet.create({
   },
 });
 
-const Map = ({navigation}) => {
-  return <Layout style={{...StyleSheet.absoluteFillObject,
+const Map = ({ navigation }) => {
+  return (
+    <Layout
+      style={{
+    ...StyleSheet.absoluteFillObject,
     height: 400,
     width: 400,
     justifyContent: 'flex-end',
-    alignItems: 'center',}}>
+    alignItems: 'center',
+  }}>
     <MapView
       provider={PROVIDER_GOOGLE} // remove if not using Google Maps
       style={styles.map}

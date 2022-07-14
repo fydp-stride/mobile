@@ -70,10 +70,10 @@ const App: () => Node = () => {
 
   return (
     <>
-      <IconRegistry icons={EvaIconsPack}/>
+      <IconRegistry icons={EvaIconsPack} />
       <NativeBaseProvider>
         <ApplicationProvider {...eva} theme={eva.dark}>
-          <MainContainer/>
+          <MainContainer />
         </ApplicationProvider>
       </NativeBaseProvider>
     </>

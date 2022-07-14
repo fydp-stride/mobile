@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { Component } from 'react';
 
-import { NavigationContainer, 
-    DarkTheme as NavigationDarkTheme 
+import {
+  NavigationContainer,
+  DarkTheme as NavigationDarkTheme,
 } from '@react-navigation/native';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -16,7 +17,7 @@ import Map from './screens/Map';
 import BluetoothTest from './screens/BluetoothTest';
 import BluetoothClassic from './screens/BluetoothClassic';
 import HomeScreen from './screens/HomeScreen';
-import SettingsScreen from './screens/SettingsScreen'
+import SettingsScreen from './screens/SettingsScreen';
 
 // names
 const HomeName = 'Home';
@@ -27,46 +28,45 @@ const SettingsName = 'Settings';
 
 const { Navigator, Screen } = createBottomTabNavigator();
 
-
 const BottomTabBar = ({ navigation, state }) => (
-    <BottomNavigation
-      selectedIndex={state.index}
-      onSelect={index => navigation.navigate(state.routeNames[index])}>
-      <BottomNavigationTab title='USERS'/>
-      <BottomNavigationTab title='ORDERS'/>
-    </BottomNavigation>
-  );
+  <BottomNavigation
+    selectedIndex={state.index}
+    onSelect={index => navigation.navigate(state.routeNames[index])}>
+    <BottomNavigationTab title="USERS" />
+    <BottomNavigationTab title="ORDERS" />
+  </BottomNavigation>
+);
 
 export default function MainContainer() {
-
-    return (
-        <NavigationContainer theme={NavigationDarkTheme}>
-            <Navigator initialRouteName={HomeName}
-                screenOptions={({ route }) => ({
-                    headerShown: false,
-                    tabBarIcon: ({ focused, color, size }) => {
-                        let iconName;
-                        let routeName = route.name;
-                        if (routeName === HomeName){
-                            iconName = focused ? 'home' : 'home-outline';
-                        } else if (routeName === BluetoothName){
-                            iconName = focused ? 'bluetooth' : 'bluetooth-outline';
-                        } else if (routeName === MapName){
-                            iconName = focused ? 'map' : 'map-outline';
-                        } else if (routeName === GeoName){
-                            iconName = focused ? 'earth' : 'earth-outline'
-                        } else if (routeName === SettingsName){
-                            iconName = focused ? 'cog' : 'cog-outline'
-                        }
-                        return <Ionicons name={iconName} size={size} color={color} />;
-                    },
-                })}>
-                <Screen name={HomeName} component={HomeScreen}/>
-                <Screen name={BluetoothName} component={BluetoothClassic}/>
-                <Screen name={MapName} component={Map}/>
-                <Screen name={GeoName} component={GeoTest}/>
-                <Screen name={SettingsName} component={SettingsScreen}/>
-            </Navigator>
-        </NavigationContainer>
-    );
+  return (
+    <NavigationContainer theme={NavigationDarkTheme}>
+      <Navigator
+        initialRouteName={HomeName}
+        screenOptions={({ route }) => ({
+          headerShown: false,
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName;
+            let routeName = route.name;
+            if (routeName === HomeName) {
+              iconName = focused ? 'home' : 'home-outline';
+            } else if (routeName === BluetoothName) {
+              iconName = focused ? 'bluetooth' : 'bluetooth-outline';
+            } else if (routeName === MapName) {
+              iconName = focused ? 'map' : 'map-outline';
+            } else if (routeName === GeoName) {
+              iconName = focused ? 'earth' : 'earth-outline';
+            } else if (routeName === SettingsName) {
+              iconName = focused ? 'cog' : 'cog-outline';
+            }
+            return <Ionicons name={iconName} size={size} color={color} />;
+          },
+        })}>
+        <Screen name={HomeName} component={HomeScreen} />
+        <Screen name={BluetoothName} component={BluetoothClassic} />
+        <Screen name={MapName} component={Map} />
+        <Screen name={GeoName} component={GeoTest} />
+        <Screen name={SettingsName} component={SettingsScreen} />
+      </Navigator>
+    </NavigationContainer>
+  );
 }
