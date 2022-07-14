@@ -6,6 +6,8 @@ import {
 	Root,
 	StyleProvider,
 } from 'native-base';
+import { Switch, View} from 'react-native';
+
 
 import { Button, Text, Layout, Toggle} from '@ui-kitten/components';
 import RNBluetoothClassic from 'react-native-bluetooth-classic';
@@ -99,8 +101,8 @@ export default class BluetoothClassic extends React.Component {
   render() {
     return (
 	<Layout style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
-		<StyleProvider style={getTheme(platform)}>
-			<Root>
+		<View style={getTheme(platform)}>
+			<View>
 			{!this.state.device ? (
 				<DeviceListScreen
 				bluetoothEnabled={this.state.bluetoothEnabled}
@@ -110,8 +112,8 @@ export default class BluetoothClassic extends React.Component {
 					device={this.state.device}
 					onBack={() => this.setState({ device: undefined })} />
 				)}
-			</Root>
-		</StyleProvider>
+			</View>
+		</View>
 	  </Layout>
     );
   }

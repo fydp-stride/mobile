@@ -7,6 +7,17 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
+import { Button, Text, Layout, Toggle} from '@ui-kitten/components';
+import {
+  Container,
+  Header,
+  Left,
+  Icon,
+  Body,
+  Title,
+  Subtitle,
+  Right,
+} from 'native-base';
 import { Buffer } from 'buffer';
 
 /**
@@ -231,23 +242,25 @@ export default class ConnectionScreen extends React.Component {
       : 'radio-button-off';
 
     return (
-      <Container>
-        <Header iosBarStyle="light-content">
-          <Left>
+      <View>
+        <View iosBarStyle="light-content">
+          <View>
             <Button transparent onPress={this.props.onBack}>
               <Icon type="Ionicons" name="arrow-back" />
+              <Text> Back</Text>
             </Button>
-          </Left>
-          <Body>
-            <Title>{this.props.device.name}</Title>
-            <Subtitle>{this.props.device.address}</Subtitle>
-          </Body>
-          <Right>
+          </View>
+          <View>
+            <Text>{this.props.device.name}</Text>
+            <Text>{this.props.device.address}</Text>
+          </View>
+          <View>
             <Button transparent onPress={() => this.toggleConnection()}>
               <Icon type="Ionicons" name={toggleIcon} />
+              <Text> Connect</Text>
             </Button>
-          </Right>
-        </Header>
+          </View>
+        </View>
         <View style={styles.connectionScreenWrapper}>
           <FlatList
             style={styles.connectionScreenOutput}
@@ -273,7 +286,7 @@ export default class ConnectionScreen extends React.Component {
             disabled={!this.state.connection}
           />
         </View>
-      </Container>
+      </View>
     );
   }
 }

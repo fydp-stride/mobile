@@ -18,6 +18,8 @@ import {
   View,
 } from 'react-native';
 
+import {NativeBaseProvider} from 'native-base';
+
 import {
   Colors,
   DebugInstructions,
@@ -69,9 +71,11 @@ const App: () => Node = () => {
   return (
     <>
       <IconRegistry icons={EvaIconsPack}/>
-      <ApplicationProvider {...eva} theme={eva.dark}>
-        <MainContainer/>
-      </ApplicationProvider>
+      <NativeBaseProvider>
+        <ApplicationProvider {...eva} theme={eva.dark}>
+          <MainContainer/>
+        </ApplicationProvider>
+      </NativeBaseProvider>
     </>
   );
 };
