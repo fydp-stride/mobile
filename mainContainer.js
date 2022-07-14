@@ -30,16 +30,22 @@ const BottomTabBar = ({ navigation, state }) => (
     <BottomNavigation
       selectedIndex={state.index}
       onSelect={index => navigation.navigate(state.routeNames[index])}>
-      <BottomNavigationTab title='USERS'/>
-      <BottomNavigationTab title='ORDERS'/>
+      <BottomNavigationTab title='Homepage'/>
+      <BottomNavigationTab title='Bluetooth'/>
+      <BottomNavigationTab title='Map'/>
+      <BottomNavigationTab title='Geolocation'/>
+      <BottomNavigationTab title='Settings'/>
     </BottomNavigation>
   );
 
 export default function MainContainer() {
 
     return (
-        <NavigationContainer theme={NavigationDarkTheme}>
-            <Navigator initialRouteName={HomeName}
+        //theme={NavigationDarkTheme}
+        <NavigationContainer>
+            <Navigator 
+                tabBar={props => <BottomTabBar {...props} />}
+                initialRouteName={HomeName}
                 screenOptions={({ route }) => ({
                     headerShown: false,
                     tabBarIcon: ({ focused, color, size }) => {
