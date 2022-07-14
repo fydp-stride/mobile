@@ -14,7 +14,7 @@ import platform from '../native-base-theme/variables/platform';
 import ConnectionScreen from '../src/connection/ConnectionScreen';
 import DeviceListScreen from '../src/device-list/DeviceListScreen';
 
-export class BluetoothClassic extends React.Component {
+export default class BluetoothClassic extends React.Component {
   constructor(props) {
     super(props);
 
