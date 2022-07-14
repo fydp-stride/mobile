@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Component } from 'react';
 
 import { NavigationContainer, 
     DarkTheme as NavigationDarkTheme 
@@ -13,6 +14,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import GeoTest from './screens/GeoTest';
 import Map from './screens/Map';
 import BluetoothTest from './screens/BluetoothTest';
+import BluetoothClassic from './screens/BluetoothClassic';
 import HomeScreen from './screens/HomeScreen';
 import SettingsScreen from './screens/SettingsScreen'
 
@@ -60,7 +62,7 @@ export default function MainContainer() {
                     },
                 })}>
                 <Screen name={HomeName} component={HomeScreen}/>
-                <Screen name={BluetoothName} component={BluetoothTest}/>
+                <Screen name={BluetoothName} component={BluetoothClassic}/>
                 <Screen name={MapName} component={Map}/>
                 <Screen name={GeoName} component={GeoTest}/>
                 <Screen name={SettingsName} component={SettingsScreen}/>
