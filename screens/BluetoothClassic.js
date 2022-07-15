@@ -1,15 +1,15 @@
 import React, {
-	useState,
-	useEffect,
-  } from 'react';
+  useState,
+  useEffect,
+} from 'react';
 import {
-	Root,
-	StyleProvider,
+  Root,
+  StyleProvider,
 } from 'native-base';
-import { Switch, View} from 'react-native';
+import { Switch, View } from 'react-native';
 
 
-import { Button, Text, Layout, Toggle} from '@ui-kitten/components';
+import { Button, Text, Layout, Toggle } from '@ui-kitten/components';
 import RNBluetoothClassic from 'react-native-bluetooth-classic';
 import getTheme from '../native-base-theme/components';
 import platform from '../native-base-theme/variables/platform';
@@ -38,7 +38,7 @@ export default class BluetoothClassic extends React.Component {
   selectDevice = (device) => {
     console.log('App::selectDevice() called with: ', device);
     this.setState({ device });
-  }
+  };
 
   /**
    * On mount:
@@ -100,21 +100,22 @@ export default class BluetoothClassic extends React.Component {
 
   render() {
     return (
-	<Layout style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
-		<View style={getTheme(platform)}>
-			<View>
-			{!this.state.device ? (
-				<DeviceListScreen
-				bluetoothEnabled={this.state.bluetoothEnabled}
-				selectDevice={this.selectDevice} />
-			) : (
-				<ConnectionScreen
-					device={this.state.device}
-					onBack={() => this.setState({ device: undefined })} />
-				)}
-			</View>
-		</View>
-	  </Layout>
+      <Layout style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+        <View style={getTheme(platform)}>
+          <View>
+            {!this.state.device ? (
+              <DeviceListScreen
+                bluetoothEnabled={this.state.bluetoothEnabled}
+                selectDevice={this.selectDevice}
+              />
+            ) : (
+              <ConnectionScreen
+                device={this.state.device}
+                onBack={() => this.setState({ device: undefined })} />
+            )}
+          </View>
+        </View>
+      </Layout>
     );
   }
 }
