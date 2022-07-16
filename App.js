@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import type {Node} from 'react';
+import type { Node } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -18,7 +18,7 @@ import {
   View,
 } from 'react-native';
 
-import {NativeBaseProvider} from 'native-base';
+import { NativeBaseProvider } from 'native-base';
 
 import {
   Colors,
@@ -33,7 +33,7 @@ import * as eva from '@eva-design/eva';
 import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
 
-import MainContainer from './mainContainer';
+import MainContainer from './MainContainer';
 
 // const Section = ({children, title}): Node => {
 //   const isDarkMode = useColorScheme() === 'dark';
@@ -70,10 +70,10 @@ const App: () => Node = () => {
 
   return (
     <>
-      <IconRegistry icons={EvaIconsPack}/>
+      <IconRegistry icons={EvaIconsPack} />
       <NativeBaseProvider>
         <ApplicationProvider {...eva} theme={eva.dark}>
-          <MainContainer/>
+          <MainContainer />
         </ApplicationProvider>
       </NativeBaseProvider>
     </>
