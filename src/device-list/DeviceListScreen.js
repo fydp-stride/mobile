@@ -200,6 +200,7 @@ export default class DeviceListScreen extends React.Component {
 
   requestEnabled = async () => {
     try {
+      this.props.bluetoothEnabled = await RNBluetoothClassic.requestBluetoothEnabled();
     } catch (error) {
       Toast.show({
         text: `Error occurred while enabling bluetooth: ${error.message}`,
@@ -220,9 +221,6 @@ export default class DeviceListScreen extends React.Component {
     return (
       <Layout style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
         <View iosBarStyle="light-content">
-          <View style={styles.body}>
-            <Text style={styles.titleText} >Devices</Text>
-          </View>
           {this.props.bluetoothEnabled ? (
             <View>
               <Button onPress={this.getBondedDevices}>
@@ -235,7 +233,6 @@ export default class DeviceListScreen extends React.Component {
         </View>
         {this.props.bluetoothEnabled ? (
           <>
-            
             {Platform.OS !== 'ios' ? (
               <View>
                 <Button onPress={toggleAccept}>
@@ -252,18 +249,21 @@ export default class DeviceListScreen extends React.Component {
             ) : (
                 undefined
               )}
+              <View style={styles.body}>
+                <Text style={styles.titleText} >Devices</Text>
+              </View>
               <DeviceList
               devices={this.state.devices}
               onPress={this.props.selectDevice}
             />
           </>
         ) : (
-            <Content contentContainerStyle={styles.center}>
+            <View style={styles.center}>
               <Text>Bluetooth is OFF</Text>
               <Button onPress={() => this.requestEnabled()}>
                 <Text>Enable Bluetooth</Text>
               </Button>
-            </Content>
+            </View>
           )}
       </Layout>
     );
