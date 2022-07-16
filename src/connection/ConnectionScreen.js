@@ -37,7 +37,9 @@ export default class ConnectionScreen extends React.Component {
       polling: false,
       connection: false,
       connectionOptions: {
-        DELIMITER: '9',
+        //CONNECTION_TYPE: 'binary',
+        READ_SIZE: 512,
+        DELIMITER: '',
       },
     };
   }
@@ -79,7 +81,7 @@ export default class ConnectionScreen extends React.Component {
         });
 
         console.log(this.state.connectionOptions);
-        connection = await this.props.device.connect();
+        connection = await this.props.device.connect(this.state.connectionOptions);
 
         this.addData({
           data: 'Connection successful',
@@ -162,11 +164,11 @@ export default class ConnectionScreen extends React.Component {
 
       if (available > 0) {
         for (let i = 0; i < available; i++) {
-          console.log(`reading ${i}th time`);
+          //console.log(`reading ${i}th time`);
           let data = await this.props.device.read();
 
           console.log(`Read data ${data}`);
-          console.log(data);
+          //console.log(data);
           this.onReceivedData({ data });
         }
       }
@@ -188,6 +190,7 @@ export default class ConnectionScreen extends React.Component {
       timestamp: new Date(),
       type: 'receive',
     });
+    console.log(event);
   }
 
   async addData(message) {
@@ -213,14 +216,14 @@ export default class ConnectionScreen extends React.Component {
         type: 'sent',
       });
 
-      let data = Buffer.alloc(10, 0xEF);
-      await this.props.device.write(data);
+      // let data = Buffer.alloc(10, 0xEF);
+      // await this.props.device.write(data);
 
-      this.addData({
-        timestamp: new Date(),
-        data: `Byte array: ${data.toString()}`,
-        type: 'sent',
-      });
+      // this.addData({
+      //   timestamp: new Date(),
+      //   data: `Byte array: ${data.toString()}`,
+      //   type: 'sent',
+      // });
 
       this.setState({ text: undefined });
     } catch (error) {
@@ -257,7 +260,7 @@ export default class ConnectionScreen extends React.Component {
           <View>
             <Button transparent onPress={() => this.toggleConnection()}>
               <Icon type="Ionicons" name={toggleIcon} />
-              <Text> Connect</Text>
+              <Text> {this.state.connection?"Disconnect":"Connect"}</Text>
             </Button>
           </View>
         </View>
