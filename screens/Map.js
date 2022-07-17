@@ -8,7 +8,7 @@ import {
   Button,
 } from 'react-native';
 import { Layout, Text } from '@ui-kitten/components';
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, { Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 
 import BackgroundGeolocation, {
   Location,
@@ -66,8 +66,13 @@ const Map = ({ navigation }) => {
           // Custom meta-data.
           route_id: 123,
         },
-      });
-      locArr.push(cur.coords);
+      }).catch(e => console.log(e));
+
+      const latlng = {
+        latitude: cur.coords.latitude,
+        longitude: cur.coords.longitude
+      };
+      locArr.push(latlng);
       setLocArr(locArr);
       console.log(locArr);
     }, INTERVAL);
@@ -102,7 +107,13 @@ const Map = ({ navigation }) => {
               latitudeDelta: 0.01,
               longitudeDelta: 0.01,
             }}
-          />
+          >
+            {locArr.length !== 0 && (
+              <Polyline
+                coordinates={locArr}
+              />
+            )}
+          </MapView>
           {!tracking ? (
             <Button
               title="Click to start recording"
