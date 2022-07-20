@@ -4,11 +4,20 @@ import {
   PermissionsAndroid,
   View,
   FlatList,
-  Button,
-  Text,
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
+import { Button, Text, Layout, Toggle} from '@ui-kitten/components';
+import {
+  Body,
+  Container,
+  Content,
+  Icon,
+  Right,
+  Toast,
+  Header,
+  Title,
+} from 'native-base';
 
 /**
  * See https://reactnative.dev/docs/permissionsandroid for more information
@@ -74,7 +83,7 @@ export default class DeviceListScreen extends React.Component {
     console.log('DeviceListScreen::getBondedDevices');
     try {
       let bonded = await RNBluetoothClassic.getBondedDevices();
-      console.log('DeviceListScreen::getBondedDevices found', bonded);
+      //console.log('DeviceListScreen::getBondedDevices found', bonded);
 
       if (!unloading) {
         this.setState({ devices: bonded });
@@ -191,6 +200,8 @@ export default class DeviceListScreen extends React.Component {
 
   requestEnabled = async () => {
     try {
+      this.props.bluetoothEnabled = await RNBluetoothClassic.requestBluetoothEnabled();
+      this.componentDidMount();
     } catch (error) {
       Toast.show({
         text: `Error occurred while enabling bluetooth: ${error.message}`,
@@ -209,14 +220,12 @@ export default class DeviceListScreen extends React.Component {
       : () => this.startDiscovery();
 
     return (
-      <View>
+      <Layout style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
         <View iosBarStyle="light-content">
-          <View style={styles.body}>
-            <Text>Devices</Text>
-          </View>
           {this.props.bluetoothEnabled ? (
             <View>
-              <Button title="Get Bonded Devices" onPress={this.getBondedDevices}>
+              <Button onPress={this.getBondedDevices}>
+                <Text>Get Bonded Devices</Text>
               </Button>
             </View>
           ) : (
@@ -225,34 +234,39 @@ export default class DeviceListScreen extends React.Component {
         </View>
         {this.props.bluetoothEnabled ? (
           <>
-            <DeviceList
-              devices={this.state.devices}
-              onPress={this.props.selectDevice}
-            />
             {Platform.OS !== 'ios' ? (
               <View>
-                <Button title={this.state.accepting
+                <Button onPress={toggleAccept}>
+                        <Text>{this.state.accepting
                       ? 'Accepting (cancel)...'
-                      : 'Accept Connection'} onPress={toggleAccept}>
+                      : 'Accept Connection'}</Text>
                 </Button>
-                <Button title={this.state.discovering
+                <Button onPress={toggleDiscovery}>
+                        <Text>{this.state.discovering
                       ? 'Discovering (cancel)...'
-                      : 'Discover Devices'} onPress={toggleDiscovery}>
+                      : 'Discover Devices'}</Text>
                 </Button>
               </View>
             ) : (
                 undefined
               )}
+              <View style={styles.body}>
+                <Text style={styles.titleText} >Devices</Text>
+              </View>
+              <DeviceList
+              devices={this.state.devices}
+              onPress={this.props.selectDevice}
+            />
           </>
         ) : (
-            <Content contentContainerStyle={styles.center}>
+            <View style={styles.center}>
               <Text>Bluetooth is OFF</Text>
               <Button onPress={() => this.requestEnabled()}>
                 <Text>Enable Bluetooth</Text>
               </Button>
-            </Content>
+            </View>
           )}
-      </View>
+      </Layout>
     );
   }
 }
@@ -320,5 +334,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  titleText: {
+    fontSize: 20,
+    fontWeight: "bold"
   },
 });

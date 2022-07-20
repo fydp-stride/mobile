@@ -1,20 +1,22 @@
 import React, {
-	useState,
-	useEffect,
-  } from 'react';
+  useState,
+  useEffect,
+} from 'react';
 import {
-	Root,
-	StyleProvider,
+  Root,
+  StyleProvider,
 } from 'native-base';
+import { Switch, View } from 'react-native';
 
-import { Button, Text, Layout, Toggle} from '@ui-kitten/components';
+
+import { Button, Text, Layout, Toggle } from '@ui-kitten/components';
 import RNBluetoothClassic from 'react-native-bluetooth-classic';
 import getTheme from '../native-base-theme/components';
 import platform from '../native-base-theme/variables/platform';
 import ConnectionScreen from '../src/connection/ConnectionScreen';
 import DeviceListScreen from '../src/device-list/DeviceListScreen';
 
-export class BluetoothClassic extends React.Component {
+export default class BluetoothClassic extends React.Component {
   constructor(props) {
     super(props);
 
@@ -34,9 +36,9 @@ export class BluetoothClassic extends React.Component {
    * @param device the BluetoothDevice selected or connected
    */
   selectDevice = (device) => {
-    console.log('App::selectDevice() called with: ', device);
+    //console.log('App::selectDevice() called with: ', device);
     this.setState({ device });
-  }
+  };
 
   /**
    * On mount:
@@ -52,14 +54,14 @@ export class BluetoothClassic extends React.Component {
     this.disabledSubscription = RNBluetoothClassic
       .onBluetoothDisabled((event) => this.onStateChanged(event));
 
-    this.checkBluetootEnabled();
+    this.checkBluetoohEnabled();
   }
 
   /**
    * Performs check on bluetooth being enabled.  This removes the `setState()`
    * from `componentDidMount()` and clears up lint issues.
    */
-  async checkBluetootEnabled() {
+  async checkBluetoohEnabled() {
     try {
       console.log('App::componentDidMount Checking bluetooth status');
       let enabled = await RNBluetoothClassic.isBluetoothEnabled();
@@ -98,21 +100,22 @@ export class BluetoothClassic extends React.Component {
 
   render() {
     return (
-	<Layout style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
-		<StyleProvider style={getTheme(platform)}>
-			<Root>
-			{!this.state.device ? (
-				<DeviceListScreen
-				bluetoothEnabled={this.state.bluetoothEnabled}
-				selectDevice={this.selectDevice} />
-			) : (
-				<ConnectionScreen
-					device={this.state.device}
-					onBack={() => this.setState({ device: undefined })} />
-				)}
-			</Root>
-		</StyleProvider>
-	  </Layout>
+      <Layout style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+        <View style={getTheme(platform)}>
+          <View>
+            {!this.state.device ? (
+              <DeviceListScreen
+                bluetoothEnabled={this.state.bluetoothEnabled}
+                selectDevice={this.selectDevice}
+              />
+            ) : (
+              <ConnectionScreen
+                device={this.state.device}
+                onBack={() => this.setState({ device: undefined })} />
+            )}
+          </View>
+        </View>
+      </Layout>
     );
   }
 }
