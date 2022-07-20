@@ -35,34 +35,13 @@ const HomeView = ({ route, navigation }) => {
   const [motionActivityEvent, setMotionActivityEvent] = React.useState<MotionActivityEvent>(null);
   const [testClicks, setTestClicks] = React.useState(0);
   const [trackInterval, setTrackInterval] = React.useState<any>(null);
+  const [locationSubscriber, setLocationSubscriber] = React.useState<any>(null);
 
   /// Init BackgroundGeolocation when view renders.
   React.useEffect(() => {
-    // Register BackgroundGeolocation event-listeners.
-
-    // For printing odometer in bottom toolbar.
-    const locationSubscriber: any = BackgroundGeolocation.onLocation(setLocation, error => {
-      console.warn('[onLocation] ERROR: ', error);
-    });
-    // Auto-toggle [ play ] / [ pause ] button in bottom toolbar on motionchange events.
-    const motionChangeSubscriber: any = BackgroundGeolocation.onMotionChange(location => {
-      setIsMoving(location.isMoving);
-    });
-    // For printing the motion-activity in bottom toolbar.
-    const activityChangeSubscriber: any = BackgroundGeolocation.onActivityChange(setMotionActivityEvent);
-
     // Configure BackgroundGeolocation.ready().
     initBackgroundGeolocation();
-
     AppState.addEventListener('change', _handleAppStateChange);
-
-    return () => {
-      // When view is destroyed (or refreshed with dev live-reload),
-      // Remove BackgroundGeolocation event-listeners.
-      locationSubscriber.remove();
-      motionChangeSubscriber.remove();
-      activityChangeSubscriber.remove();
-    }
   }, []);
 
   /// Add a toggle <Switch> to top-right toolbar.
@@ -77,7 +56,8 @@ const HomeView = ({ route, navigation }) => {
   /// Location effect-handler
   React.useEffect(() => {
     if (!location) return;
-    setOdometer(location.odometer);
+    // setOdometer(location.odometer);
+
   }, [location]);
 
   const _handleAppStateChange = async nextAppState => {
@@ -135,16 +115,18 @@ const HomeView = ({ route, navigation }) => {
     }
   };
 
-  /// changePace handler.
-  // const onClickChangePace = () => {
-  //   BackgroundGeolocation.changePace(!isMoving);
-  //   setIsMoving(!isMoving);
-  // };
-
   const INTERVAL = 15000; // 10 s
   const startRecordingLoc = async () => {
+    const subscription = BackgroundGeolocation.onLocation((location) => {
+      setLocation(location);
+      console.log("[onLocation] success: ", location);
+    }, (error) => {
+      console.log("[onLocation] ERROR: ", error);
+    });
+    setLocationSubscriber(subscription);
     BackgroundGeolocation.changePace(true);
     setIsMoving(true);
+
     const interval = setInterval(async () => {
       let cur = await BackgroundGeolocation.getCurrentPosition({
         timeout: 15, // 30 second timeout to fetch location
@@ -156,27 +138,30 @@ const HomeView = ({ route, navigation }) => {
           route_id: 123,
         },
       });
-      console.log(cur);
+      // console.log(cur);
     }, INTERVAL);
     setTrackInterval(interval);
+    
   };
 
   const stopRecordingLoc = () => {
     BackgroundGeolocation.changePace(false);
+    locationSubscriber.remove();
+    setLocationSubscriber(null);
     setIsMoving(false);
     clearInterval(trackInterval);
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <Map style={styles.map} navigation={navigation} />
+      <Map style={styles.map} navigation={navigation} location={location} />
       <View
         style={{
           backgroundColor: COLORS.gold,
           height: 56,
           flexDirection: 'row',
         }}>
-        <View style={{ flex: 1, justifyContent: 'center' }}>
+        {/* <View style={{ flex: 1, justifyContent: 'center' }}>
           <TouchableHighlight
             onPress={() => setTestClicks(testClicks + 1)}
             underlayColor="transparent">
@@ -190,7 +175,7 @@ const HomeView = ({ route, navigation }) => {
               </Text>
             </View>
           </TouchableHighlight>
-        </View>
+        </View> */}
         <View style={{ justifyContent: 'center', padding: 5 }}>
           {!isMoving ? (
             <Button title="Start" onPress={startRecordingLoc} />
