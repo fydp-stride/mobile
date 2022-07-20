@@ -53,22 +53,9 @@ const Map = props => {
   const [coordinates, setCoordinates] = React.useState<any[]>([]);
 
   /// BackgroundGeolocation Events.
-  const [location, setLocation] = React.useState<Location>(null);
+  // const [location, setLocation] = React.useState<Location>(null);
   const [enabled, setEnabled] = React.useState(false);
   const [center, setCenter] = React.useState<any>(null);
-
-  /// Collection of BackgroundGeolocation event-subscriptions.
-  const subscriptions: any[] = [];
-
-  /// [Helper] Add a BackgroundGeolocation event subscription to collection
-  const subscribe = (subscription: any) => {
-    subscriptions.push(subscription);
-  };
-  /// [Helper] Iterate BackgroundGeolocation subscriptions and .remove() each.
-  const unsubscribe = () => {
-    subscriptions.forEach((subscription: any) => subscription.remove());
-    subscriptions.splice(0, subscriptions.length);
-  };
 
   /// Register BackgroundGeolocation event-listeners.
   React.useEffect(() => {
@@ -76,11 +63,7 @@ const Map = props => {
       setEnabled(state.enabled);
     });
 
-    // All BackgroundGeolocation event-listeners use React.useState setters.
-    // subscribe(BackgroundGeolocation.onLocation(setLocation, error => {
-    //   console.warn('[onLocation] ERROR: ', error);
-    // }));
-    subscribe(BackgroundGeolocation.onEnabledChange(setEnabled));
+    const enabledSubscriber = BackgroundGeolocation.onEnabledChange(setEnabled);
 
     const getLocation = async () => {
       let loc = await BackgroundGeolocation.getCurrentPosition({
@@ -101,9 +84,9 @@ const Map = props => {
 
     return () => {
       // Important for with live-reload to remove BackgroundGeolocation event subscriptions.
-      unsubscribe();
+      enabledSubscriber.remove();
       clearMarkers();
-    }
+    };
   }, []);
 
   /// onEnabledChange effect.
@@ -115,17 +98,17 @@ const Map = props => {
   /// onLocation effect.
   ///
   React.useEffect(() => {
-    if (!location) return;
+    if (!props.location) return;
     onLocation();
-  }, [location]);
+  }, [props.location]);
 
   /// onLocation effect-handler
   /// Adds a location Marker to MapView
   ///
   const onLocation = () => {
-    console.log('[location] - ', location);
-    if (!location.sample) {
-      addMarker(location);
+    console.log('[location] - ', props.location);
+    if (!props.location.sample) {
+      addMarker(props.location);
     }
     // setCenter(location);
   };
