@@ -35,7 +35,7 @@ import * as eva from '@eva-design/eva';
 import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
 
-import MainContainer from './MainContainer';
+import MainContainer from './mainContainer';
 
 const App: () => Node = () => {
   // const isDarkMode = useColorScheme() === 'dark';
