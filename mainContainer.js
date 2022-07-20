@@ -18,10 +18,12 @@ import BluetoothTest from './screens/BluetoothTest';
 import BluetoothClassic from './screens/BluetoothClassic';
 import HomeScreen from './screens/HomeScreen';
 import SettingsScreen from './screens/SettingsScreen';
+import Visualization from './screens/Visualization';
 
 // names
 const HomeName = 'Home';
 const BluetoothName = 'Bluetooth';
+const VisualizationName = 'Visualization';
 const MapName = 'Map';
 const GeoName = 'Geolocation';
 const SettingsName = 'Settings';
@@ -57,12 +59,15 @@ export default function MainContainer() {
               iconName = focused ? 'earth' : 'earth-outline';
             } else if (routeName === SettingsName) {
               iconName = focused ? 'cog' : 'cog-outline';
+            } else if (routeName === VisualizationName) {
+              iconName = focused ? 'bar-chart' : 'bar-chart-outline';
             }
             return <Ionicons name={iconName} size={size} color={color} />;
           },
         })}>
         <Screen name={HomeName} component={HomeScreen} />
         <Screen name={BluetoothName} component={BluetoothClassic} />
+        <Screen name={VisualizationName} component={Visualization} />
         <Screen name={MapName} component={MapHomeView} />
         <Screen name={GeoName} component={GeoTest} />
         <Screen name={SettingsName} component={SettingsScreen} />

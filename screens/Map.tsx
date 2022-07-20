@@ -77,9 +77,9 @@ const Map = props => {
     });
 
     // All BackgroundGeolocation event-listeners use React.useState setters.
-    subscribe(BackgroundGeolocation.onLocation(setLocation, error => {
-      console.warn('[onLocation] ERROR: ', error);
-    }));
+    // subscribe(BackgroundGeolocation.onLocation(setLocation, error => {
+    //   console.warn('[onLocation] ERROR: ', error);
+    // }));
     subscribe(BackgroundGeolocation.onEnabledChange(setEnabled));
 
     const getLocation = async () => {
