@@ -36,7 +36,7 @@ export default class BluetoothClassic extends React.Component {
    * @param device the BluetoothDevice selected or connected
    */
   selectDevice = (device) => {
-    console.log('App::selectDevice() called with: ', device);
+    //console.log('App::selectDevice() called with: ', device);
     this.setState({ device });
   };
 
@@ -54,14 +54,14 @@ export default class BluetoothClassic extends React.Component {
     this.disabledSubscription = RNBluetoothClassic
       .onBluetoothDisabled((event) => this.onStateChanged(event));
 
-    this.checkBluetootEnabled();
+    this.checkBluetoohEnabled();
   }
 
   /**
    * Performs check on bluetooth being enabled.  This removes the `setState()`
    * from `componentDidMount()` and clears up lint issues.
    */
-  async checkBluetootEnabled() {
+  async checkBluetoohEnabled() {
     try {
       console.log('App::componentDidMount Checking bluetooth status');
       let enabled = await RNBluetoothClassic.isBluetoothEnabled();

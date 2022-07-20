@@ -83,7 +83,7 @@ export default class DeviceListScreen extends React.Component {
     console.log('DeviceListScreen::getBondedDevices');
     try {
       let bonded = await RNBluetoothClassic.getBondedDevices();
-      console.log('DeviceListScreen::getBondedDevices found', bonded);
+      //console.log('DeviceListScreen::getBondedDevices found', bonded);
 
       if (!unloading) {
         this.setState({ devices: bonded });
