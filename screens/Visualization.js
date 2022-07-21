@@ -33,7 +33,7 @@ export default function Visualization({ navigation }) {
         strokeWidth: 6 // optional
       },
       {
-        data: [300],
+        data: [500],
         withDots: false,
         color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
         strokeWidth: 6 // optional
@@ -43,20 +43,20 @@ export default function Visualization({ navigation }) {
   };
 
   const mockForceData = {
-    labels: ["Jan.", "Feb.", "Mar.", "Apr.", "May", "Jun."],
+    labels: forceXaxis,
     datasets: [
       {
-        data: [20, 45, 28, 80, 99, 43],
+        data: forceData,
         color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
         strokeWidth: 6 // optional
-      }
+      }, 
     ],
   };
-
 
   useEffect(() => {
     var curTime = getCurrentTime();
     setImpulseXaxis([curTime]);
+    setforceXaxis([curTime]);
   }, []);
 
   // style
@@ -75,7 +75,7 @@ export default function Visualization({ navigation }) {
     impulseData && <Layout style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
       <LineChart data={mockImpulseData}
         width={Dimensions.get("window").width}
-        height={220}
+        height={300}
         chartConfig={chartConfig}
         bezier
       />
@@ -85,8 +85,10 @@ export default function Visualization({ navigation }) {
     forceData && <Layout style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
       <BarChart data={mockForceData}
         width={Dimensions.get("window").width}
-        height={220}
+        height={300}
         chartConfig={chartConfig}
+        fromNumber={100} 
+        fromZero={true}
       />
     </Layout>
 
@@ -101,7 +103,7 @@ export default function Visualization({ navigation }) {
     return dateStr;
   }
 
-  const addTestPoint = (datum) => {
+  const addImpulsePoint = (datum) => {
     var curTime = getCurrentTime();
     setImpulseData(prev => {
       let tempImpulseData;
@@ -126,14 +128,42 @@ export default function Visualization({ navigation }) {
     });
   }
 
+  const addForcePoint = (datum) => {
+    var curTime = getCurrentTime();
+    setForceData(prev => {
+      let tempImpulseData;
+      if (prev.length < 6) {
+        tempImpulseData = prev.slice();
+      } else {
+        tempImpulseData = prev.slice(1);
+      }
+      tempImpulseData.push(Math.random() * 100);
+      return tempImpulseData;
+    });
+
+    setforceXaxis(prev => {
+      let tempAxis;
+      if (prev.length < 6) {
+        tempAxis = prev.slice();
+      } else {
+        tempAxis = prev.slice(1);
+      }
+      tempAxis.push(curTime);
+      return tempAxis;
+    });
+  }
+
   let datum = 30;
   return (
     <Layout style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
       {renderImpulseData}
-      <Button onPress={() => addTestPoint(datum)}>
+      <Button onPress={() => addImpulsePoint(datum)}>
         <Text>add data point</Text>
       </Button>
       {renderForceData}
+      <Button onPress={() => addForcePoint(datum)}>
+        <Text>add data point</Text>
+      </Button>
     </Layout>
   );
 }
