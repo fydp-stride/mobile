@@ -21,18 +21,18 @@ export default function Visualization({ navigation }) {
     labels: impulseXaxis,
     datasets: [
       {
-        data: bluetoothData.impulse,
+        data: bluetoothData.impulse.slice(-10),
         color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
         strokeWidth: 6 // optional
       },
       {
-        data: [0],
+        data: [Math.min(...bluetoothData.impulse.slice(-10)) * 0.8],
         withDots: false,
         color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
         strokeWidth: 6 // optional
       },
       {
-        data: [500],
+        data: [Math.max(...bluetoothData.impulse.slice(-10))],
         withDots: false,
         color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
         strokeWidth: 6 // optional
@@ -45,7 +45,7 @@ export default function Visualization({ navigation }) {
     labels: forceXaxis,
     datasets: [
       {
-        data: bluetoothData.maxForce,
+        data: bluetoothData.maxForce.slice(-10),
         color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
         strokeWidth: 6 // optional
       },

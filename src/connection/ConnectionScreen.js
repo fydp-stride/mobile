@@ -1,5 +1,6 @@
 import React from 'react';
 import RNBluetoothClassic from 'react-native-bluetooth-classic';
+import {addImpulse, addMaxForce, addAngle, clearImpulse, clearMaxForce, clearAngle, setImpulse, setMaxForce, setBattery} from '../../screens/bluetoothSlice';
 import {
   FlatList,
   View,
@@ -7,6 +8,7 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
+import { useSelector, useDispatch, connect } from 'react-redux'
 import { Button, Text, Layout, Toggle} from '@ui-kitten/components';
 import {
   Container,
@@ -19,6 +21,8 @@ import {
   Right,
 } from 'native-base';
 import { Buffer } from 'buffer';
+
+
 
 const SYNC_BYTE = 0xFF;
 const IMPULSE_CMD = 0x01;
@@ -34,7 +38,7 @@ const RESPONSE_CMD = 0x06;
  * to and processed as such.
  *
  */
-export default class ConnectionScreen extends React.Component {
+class ConnectionScreen extends React.Component {
   constructor(props) {
     super(props);
 
@@ -194,158 +198,170 @@ export default class ConnectionScreen extends React.Component {
    * @param {ReadEvent} event
    */
   async onReceivedData(event) {
-    console.log("Start onReceivedData");
+    //console.log("Start onReceivedData");
     event.timestamp = new Date();
     this.addData({
       ...event,
       timestamp: new Date(),
       type: 'receive',
     });
-    console.log(event);
+    //console.log(event);
     
-    // message = event.data;
-    // console.log("message.length: " + message.length);
-    // console.log("message: " + message);
-
-    // i = 0
-    // if(!this.sync || !this.cmd){
-    //   while (true) {
-    //     while (i < message.length && this.sync != SYNC_BYTE){
-    //       this.sync = message.charCodeAt(i);
-    //       console.log("sync: " + this.sync);
-    //       i++;
-    //     }
-    //     // Done with this message
-    //     if (i >= message.length){
-    //       return;
-    //     }
-    //     this.cmd = message.charCodeAt(i);
-    //     console.log("cmd: " + this.cmd);
-    //     i++;
-    //     if (this.cmd != SYNC_BYTE){
-    //       break;
-    //     }
-    //   }
-    // }
-    // // Done with this message
-    // if (i >= message.length){
-    //   return;
-    // }
-
-    // if (!this.length) {
-    //   this.length = message.charCodeAt(i)
-    //   i++;
-    //   console.log(`Received packet (${this.cmd}, ${this.length})`);
-    // }
-
-    // if (i >= message.length){
-    //   return;
-    // }
-
-    // // Uint8Array is a byte array
-    // if (!this.buffer){
-    //   this.buffer = Array.from(new Uint8Array());
-    // }
-
-    // // This may create a buffer greater than the length.
-    // for (x = i; x < message.length; x++){
-    //   this.buffer.push(message.charCodeAt(x));
-    //   // Ensures buffer is of length (max) this.length
-    //   if (this.buffer.length >= this.length){
-
-    //     break;
-    //   }
-    // }
-    // //this.buffer.push(message.substring(i));
-
-    // // More messages incoming!
-    // if (this.buffer.length < this.length){
-    //   return;
-    // }
-    // // At this point, no more message incoming for THIS message.
-    // console.log("buffer: " + this.buffer);
-
-    // var r_data = Array.from(new Uint8Array());
-    // //console.log("this.length: " + this.length);
-    // is_escaped = false;
-    // // var counter = 1;
-    // for (j = 0; j < this.buffer.length; j++){
-    //   if (!is_escaped && this.buffer[j] === SYNC_BYTE){
-    //     is_escaped = true;
-    //   }
-    //   else{
-    //     r_data.push(this.buffer[j]);
-    //     // console.log("buffer[j]: " + this.buffer[j]);
-    //     // console.log("counter: " + counter);
-    //     // counter += 1;
-    //     is_escaped = false;
-    //   }
+    var message = event.data;
+    //console.log("message.length: " + message.length);
+    //console.log("message: " + message);
+    // for (let ij = 0; ij < message.length; ij++){
+    //  console.log("message["+ ij + "]: " + message.charCodeAt(ij));
     // }
     
-    // console.log("read data received: " + r_data);
+    let i = 0
+    while(true){
+      if(!this.sync || !this.cmd){
+        while (true) {
+          while (i < message.length && this.sync != SYNC_BYTE){
+            this.sync = message.charCodeAt(i);
+            //console.log("sync: " + this.sync);
+            i++;
+          }
+          // Done with this message
+          if (i >= message.length){
+            break;
+          }
+          this.cmd = message.charCodeAt(i);
+          //console.log("cmd: " + this.cmd);
+          i++;
+          if (this.cmd != SYNC_BYTE){
+            break;
+          }
+        }
+      }
+      // Done with this message
+      if (i >= message.length){
+        break;
+      }
 
-    // switch(this.cmd){
-    //   case IMPULSE_CMD:
-    //       // Convert 4 bytes into Float Data
-    //       var buf = new ArrayBuffer(4);
-    //       var view = new DataView(buf);
+      if (!this.length) {
+        this.length = message.charCodeAt(i)
+        i++;
+        //console.log(`Received packet (${this.cmd}, ${this.length})`);
+      }
 
-    //       for (let c = 0; c < 4; c++){
-    //         view.setUint8(r_data.length - 1 - c, r_data[c]);
-    //       }
-    //       var impulse = view.getFloat32(0);
-    //       console.log("read data converted to Float: " + impulse);
-    //       // Send this impulse somewhere (Redux or some state management).
-    //     break;
-    //   case MAX_FORCE_CMD:
-    //     var maxForceList = []
-    //     n = 0
-    //     while(n < r_data.length){
-    //       var buf = new ArrayBuffer(4);
-    //       var view = new DataView(buf);
+      // Done with this message
+      if (i >= message.length){
+        break;
+      }
 
-    //       for (let c = n; c < n + 4; c++){
-    //         view.setUint8(r_data.length - 1 - c, r_data[c]);
-    //       }
-    //       maxForceList.push(view.getFloat32(0));
-    //       n += 4;
-    //     }
-    //     // Send this maxForceList somewhere
-    //     break;
-    //   case ANGLE_CMD:
-    //     var angleSet = []
-    //     n = 0
-    //     while(n < r_data.length){
-    //       var buf = new ArrayBuffer(4);
-    //       var view = new DataView(buf);
+      if (!this.buffer){
+        this.buffer = new String();
+      }
 
-    //       for (let c = n; c < n + 4; c++){
-    //         view.setUint8(r_data.length - 1 - c, r_data[c]);
-    //       }
-    //       angleList.push(view.getFloat32(0));
-    //       n += 4;
-    //     }
-    //     // Send these set of angles somewhere
-    //     break;
-    //   case BATT_CMD:
-    //     // Convert 4 bytes into Float Data
-    //     var buf = new ArrayBuffer(4);
-    //     var view = new DataView(buf);
+      // This may create a buffer greater than the length.
+      for (x = i; x < message.length; x++){
+        this.buffer += message.charAt(x);
+        i++;
+        // Ensures buffer is of length (max) this.length
+        if (this.buffer.length >= this.length){
+          break;
+        }
+      }
+      //this.buffer.push(message.substring(i));
 
-    //     for (let c = 0; c < 4; c++){
-    //       view.setUint8(r_data.length - 1 - c, r_data[c]);
-    //     }
-    //     var battPerc = view.getFloat32(0);
-    //     console.log("read data converted to Float: " + battPerc);
-    //     // Send this battPerc somewhere (Redux or some state management).
-    //     break;
-    //   default:
-    //     console.log(`Invalid Packet`);
-    // }
+      // More messages incoming!
+      if (this.buffer.length < this.length){
+        break;
+      }
 
-    
+      // At this point, no more message incoming for THIS message.
+      //console.log("buffer: " + this.buffer);
 
+      // var r_data = Array.from(new Uint8Array());
+      // //console.log("this.length: " + this.length);
+      // is_escaped = false;
+      // // var counter = 1;
+      // for (j = 0; j < this.buffer.length; j++){
+      //   if (!is_escaped && this.buffer[j] === SYNC_BYTE){
+      //     is_escaped = true;
+      //   }
+      //   else{
+      //     r_data.push(this.buffer[j]);
+      //     // console.log("buffer[j]: " + this.buffer[j]);
+      //     // console.log("counter: " + counter);
+      //     // counter += 1;
+      //     is_escaped = false;
+      //   }
+      // }
+      
+      //console.log("read data received: " + r_data);
 
+      switch(this.cmd){
+        case IMPULSE_CMD:
+            // 45.20, 12.40,
+            let impulse_list = this.buffer.split(",");
+            for (let i = 0; i < impulse_list.length;i++){
+              if (impulse_list[i]){
+                let impulse_float = parseFloat(impulse_list[i]);
+                const addImpulseAction = {
+                  type: 'bluetooth/addImpulse',
+                  payload: impulse_float
+                }
+                // add to global dispatcher
+                this.props.addImpulse(addImpulseAction);
+                //console.log("added " + impulse_float + " to the impulse dispatcher.");
+              }
+            }
+            // Send this impulse somewhere (Redux or some state management).
+          break;
+        case MAX_FORCE_CMD:
+            let max_force_list = this.buffer.split(",");
+            for (let i = 0; i < max_force_list.length;i++){
+              if (max_force_list[i]){
+                let max_force_float = parseFloat(max_force_list[i]);
+                const addMaxForceAction = {
+                  type: 'bluetooth/addMaxForce',
+                  payload: max_force_float
+                }
+                // add to global dispatcher
+                this.props.addMaxForce(addMaxForceAction);
+                //console.log("added " + max_force_float + " to the maxForce dispatcher.");
+
+              }
+            }
+          break;
+        case ANGLE_CMD:
+          let angle_list = this.buffer.split(",");
+          let angle_float_list = [];
+            for (let i = 0; i < angle_list.length;i++){
+              if (angle_list[i]){
+                let angle_float = parseFloat(angle_list[i]);
+                angle_float_list.push(angle_float)
+              }
+            }
+            // add to global dispatcher
+            this.props.addAngle(angle_float_list);
+            //console.log("added " + angle_float_list + " to the angle dispatcher.");
+          break;
+        case BATT_CMD:
+          // Convert 4 bytes into Float Data
+          var battPerc = parseFloat(this.buffer.split(",")[0]);
+          console.log("Battery Charge: " + battPerc + "%");
+          // Add this to global dispatcher
+          this.props.setBattery(battPerc);
+          //console.log("set battery " + battPerc + " to the battery dispatcher.");
+          break;
+        default:
+          console.log(`Invalid Packet`);
+      }
+      // Reset this current message for next message
+      this.cmd = undefined;
+      this.sync = undefined;
+      this.length = 0;
+      this.buffer = undefined;
+      if (i >= message.length){
+        break;
+      }
+    }
+    //console.log("onReceivedData Ends");
+    // Send w_data
     // let response = "";
     // if (this.cmd === IMPULSE_CMD || this.cmd === MAX_FORCE_CMD || this.cmd === ANGLE_CMD || this.cmd === BATT_CMD){
     //   console.log(`Valid Packet`);
@@ -373,13 +389,6 @@ export default class ConnectionScreen extends React.Component {
     // console.log("response_length: " + response_len);
     // console.log("w_data being send: " + w_data);
     // console.log("SYNC_BYTE: " + String.fromCharCode(SYNC_BYTE));
-    // // Reset this current message for next message
-    // this.cmd = undefined;
-    // this.sync = undefined;
-    // this.length = 0;
-    // this.buffer = undefined;
-    // console.log("onReceivedData Ends");
-    // // Send w_data
     // try{
     //   await RNBluetoothClassic.writeToDevice(
     //     this.props.device.address,
@@ -453,16 +462,34 @@ export default class ConnectionScreen extends React.Component {
   }
 
   async writeWeight(){
-    let weight = 95.2
+    let weight = 65.0;
     var farr = new Float32Array(1);
     farr[0] = weight;
-    var barr = new Int8Array(farr.buffer);
-
-    await RNBluetoothClassic.writeToDevice(
-      this.props.device.address,
-      String.fromCharCode(...barr),
-      "ascii",
-    );
+    var barr = new Int8Array(farr.buffer); 
+    try{
+        await RNBluetoothClassic.writeToDevice(
+          this.props.device.address,
+          String.fromCharCode(SYNC_BYTE),
+          "ascii",
+        );
+        await RNBluetoothClassic.writeToDevice(
+          this.props.device.address,
+          String.fromCharCode(WEIGHT_CMD),
+          "ascii",
+        );
+        await RNBluetoothClassic.writeToDevice(
+          this.props.device.address,
+          String.fromCharCode(barr.length),
+          "ascii",
+        );
+        await RNBluetoothClassic.writeToDevice(
+          this.props.device.address,
+          String.fromCharCode(...barr),
+          "ascii",
+        );
+      } catch (error){
+        console.log(error);
+      }
   }
   
   render() {
@@ -549,6 +576,17 @@ const InputArea = ({ text, onChangeText, onSend, disabled }) => {
     </View>
   );
 };
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addImpulse: (impulse) => dispatch(addImpulse(impulse)),
+    addMaxForce: (maxForce) => dispatch(addMaxForce(maxForce)),
+    addAngle: (angle) => dispatch(addAngle(angle)),
+    setBattery: (battery) => dispatch(setBattery(battery)),
+  }
+};
+
+export default connect(null, mapDispatchToProps)(ConnectionScreen);
 
 /**
  * TextInput and Button for sending
