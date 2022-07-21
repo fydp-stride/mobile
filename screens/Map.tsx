@@ -133,8 +133,10 @@ const Map = props => {
           key={marker.key}
           tracksViewChanges={tracksViewChanges}
           coordinate={marker.coordinate}
-          anchor={{ x: 0, y: 0.1 }}
-          title={marker.title}>
+          // anchor={{ x: 0, y: 0.1 }}
+          title={marker.title}
+          rotation={marker.heading}
+        >
           <View style={[styles.markerIcon]}></View>
         </Marker>
       ));
@@ -232,12 +234,26 @@ var styles = StyleSheet.create({
     height: 12,
   },
   markerIcon: {
-    borderWidth: 1,
-    borderColor: '#000000',
-    backgroundColor: COLORS.polyline_color,
+    // borderWidth: 1,
+    // borderColor: '#000000',
+    // backgroundColor: COLORS.polyline_color,
     //backgroundColor: 'rgba(0,179,253, 0.6)',
-    width: 10,
-    height: 10,
-    borderRadius: 5,
+    // width: 10,
+    // height: 10,
+    // borderRadius: 5,
+    // width: 0,
+    // height: 0,
+    width: 0,
+    height: 0,
+    backgroundColor: 'transparent',
+    borderStyle: 'solid',
+    borderTopWidth: 0,
+    borderRightWidth: 3.5,
+    borderBottomWidth: 9.0,
+    borderLeftWidth: 3.5,
+    borderTopColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderBottomColor: 'blue',
+    borderLeftColor: 'transparent',
   },
 });
