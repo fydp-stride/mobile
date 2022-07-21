@@ -3,9 +3,9 @@ import { createSlice } from '@reduxjs/toolkit';
 export const bluetoothSlice = createSlice({
   name: 'bluetooth',
   initialState: {
-    impulse: [],
-    maxForce: [],
-    angle: [],
+    impulse: [0],
+    maxForce: [0],
+    angle: [0],
   },
   reducers: {
     addImpulse: (state, action) => {
@@ -36,10 +36,13 @@ export const bluetoothSlice = createSlice({
     clearAngle: state => {
       state.angle = [];
     },
+    setImpulse: (state, action) => {
+      state.impulse = action.payload;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { increment, decrement, incrementByAmount } = bluetoothSlice.actions;
+export const { addImpulse, addMaxForce, addAngle, clearImpulse, clearMaxForce, clearAngle, setImpulse } = bluetoothSlice.actions;
 
 export default bluetoothSlice.reducer;

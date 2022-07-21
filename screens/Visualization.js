@@ -3,17 +3,38 @@ import { Dimensions } from 'react-native';
 import { BottomNavigation, BottomNavigationTab, Layout, Text, Button } from '@ui-kitten/components';
 import { LineChart, BarChart } from 'react-native-chart-kit';
 
+import { useSelector, useDispatch } from 'react-redux';
+import { setImpulse } from './bluetoothSlice';
+
 export default function Visualization({ navigation }) {
 
   // data
-  const [impulseData, setImpulseData] = useState(null);
-  const [forceData, setForceData] = useState(null);
+  // const impulseData = useSelector(state => state.impulse);
+  const dispatch = useDispatch();
+
+  const [impulseData, setImpulseData] = useState([0]);
+  const [forceData, setForceData] = useState([0]);
+
+  const [impulseXaxis, setImpulseXaxis] = useState([]);
+  const [forceXaxis, setforceXaxis] = useState([])
 
   const mockImpulseData = {
-    labels: ["Jan.", "Feb.", "Mar.", "Apr.", "May", "Jun."],
+    labels: impulseXaxis,
     datasets: [
       {
-        data: [20, 45, 28, 80, 99, 43],
+        data: impulseData,
+        color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
+        strokeWidth: 6 // optional
+      },
+      {
+        data: [0],
+        withDots: false,
+        color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
+        strokeWidth: 6 // optional
+      },
+      {
+        data: [300],
+        withDots: false,
         color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
         strokeWidth: 6 // optional
       }
@@ -31,9 +52,11 @@ export default function Visualization({ navigation }) {
       }
     ],
   };
+
+
   useEffect(() => {
-    setImpulseData(mockImpulseData);
-    setForceData(mockForceData);
+    var curTime = getCurrentTime();
+    setImpulseXaxis([curTime]);
   }, []);
 
   // style
@@ -48,10 +71,9 @@ export default function Visualization({ navigation }) {
     useShadowColorFromDataset: false // optional
   };
 
-
   const renderImpulseData =
     impulseData && <Layout style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
-      <LineChart data={impulseData}
+      <LineChart data={mockImpulseData}
         width={Dimensions.get("window").width}
         height={220}
         chartConfig={chartConfig}
@@ -61,19 +83,14 @@ export default function Visualization({ navigation }) {
 
   const renderForceData =
     forceData && <Layout style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
-      <BarChart data={forceData}
+      <BarChart data={mockForceData}
         width={Dimensions.get("window").width}
         height={220}
         chartConfig={chartConfig}
       />
     </Layout>
 
-
-
-  const [x, setX] = useState(["Jan.", "Feb.", "Mar.", "Apr.", "May", "Jun."]);
-
-
-  const addTestPoint = () => {
+  const getCurrentTime = () => {
 
     var date = new Date();
     var dateStr =
@@ -81,52 +98,40 @@ export default function Visualization({ navigation }) {
       ("00" + date.getMinutes()).slice(-2) + ":" +
       ("00" + date.getSeconds()).slice(-2);
 
-    let tempAxis = x.slice(1);
-    tempAxis.push(dateStr)
-    setX(tempAxis);
-
-    const temp = {
-      labels: x,
-      datasets: [
-        {
-          data: [
-            Math.random() * 100,
-            Math.random() * 100,
-            Math.random() * 100,
-            Math.random() * 100,
-            Math.random() * 100,
-            Math.random() * 100
-          ],
-
-
-          color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
-          strokeWidth: 6 // optional
-        },
-        {
-          data: [0],
-          withDots: false,
-          color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
-          strokeWidth: 6 // optional
-        },
-        {
-          data: [100],
-          withDots: false,
-          color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
-          strokeWidth: 6 // optional
-        }
-
-      ],
-      legend: ["Average impulse"] // optional
-    };
-
-    setImpulseData(temp);
+    return dateStr;
   }
+
+  const addTestPoint = (datum) => {
+    var curTime = getCurrentTime();
+    setImpulseData(prev => {
+      let tempImpulseData;
+      if (prev.length < 6) {
+        tempImpulseData = prev.slice();
+      } else {
+        tempImpulseData = prev.slice(1);
+      }
+      tempImpulseData.push(Math.random() * 300);
+      return tempImpulseData;
+    });
+
+    setImpulseXaxis(prev => {
+      let tempAxis;
+      if (prev.length < 6) {
+        tempAxis = prev.slice();
+      } else {
+        tempAxis = prev.slice(1);
+      }
+      tempAxis.push(curTime);
+      return tempAxis;
+    });
+  }
+
+  let datum = 30;
   return (
     <Layout style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
-      {/* <Text style={{ fontSize: 30 }}>Graph</Text> */}
       {renderImpulseData}
-      <Button onPress={() => addTestPoint()}>
-        <Text>rand test data</Text>
+      <Button onPress={() => addTestPoint(datum)}>
+        <Text>add data point</Text>
       </Button>
       {renderForceData}
     </Layout>
