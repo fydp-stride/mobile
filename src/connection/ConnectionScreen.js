@@ -1,6 +1,7 @@
 import React from 'react';
 import RNBluetoothClassic from 'react-native-bluetooth-classic';
-import {addImpulse, addMaxForce, addAngle, clearImpulse, clearMaxForce, clearAngle, setImpulse, setMaxForce, setBattery} from '../../screens/bluetoothSlice';
+import { addImpulse, addMaxForce, addAngle, clearImpulse, clearMaxForce, 
+  clearAngle, setImpulse, setMaxForce, setBattery, setImpulseAxis, setMaxForceAxis } from '../../screens/bluetoothSlice';
 import {
   FlatList,
   View,
@@ -306,6 +307,7 @@ class ConnectionScreen extends React.Component {
                 }
                 // add to global dispatcher
                 this.props.addImpulse(addImpulseAction);
+                this.props.setImpulseAxis();
                 //console.log("added " + impulse_float + " to the impulse dispatcher.");
               }
             }
@@ -322,6 +324,7 @@ class ConnectionScreen extends React.Component {
                 }
                 // add to global dispatcher
                 this.props.addMaxForce(addMaxForceAction);
+                this.props.setMaxForceAxis();
                 //console.log("added " + max_force_float + " to the maxForce dispatcher.");
 
               }
@@ -583,6 +586,8 @@ const mapDispatchToProps = (dispatch) => {
     addMaxForce: (maxForce) => dispatch(addMaxForce(maxForce)),
     addAngle: (angle) => dispatch(addAngle(angle)),
     setBattery: (battery) => dispatch(setBattery(battery)),
+    setImpulseAxis: () => dispatch(setImpulseAxis()),
+    setMaxForceAxis: () => dispatch(setMaxForceAxis()),
   }
 };
 

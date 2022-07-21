@@ -18,7 +18,7 @@ export default function Visualization({ navigation }) {
   const [forceXaxis, setforceXaxis] = useState([])
 
   const mockImpulseData = {
-    labels: impulseXaxis,
+    labels: bluetoothData.impulseAxis,
     datasets: [
       {
         data: bluetoothData.impulse.slice(-10),
@@ -42,7 +42,7 @@ export default function Visualization({ navigation }) {
   };
 
   const mockForceData = {
-    labels: forceXaxis,
+    labels: bluetoothData.maxForceAxis,
     datasets: [
       {
         data: bluetoothData.maxForce.slice(-10),

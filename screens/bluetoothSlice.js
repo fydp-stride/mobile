@@ -1,5 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+const getCurrentTime = () => {
+  var date = new Date();
+  var dateStr =
+    ("00" + date.getHours()).slice(-2) + ":" +
+    ("00" + date.getMinutes()).slice(-2) + ":" +
+    ("00" + date.getSeconds()).slice(-2);
+  return dateStr;
+}
+
 export const bluetoothSlice = createSlice({
   name: 'bluetooth',
   initialState: {
@@ -7,6 +16,8 @@ export const bluetoothSlice = createSlice({
     maxForce: [0],
     angle: [0],
     battery: 0,
+    impulseAxis: [getCurrentTime()],
+    maxForceAxis: [getCurrentTime()],
   },
   reducers: {
     addImpulse: (state, action) => {
@@ -47,11 +58,18 @@ export const bluetoothSlice = createSlice({
     },
     setBattery: (state, action) => {
       state.battery = action.payload;
+    },
+    setImpulseAxis: state => {
+      state.impulseAxis = [...state.impulseAxis, getCurrentTime()].slice(-10);
+    },
+    setMaxForceAxis: state => {
+      state.maxForceAxis = [...state.maxForceAxis, getCurrentTime()].slice(-10);
     }
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { addImpulse, addMaxForce, addAngle, clearImpulse, clearMaxForce, clearAngle, setImpulse, setMaxForce, setBattery} = bluetoothSlice.actions;
+export const { addImpulse, addMaxForce, addAngle, clearImpulse, clearMaxForce, 
+  clearAngle, setImpulse, setMaxForce, setBattery, setImpulseAxis, setMaxForceAxis } = bluetoothSlice.actions;
 
 export default bluetoothSlice.reducer;
