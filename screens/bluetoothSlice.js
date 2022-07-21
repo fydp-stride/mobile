@@ -39,10 +39,13 @@ export const bluetoothSlice = createSlice({
     setImpulse: (state, action) => {
       state.impulse = action.payload;
     },
+    setMaxForce: (state, action) => {
+      state.maxForce = action.payload;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { addImpulse, addMaxForce, addAngle, clearImpulse, clearMaxForce, clearAngle, setImpulse } = bluetoothSlice.actions;
+export const { addImpulse, addMaxForce, addAngle, clearImpulse, clearMaxForce, clearAngle, setImpulse, setMaxForce } = bluetoothSlice.actions;
 
 export default bluetoothSlice.reducer;

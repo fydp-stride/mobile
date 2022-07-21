@@ -4,17 +4,16 @@ import { BottomNavigation, BottomNavigationTab, Layout, Text, Button } from '@ui
 import { LineChart, BarChart } from 'react-native-chart-kit';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { setImpulse } from './bluetoothSlice';
+import { selectBluetooth, setImpulse, setMaxForce } from './bluetoothSlice';
 
 export default function Visualization({ navigation }) {
 
   // data
-  // const impulseData = useSelector(state => state.impulse);
+  const bluetoothData = useSelector(state => state.bluetoothData);
   const dispatch = useDispatch();
 
-  const [impulseData, setImpulseData] = useState([0]);
+  // const [impulseData, setImpulseData] = useState([0]);
   const [forceData, setForceData] = useState([0]);
-
   const [impulseXaxis, setImpulseXaxis] = useState([]);
   const [forceXaxis, setforceXaxis] = useState([])
 
@@ -22,7 +21,7 @@ export default function Visualization({ navigation }) {
     labels: impulseXaxis,
     datasets: [
       {
-        data: impulseData,
+        data: bluetoothData.impulse,
         color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
         strokeWidth: 6 // optional
       },
@@ -46,10 +45,10 @@ export default function Visualization({ navigation }) {
     labels: forceXaxis,
     datasets: [
       {
-        data: forceData,
+        data: bluetoothData.maxForce,
         color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
         strokeWidth: 6 // optional
-      }, 
+      },
     ],
   };
 
@@ -72,7 +71,7 @@ export default function Visualization({ navigation }) {
   };
 
   const renderImpulseData =
-    impulseData && <Layout style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+    bluetoothData.impulse && <Layout style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
       <LineChart data={mockImpulseData}
         width={Dimensions.get("window").width}
         height={300}
@@ -82,39 +81,34 @@ export default function Visualization({ navigation }) {
     </Layout>
 
   const renderForceData =
-    forceData && <Layout style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+    bluetoothData.maxForce && <Layout style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
       <BarChart data={mockForceData}
         width={Dimensions.get("window").width}
         height={300}
         chartConfig={chartConfig}
-        fromNumber={100} 
+        fromNumber={100}
         fromZero={true}
       />
     </Layout>
 
   const getCurrentTime = () => {
-
     var date = new Date();
     var dateStr =
       ("00" + date.getHours()).slice(-2) + ":" +
       ("00" + date.getMinutes()).slice(-2) + ":" +
       ("00" + date.getSeconds()).slice(-2);
-
     return dateStr;
   }
 
   const addImpulsePoint = (datum) => {
     var curTime = getCurrentTime();
-    setImpulseData(prev => {
-      let tempImpulseData;
-      if (prev.length < 6) {
-        tempImpulseData = prev.slice();
-      } else {
-        tempImpulseData = prev.slice(1);
-      }
-      tempImpulseData.push(Math.random() * 300);
-      return tempImpulseData;
-    });
+    if (bluetoothData.impulse.length < 6) {
+      tempImpulseData = bluetoothData.impulse.slice();
+    } else {
+      tempImpulseData = bluetoothData.impulse.slice(1);
+    }
+    tempImpulseData.push(Math.random() * 300);
+    dispatch(setImpulse(tempImpulseData));
 
     setImpulseXaxis(prev => {
       let tempAxis;
@@ -130,16 +124,14 @@ export default function Visualization({ navigation }) {
 
   const addForcePoint = (datum) => {
     var curTime = getCurrentTime();
-    setForceData(prev => {
-      let tempImpulseData;
-      if (prev.length < 6) {
-        tempImpulseData = prev.slice();
-      } else {
-        tempImpulseData = prev.slice(1);
-      }
-      tempImpulseData.push(Math.random() * 100);
-      return tempImpulseData;
-    });
+    
+    if (bluetoothData.impulse.length < 6) {
+      tempMaxForceData = bluetoothData.maxForce.slice();
+    } else {
+      tempMaxForceData = bluetoothData.maxForce.slice(1);
+    }
+    tempMaxForceData.push(Math.random() * 300);
+    dispatch(setMaxForce(tempMaxForceData));
 
     setforceXaxis(prev => {
       let tempAxis;
