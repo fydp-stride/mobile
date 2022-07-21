@@ -308,6 +308,7 @@ class ConnectionScreen extends React.Component {
                 // add to global dispatcher
                 this.props.addImpulse(addImpulseAction);
                 this.props.setImpulseAxis();
+                
                 //console.log("added " + impulse_float + " to the impulse dispatcher.");
               }
             }
