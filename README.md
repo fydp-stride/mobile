@@ -1,14 +1,14 @@
-# setup
+# Setup
 https://reactnative.dev/docs/environment-setup
 
 # To make sure dependencies are installed run
-npm install
+`npm install`
 
 # If dependency error, run
-npm install --legacy-peer-deps
+`npm install --legacy-peer-deps`
 
 # Run Metro first before starting android or IOS run
-npx react-native start
+`npx react-native start`
 
 # To start android run
-npm run android
+`npm run android`
