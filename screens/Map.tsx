@@ -7,7 +7,7 @@
 /// - renders a PolyLine where the plugin has tracked the device.
 ///
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 
 import MapView, { Marker, Polyline } from 'react-native-maps';
 
@@ -177,7 +177,7 @@ const Map = props => {
   };
 
   return (
-    center && (
+    center ? (
       <MapView
         showsUserLocation={showsUserLocation}
         followsUserLocation={false}
@@ -202,7 +202,10 @@ const Map = props => {
       {renderGeofencesHit()}
       {renderGeofencesHitEvents()} */}
       </MapView>
-    )
+    ) : 
+    <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center' }}>
+      <Text style={{ fontSize: 20, textAlign: center }}>Loading map...</Text>
+    </View>
   );
 };
 

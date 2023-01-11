@@ -157,30 +157,17 @@ const HomeView = ({ route, navigation }) => {
       <Map style={styles.map} navigation={navigation} location={location} />
       <View
         style={{
-          backgroundColor: COLORS.gold,
-          height: 56,
+          // backgroundColor: COLORS.grey,
+          // height: 56,
           flexDirection: 'row',
+          position: 'absolute',
+          right: 2, bottom: 2
         }}>
-        {/* <View style={{ flex: 1, justifyContent: 'center' }}>
-          <TouchableHighlight
-            onPress={() => setTestClicks(testClicks + 1)}
-            underlayColor="transparent">
-            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-              <Text style={styles.statusBar}>
-                {motionActivityEvent ? motionActivityEvent.activity : 'unknown'}
-              </Text>
-              <Text style={{ color: '#000' }}>&nbsp;•&nbsp;</Text>
-              <Text style={styles.statusBar}>
-                {(odometer / 1000).toFixed(1)}km
-              </Text>
-            </View>
-          </TouchableHighlight>
-        </View> */}
         <View style={{ justifyContent: 'center', padding: 5 }}>
           {!isMoving ? (
             <Button title="Start" onPress={startRecordingLoc} />
           ) : (
-            <Button title="Stop" onPress={stopRecordingLoc} />
+            <Button title="Stop" onPress={stopRecordingLoc} color={COLORS.gold} />
           )}
         </View>
       </View>
@@ -192,7 +179,7 @@ export default HomeView;
 
 var styles = StyleSheet.create({
   container: {
-    backgroundColor: COLORS.gold,
+    backgroundColor: COLORS.white,
     flexDirection: 'column',
     flex: 1,
   },
