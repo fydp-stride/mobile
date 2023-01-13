@@ -69,8 +69,6 @@ export default function MainContainer() {
               iconName = focused ? 'bluetooth' : 'bluetooth-outline';
             } else if (routeName === MapName) {
               iconName = focused ? 'map' : 'map-outline';
-            } else if (routeName === GeoName) {
-              iconName = focused ? 'earth' : 'earth-outline';
             } else if (routeName === SettingsName) {
               iconName = focused ? 'cog' : 'cog-outline';
             } else if (routeName === VisualizationName) {
@@ -83,7 +81,7 @@ export default function MainContainer() {
         <Screen name={BluetoothName} component={BluetoothClassic} />
         <Screen name={VisualizationName} component={Visualization} />
         <Screen name={MapName} component={MapHomeView} />
-        <Screen name={GeoName} component={GeoTest} />
+        {/* <Screen name={GeoName} component={GeoTest} /> */}
         <Screen name={SettingsName} component={SettingsScreen} />
       </Navigator>
     </NavigationContainer>

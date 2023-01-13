@@ -177,35 +177,30 @@ const Map = props => {
   };
 
   return (
-    center ? (
-      <MapView
-        showsUserLocation={showsUserLocation}
-        followsUserLocation={false}
-        onPanDrag={onMapPanDrag}
-        scrollEnabled={mapScrollEnabled}
-        showsMyLocationButton={true}
-        showsPointsOfInterest={false}
-        showsScale={false}
-        showsTraffic={false}
-        style={styles.map}
-        toolbarEnabled={false}>
-        <Polyline
-          key="polyline"
-          coordinates={coordinates}
-          geodesic={true}
-          strokeColor="rgba(0,179,253, 0.6)"
-          strokeWidth={6}
-          zIndex={0}
-        />
-        {renderMarkers()}
-        {/* {renderActiveGeofences()}
+    <MapView
+      showsUserLocation={showsUserLocation}
+      followsUserLocation={false}
+      onPanDrag={onMapPanDrag}
+      scrollEnabled={mapScrollEnabled}
+      showsMyLocationButton={true}
+      showsPointsOfInterest={false}
+      showsScale={false}
+      showsTraffic={false}
+      style={styles.map}
+      toolbarEnabled={false}>
+      <Polyline
+        key="polyline"
+        coordinates={coordinates}
+        geodesic={true}
+        strokeColor="rgba(0,179,253, 0.6)"
+        strokeWidth={6}
+        zIndex={0}
+      />
+      {renderMarkers()}
+      {/* {renderActiveGeofences()}
       {renderGeofencesHit()}
       {renderGeofencesHitEvents()} */}
-      </MapView>
-    ) : 
-    <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center' }}>
-      <Text style={{ fontSize: 20, textAlign: center }}>Loading map...</Text>
-    </View>
+    </MapView>
   );
 };
 

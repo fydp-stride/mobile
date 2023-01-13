@@ -8,13 +8,11 @@
 import React from 'react';
 import {
   StyleSheet,
-  Text,
   View,
   SafeAreaView,
   Switch,
   TouchableHighlight,
   AppState,
-  Button,
 } from 'react-native';
 
 import BackgroundGeolocation, {
@@ -27,8 +25,11 @@ import BackgroundFetch from 'react-native-background-fetch';
 
 import Map, { COLORS } from './Map';
 
+import { Button, Card, Layout, Modal, Text } from '@ui-kitten/components';
+
 const HomeView = ({ route, navigation }) => {
   const [enabled, setEnabled] = React.useState(false);
+  const [cannotStartVisible, setCannotStartVisible] = React.useState(false);
   const [isMoving, setIsMoving] = React.useState(false);
   const [location, setLocation] = React.useState<Location>(null);
   const [odometer, setOdometer] = React.useState(0);
@@ -117,6 +118,10 @@ const HomeView = ({ route, navigation }) => {
 
   const INTERVAL = 15000; // 10 s
   const startRecordingLoc = async () => {
+    if (!enabled) {
+      setCannotStartVisible(true);
+      return;
+    }
     const subscription = BackgroundGeolocation.onLocation((location) => {
       setLocation(location);
       console.log("[onLocation] success: ", location);
@@ -141,7 +146,7 @@ const HomeView = ({ route, navigation }) => {
       // console.log(cur);
     }, INTERVAL);
     setTrackInterval(interval);
-    
+
   };
 
   const stopRecordingLoc = () => {
@@ -164,10 +169,18 @@ const HomeView = ({ route, navigation }) => {
           right: 2, bottom: 2
         }}>
         <View style={{ justifyContent: 'center', padding: 5 }}>
+          <Modal visible={cannotStartVisible}>
+            <Card disabled={true}>
+              <Text>Location tracking is not enabled, please enable it in Settings</Text>
+              <Button onPress={() => setCannotStartVisible(false)}>
+                OK
+              </Button>
+            </Card>
+          </Modal>
           {!isMoving ? (
-            <Button title="Start" onPress={startRecordingLoc} />
+            <Button onPress={startRecordingLoc}>Start</Button>
           ) : (
-            <Button title="Stop" onPress={stopRecordingLoc} color={COLORS.gold} />
+            <Button onPress={stopRecordingLoc} style={{ backgroundColor: COLORS.gold }}>Stop</Button>
           )}
         </View>
       </View>
