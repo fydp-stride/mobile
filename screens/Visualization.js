@@ -4,7 +4,7 @@ import { BottomNavigation, BottomNavigationTab, Layout, Text, Button } from '@ui
 import { LineChart, BarChart } from 'react-native-chart-kit';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { selectBluetooth, setImpulse, setMaxForce } from './bluetoothSlice';
+import { selectBluetooth, setImpulse, setMaxForce, addImpulse, setImpulseAxis, addMaxForce ,setMaxForceAxis } from './bluetoothSlice';
 
 export default function Visualization({ navigation }) {
 
@@ -21,18 +21,18 @@ export default function Visualization({ navigation }) {
     labels: bluetoothData.impulseAxis,
     datasets: [
       {
-        data: bluetoothData.impulse.slice(-10),
+        data: bluetoothData.impulse,
         color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
         strokeWidth: 6 // optional
       },
       {
-        data: [Math.min(...bluetoothData.impulse.slice(-10)) * 0.8],
+        data: [Math.min(...bluetoothData.impulse) * 0.8],
         withDots: false,
         color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
         strokeWidth: 6 // optional
       },
       {
-        data: [Math.max(...bluetoothData.impulse.slice(-10))],
+        data: [Math.max(...bluetoothData.impulse)],
         withDots: false,
         color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
         strokeWidth: 6 // optional
@@ -45,7 +45,7 @@ export default function Visualization({ navigation }) {
     labels: bluetoothData.maxForceAxis,
     datasets: [
       {
-        data: bluetoothData.maxForce.slice(-10),
+        data: bluetoothData.maxForce,
         color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
         strokeWidth: 6 // optional
       },
@@ -102,47 +102,59 @@ export default function Visualization({ navigation }) {
 
   const addImpulsePoint = (datum) => {
     var curTime = getCurrentTime();
-    if (bluetoothData.impulse.length < 6) {
-      tempImpulseData = bluetoothData.impulse.slice();
-    } else {
-      tempImpulseData = bluetoothData.impulse.slice(1);
-    }
-    tempImpulseData.push(Math.random() * 300);
-    dispatch(setImpulse(tempImpulseData));
+    const addImpulseAction = {
+      type: 'bluetooth/addImpulse',
+      payload: Math.random() * 300
+    };
+    dispatch(addImpulse(addImpulseAction));
+    dispatch(setImpulseAxis());
+    // if (bluetoothData.impulse.length < 6) {
+    //   tempImpulseData = bluetoothData.impulse.slice();
+    // } else {
+    //   tempImpulseData = bluetoothData.impulse.slice(1);
+    // }
+    // tempImpulseData.push(Math.random() * 300);
+    // dispatch(setImpulse(tempImpulseData));
 
-    setImpulseXaxis(prev => {
-      let tempAxis;
-      if (prev.length < 6) {
-        tempAxis = prev.slice();
-      } else {
-        tempAxis = prev.slice(1);
-      }
-      tempAxis.push(curTime);
-      return tempAxis;
-    });
+    // setImpulseXaxis(prev => {
+    //   let tempAxis;
+    //   if (prev.length < 6) {
+    //     tempAxis = prev.slice();
+    //   } else {
+    //     tempAxis = prev.slice(1);
+    //   }
+    //   tempAxis.push(curTime);
+    //   return tempAxis;
+    // });
   }
 
   const addForcePoint = (datum) => {
     var curTime = getCurrentTime();
+    const addMaxForceAction = {
+      type: 'bluetooth/addMaxForce',
+      payload: Math.random() * 300
+    };
+    dispatch(addMaxForce(addMaxForceAction));
+    dispatch(setMaxForceAxis());
     
-    if (bluetoothData.impulse.length < 6) {
-      tempMaxForceData = bluetoothData.maxForce.slice();
-    } else {
-      tempMaxForceData = bluetoothData.maxForce.slice(1);
-    }
-    tempMaxForceData.push(Math.random() * 300);
-    dispatch(setMaxForce(tempMaxForceData));
+    // if (bluetoothData.impulse.length < 6) {
+    //   tempMaxForceData = bluetoothData.maxForce.slice();
+    // } else {
+    //   tempMaxForceData = bluetoothData.maxForce.slice(1);
+    // }
+    // tempMaxForceData.push(Math.random() * 300);
+    // dispatch(setMaxForce(tempMaxForceData));
 
-    setforceXaxis(prev => {
-      let tempAxis;
-      if (prev.length < 6) {
-        tempAxis = prev.slice();
-      } else {
-        tempAxis = prev.slice(1);
-      }
-      tempAxis.push(curTime);
-      return tempAxis;
-    });
+    // setforceXaxis(prev => {
+    //   let tempAxis;
+    //   if (prev.length < 6) {
+    //     tempAxis = prev.slice();
+    //   } else {
+    //     tempAxis = prev.slice(1);
+    //   }
+    //   tempAxis.push(curTime);
+    //   return tempAxis;
+    // });
   }
 
   let datum = 30;

@@ -298,6 +298,7 @@ class ConnectionScreen extends React.Component {
         case IMPULSE_CMD:
             // 45.20, 12.40,
             let impulse_list = this.buffer.split(",");
+            console.log("impulse_list " + impulse_list)
             for (let i = 0; i < impulse_list.length;i++){
               if (impulse_list[i]){
                 let impulse_float = parseFloat(impulse_list[i]);
@@ -316,20 +317,30 @@ class ConnectionScreen extends React.Component {
           break;
         case MAX_FORCE_CMD:
             let max_force_list = this.buffer.split(",");
-            for (let i = 0; i < max_force_list.length;i++){
-              if (max_force_list[i]){
-                let max_force_float = parseFloat(max_force_list[i]);
-                const addMaxForceAction = {
-                  type: 'bluetooth/addMaxForce',
-                  payload: max_force_float
-                }
-                // add to global dispatcher
-                this.props.addMaxForce(addMaxForceAction);
-                this.props.setMaxForceAxis();
-                //console.log("added " + max_force_float + " to the maxForce dispatcher.");
-
-              }
+            let max_force_highest = Math.max(parseFloat(max_force_list));
+            console.log("max_force_list: " + max_force_list)
+            console.log("max_force_highest: " + max_force_highest)
+            const addMaxForceAction = {
+              type: 'bluetooth/addMaxForce',
+              payload: max_force_highest
             }
+            // add to global dispatcher
+            this.props.addMaxForce(addMaxForceAction);
+            this.props.setMaxForceAxis();
+            // for (let i = 0; i < max_force_list.length;i++){
+            //   if (max_force_list[i]){
+            //     let max_force_float = parseFloat(max_force_list[i]);
+            //     const addMaxForceAction = {
+            //       type: 'bluetooth/addMaxForce',
+            //       payload: max_force_float
+            //     }
+            //     //add to global dispatcher
+            //     this.props.addMaxForce(addMaxForceAction);
+            //     this.props.setMaxForceAxis();
+            //     console.log("added " + max_force_float + " to the maxForce dispatcher.");
+
+            //   }
+            // }
           break;
         case ANGLE_CMD:
           let angle_list = this.buffer.split(",");
