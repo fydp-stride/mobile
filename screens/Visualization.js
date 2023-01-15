@@ -108,7 +108,7 @@ export default function Visualization({ navigation }) {
       payload: Math.random() * 300
     };
     dispatch(addImpulse(addImpulseAction));
-    dispatch(setImpulseAxis());
+    //dispatch(setImpulseAxis());
     // if (bluetoothData.impulse.length < 6) {
     //   tempImpulseData = bluetoothData.impulse.slice();
     // } else {
@@ -136,7 +136,7 @@ export default function Visualization({ navigation }) {
       payload: Math.random() * 300
     };
     dispatch(addMaxForce(addMaxForceAction));
-    dispatch(setMaxForceAxis());
+    //dispatch(setMaxForceAxis());
     
     // if (bluetoothData.impulse.length < 6) {
     //   tempMaxForceData = bluetoothData.maxForce.slice();
