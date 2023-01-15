@@ -1,7 +1,7 @@
 import React from 'react';
 import RNBluetoothClassic from 'react-native-bluetooth-classic';
 import { addImpulse, addMaxForce, addAngle, clearImpulse, clearMaxForce, 
-  clearAngle, setImpulse, setMaxForce, setBattery, setImpulseAxis, setMaxForceAxis } from '../../screens/bluetoothSlice';
+  clearAngle, setImpulse, setMaxForce, setBattery, setImpulseAxis, setMaxForceAxis } from '../../screens/reducers/bluetoothSlice';
 import {
   FlatList,
   View,

@@ -7,7 +7,7 @@
 /// - renders a PolyLine where the plugin has tracked the device.
 ///
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 
 import MapView, { Marker, Polyline } from 'react-native-maps';
 
@@ -177,32 +177,30 @@ const Map = props => {
   };
 
   return (
-    center && (
-      <MapView
-        showsUserLocation={showsUserLocation}
-        followsUserLocation={false}
-        onPanDrag={onMapPanDrag}
-        scrollEnabled={mapScrollEnabled}
-        showsMyLocationButton={true}
-        showsPointsOfInterest={false}
-        showsScale={false}
-        showsTraffic={false}
-        style={styles.map}
-        toolbarEnabled={false}>
-        <Polyline
-          key="polyline"
-          coordinates={coordinates}
-          geodesic={true}
-          strokeColor="rgba(0,179,253, 0.6)"
-          strokeWidth={6}
-          zIndex={0}
-        />
-        {renderMarkers()}
-        {/* {renderActiveGeofences()}
+    <MapView
+      showsUserLocation={showsUserLocation}
+      followsUserLocation={false}
+      onPanDrag={onMapPanDrag}
+      scrollEnabled={mapScrollEnabled}
+      showsMyLocationButton={true}
+      showsPointsOfInterest={false}
+      showsScale={false}
+      showsTraffic={false}
+      style={styles.map}
+      toolbarEnabled={false}>
+      <Polyline
+        key="polyline"
+        coordinates={coordinates}
+        geodesic={true}
+        strokeColor="rgba(0,179,253, 0.6)"
+        strokeWidth={6}
+        zIndex={0}
+      />
+      {renderMarkers()}
+      {/* {renderActiveGeofences()}
       {renderGeofencesHit()}
       {renderGeofencesHitEvents()} */}
-      </MapView>
-    )
+    </MapView>
   );
 };
 

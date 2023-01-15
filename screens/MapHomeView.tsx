@@ -8,13 +8,11 @@
 import React from 'react';
 import {
   StyleSheet,
-  Text,
   View,
   SafeAreaView,
   Switch,
   TouchableHighlight,
   AppState,
-  Button,
 } from 'react-native';
 
 import BackgroundGeolocation, {
@@ -27,8 +25,11 @@ import BackgroundFetch from 'react-native-background-fetch';
 
 import Map, { COLORS } from './Map';
 
+import { Button, Card, Layout, Modal, Text } from '@ui-kitten/components';
+
 const HomeView = ({ route, navigation }) => {
   const [enabled, setEnabled] = React.useState(false);
+  const [cannotStartVisible, setCannotStartVisible] = React.useState(false);
   const [isMoving, setIsMoving] = React.useState(false);
   const [location, setLocation] = React.useState<Location>(null);
   const [odometer, setOdometer] = React.useState(0);
@@ -117,6 +118,10 @@ const HomeView = ({ route, navigation }) => {
 
   const INTERVAL = 15000; // 10 s
   const startRecordingLoc = async () => {
+    if (!enabled) {
+      setCannotStartVisible(true);
+      return;
+    }
     const subscription = BackgroundGeolocation.onLocation((location) => {
       setLocation(location);
       console.log("[onLocation] success: ", location);
@@ -141,7 +146,7 @@ const HomeView = ({ route, navigation }) => {
       // console.log(cur);
     }, INTERVAL);
     setTrackInterval(interval);
-    
+
   };
 
   const stopRecordingLoc = () => {
@@ -157,30 +162,25 @@ const HomeView = ({ route, navigation }) => {
       <Map style={styles.map} navigation={navigation} location={location} />
       <View
         style={{
-          backgroundColor: COLORS.gold,
-          height: 56,
+          // backgroundColor: COLORS.grey,
+          // height: 56,
           flexDirection: 'row',
+          position: 'absolute',
+          right: 2, bottom: 2
         }}>
-        {/* <View style={{ flex: 1, justifyContent: 'center' }}>
-          <TouchableHighlight
-            onPress={() => setTestClicks(testClicks + 1)}
-            underlayColor="transparent">
-            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-              <Text style={styles.statusBar}>
-                {motionActivityEvent ? motionActivityEvent.activity : 'unknown'}
-              </Text>
-              <Text style={{ color: '#000' }}>&nbsp;•&nbsp;</Text>
-              <Text style={styles.statusBar}>
-                {(odometer / 1000).toFixed(1)}km
-              </Text>
-            </View>
-          </TouchableHighlight>
-        </View> */}
         <View style={{ justifyContent: 'center', padding: 5 }}>
+          <Modal visible={cannotStartVisible}>
+            <Card disabled={true}>
+              <Text>Location tracking is not enabled, please enable it in Settings</Text>
+              <Button onPress={() => setCannotStartVisible(false)}>
+                OK
+              </Button>
+            </Card>
+          </Modal>
           {!isMoving ? (
-            <Button title="Start" onPress={startRecordingLoc} />
+            <Button onPress={startRecordingLoc}>Start</Button>
           ) : (
-            <Button title="Stop" onPress={stopRecordingLoc} />
+            <Button onPress={stopRecordingLoc} style={{ backgroundColor: COLORS.gold }}>Stop</Button>
           )}
         </View>
       </View>
@@ -192,7 +192,7 @@ export default HomeView;
 
 var styles = StyleSheet.create({
   container: {
-    backgroundColor: COLORS.gold,
+    backgroundColor: COLORS.white,
     flexDirection: 'column',
     flex: 1,
   },

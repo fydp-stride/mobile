@@ -4,7 +4,8 @@ import { BottomNavigation, BottomNavigationTab, Layout, Text, Button } from '@ui
 import { LineChart, BarChart } from 'react-native-chart-kit';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { selectBluetooth, setImpulse, setMaxForce, addImpulse, setImpulseAxis, addMaxForce ,setMaxForceAxis } from './bluetoothSlice';
+
+import { selectBluetooth, setImpulse, setMaxForce, addImpulse, setImpulseAxis, addMaxForce ,setMaxForceAxis } from './reducers/bluetoothSlice';
 
 export default function Visualization({ navigation }) {
 
