@@ -207,11 +207,12 @@ const Map = props => {
 export default Map;
 
 var styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#272727',
-  },
   map: {
-    flex: 1,
+    // flex: 0.5,
+    height: "30%",
+    width: "90%",
+    position: 'relative',
+    left: "5%",
   },
   stopZoneMarker: {
     borderWidth: 1,

@@ -25,7 +25,7 @@ import BackgroundFetch from 'react-native-background-fetch';
 
 import Map, { COLORS } from './Map';
 
-import { Button, Card, Layout, Modal, Text } from '@ui-kitten/components';
+import { Button, Card, Icon, Layout, List, Modal, Text } from '@ui-kitten/components';
 
 const HomeView = ({ route, navigation }) => {
   const [enabled, setEnabled] = React.useState(false);
@@ -157,16 +157,30 @@ const HomeView = ({ route, navigation }) => {
     clearInterval(trackInterval);
   };
 
+  const data = [0, 1, 2]
+  const renderRoutes = () => {
+    return <View style={{ backgroundColor: 'green', flexDirection: 'row', width: '80%', borderRadius: 30, alignSelf: 'center', padding: 15, marginBottom: '5%' }}>
+      <Icon name='flag-outline' style={styles.icon} />
+      <View>
+        <Text style={{ color: "black" }}>Route Name</Text>
+        <Text style={{ color: "black" }}>Today, 6:00 PM</Text>
+      </View>
+    </View>;
+  }
+
   return (
     <SafeAreaView style={styles.container}>
+      <Text style={{ color: "black", textAlign: 'center', fontSize: 25, margin: 20 }}>Trip Planner</Text>
       <Map style={styles.map} navigation={navigation} location={location} />
       <View
         style={{
           // backgroundColor: COLORS.grey,
           // height: 56,
           flexDirection: 'row',
-          position: 'absolute',
-          right: 2, bottom: 2
+          // position: 'absolute',
+          // right: '50%', bottom: '50%', left: '50%', top: '50%'
+          justifyContent: 'center', alignItems: 'center',
+          // right: 0, bottom: '40%', left: 0, top: 0
         }}>
         <View style={{ justifyContent: 'center', padding: 5 }}>
           <Modal visible={cannotStartVisible}>
@@ -178,12 +192,30 @@ const HomeView = ({ route, navigation }) => {
             </Card>
           </Modal>
           {!isMoving ? (
-            <Button onPress={startRecordingLoc}>Start</Button>
+            <Button onPress={startRecordingLoc} style={{ backgroundColor: 'green' }}>Start</Button>
           ) : (
             <Button onPress={stopRecordingLoc} style={{ backgroundColor: COLORS.gold }}>Stop</Button>
           )}
         </View>
       </View>
+      <View style={{ backgroundColor: COLORS.green, flexDirection: 'column', width: '80%', position: 'relative', left: "10%", borderRadius: 20 }}>
+        <Text style={{ alignSelf: 'center', fontSize: 25 }}>25:11</Text>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+            <Text>Avg. Angle</Text>
+            <Text>34*</Text>
+          </View>
+          <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+            <Text>Avg. Force</Text>
+            <Text>535N</Text>
+          </View>
+          <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+            <Text>Distance</Text>
+            <Text>3.4km</Text>
+          </View>
+        </View>
+      </View>
+      <List data={data} renderItem={renderRoutes} style={{ backgroundColor: COLORS.white, marginTop: 20}} />
     </SafeAreaView>
   );
 };
@@ -197,10 +229,16 @@ var styles = StyleSheet.create({
     flex: 1,
   },
   map: {
-    flex: 1,
+    // flex: 1,
+    // borderRadius: 100
   },
   statusBar: {
     fontSize: 16,
     color: '#000',
+  },
+  icon: {
+    width: 32,
+    height: 32,
+    marginRight: 10,
   },
 });
