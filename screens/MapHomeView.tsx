@@ -192,16 +192,16 @@ const HomeView = ({ route, navigation }) => {
             </Card>
           </Modal>
           {!isMoving ? (
-            <Button onPress={startRecordingLoc} style={{ backgroundColor: 'green' }}>Start</Button>
+            <Button onPress={startRecordingLoc} style={{ backgroundColor: 'green', marginTop: -40, marginBottom: -40, zIndex: 999, borderWidth: 0, borderRadius: 100, height: 75, width: 75 }}>Start</Button>
           ) : (
-            <Button onPress={stopRecordingLoc} style={{ backgroundColor: COLORS.gold }}>Stop</Button>
+            <Button onPress={stopRecordingLoc} style={{ backgroundColor: COLORS.gold, marginTop: -40, marginBottom: -40, zIndex: 999, borderWidth: 0, borderRadius: 100, height: 75, width: 75 }}>Stop</Button>
           )}
         </View>
       </View>
-      <View style={{ backgroundColor: COLORS.green, flexDirection: 'column', width: '80%', position: 'relative', left: "10%", borderRadius: 20 }}>
+      <View style={{ backgroundColor: COLORS.green, flexDirection: 'column', width: '80%', position: 'relative', left: "10%", borderRadius: 20, paddingTop: 40, paddingBottom: 10 }}>
         <Text style={{ alignSelf: 'center', fontSize: 25 }}>25:11</Text>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+          <View style={{ flexDirection: 'column', alignItems: 'center', marginLeft: 10 }}>
             <Text>Avg. Angle</Text>
             <Text>34*</Text>
           </View>
@@ -209,13 +209,13 @@ const HomeView = ({ route, navigation }) => {
             <Text>Avg. Force</Text>
             <Text>535N</Text>
           </View>
-          <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+          <View style={{ flexDirection: 'column', alignItems: 'center', marginRight: 10 }}>
             <Text>Distance</Text>
             <Text>3.4km</Text>
           </View>
         </View>
       </View>
-      <List data={data} renderItem={renderRoutes} style={{ backgroundColor: COLORS.white, marginTop: 20}} />
+      <List data={data} renderItem={renderRoutes} style={{ backgroundColor: COLORS.white, marginTop: 15}} />
     </SafeAreaView>
   );
 };
