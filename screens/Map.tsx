@@ -209,7 +209,7 @@ export default Map;
 var styles = StyleSheet.create({
   map: {
     // flex: 0.5,
-    height: "30%",
+    height: "64%",
     width: "90%",
     position: 'relative',
     left: "5%",

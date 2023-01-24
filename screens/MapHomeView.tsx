@@ -170,7 +170,7 @@ const HomeView = ({ route, navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={{ color: "black", textAlign: 'center', fontSize: 25, margin: 20 }}>Trip Planner</Text>
+      <Text style={{ color: "black", textAlign: 'center', fontSize: 25, margin: 20, fontWeight: 'bold' }}>Route Tracker</Text>
       <Map style={styles.map} navigation={navigation} location={location} />
       <View
         style={{
@@ -215,7 +215,7 @@ const HomeView = ({ route, navigation }) => {
           </View>
         </View>
       </View>
-      <List data={data} renderItem={renderRoutes} style={{ backgroundColor: COLORS.white, marginTop: 15}} />
+      {/* <List data={data} renderItem={renderRoutes} style={{ backgroundColor: COLORS.white, marginTop: 15}} /> */}
     </SafeAreaView>
   );
 };
