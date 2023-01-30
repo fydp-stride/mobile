@@ -157,14 +157,14 @@ export default function Visualization({ navigation }) {
       <Text style={{ color: "black", textAlign: 'center', fontSize: 25, margin: 20, fontWeight: 'bold' }}>Metrics</Text>
       <Text style={{ color: "black", textAlign: 'left', fontSize: 15, marginLeft: 20, fontWeight: 'bold' }}>Total Impulse</Text>
       {renderImpulseData}
-      <Button onPress={() => addImpulsePoint(datum)}>
+      {/* <Button onPress={() => addImpulsePoint(datum)}>
         <Text>add data point</Text>
-      </Button>
+      </Button> */}
       <Text style={{ color: "black", textAlign: 'left', fontSize: 15, marginLeft: 20, fontWeight: 'bold' }}>Maximum Force</Text>
       {renderForceData}
-      <Button onPress={() => addForcePoint(datum)}>
+      {/* <Button onPress={() => addForcePoint(datum)}>
         <Text>add data point</Text>
-      </Button>
+      </Button> */}
     </Layout>
   );
 }
