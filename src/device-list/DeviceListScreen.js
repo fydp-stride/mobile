@@ -63,14 +63,10 @@ export default class DeviceListScreen extends React.Component {
   }
 
   componentDidMount() {
-    this.getBondedDevices();
+    //this.getBondedDevices();
   }
 
   componentWillUnmount() {
-    if (this.state.accepting) {
-      this.cancelAcceptConnections(false);
-    }
-
     if (this.state.discovering) {
       this.cancelDiscovery(false);
     }
@@ -84,10 +80,7 @@ export default class DeviceListScreen extends React.Component {
     try {
       let bonded = await RNBluetoothClassic.getBondedDevices();
       //console.log('DeviceListScreen::getBondedDevices found', bonded);
-
-      if (!unloading) {
-        this.setState({ devices: bonded });
-      }
+      this.setState({ devices: bonded });
     } catch (error) {
       this.setState({ devices: [] });
 
@@ -102,57 +95,6 @@ export default class DeviceListScreen extends React.Component {
    * Starts attempting to accept a connection.  If a device was accepted it will
    * be passed to the application context as the current device.
    */
-  acceptConnections = async () => {
-    if (this.state.accepting) {
-      Toast.show({
-        text: 'Already accepting connections',
-        duration: 5000,
-      });
-
-      return;
-    }
-
-    this.setState({ accepting: true });
-
-    try {
-      let device = await RNBluetoothClassic.accept({ delimiter: '\r' });
-      if (device) {
-        this.props.selectDevice(device);
-      }
-    } catch (error) {
-      // If we're not in an accepting state, then chances are we actually
-      // requested the cancellation.  This could be managed on the native
-      // side but for now this gives more options.
-      if (!this.state.accepting) {
-        Toast.show({
-          text: 'Attempt to accept connection failed.',
-          duration: 5000,
-        });
-      }
-    } finally {
-      this.setState({ accepting: false });
-    }
-  };
-
-  /**
-   * Cancels the current accept - might be wise to check accepting state prior
-   * to attempting.
-   */
-  cancelAcceptConnections = async () => {
-    if (!this.state.accepting) {
-      return;
-    }
-
-    try {
-      let cancelled = await RNBluetoothClassic.cancelAccept();
-      this.setState({ accepting: !cancelled });
-    } catch (error) {
-      Toast.show({
-        text: 'Unable to cancel accept connection',
-        duration: 2000,
-      });
-    }
-  };
 
   startDiscovery = async () => {
     try {
@@ -211,9 +153,9 @@ export default class DeviceListScreen extends React.Component {
   };
 
   render() {
-    let toggleAccept = this.state.accepting
-      ? () => this.cancelAcceptConnections()
-      : () => this.acceptConnections();
+    // let toggleAccept = this.state.accepting
+    //   ? () => this.cancelAcceptConnections()
+    //   : () => this.acceptConnections();
 
     let toggleDiscovery = this.state.discovering
       ? () => this.cancelDiscovery()
@@ -236,11 +178,6 @@ export default class DeviceListScreen extends React.Component {
           <>
             {Platform.OS !== 'ios' ? (
               <View>
-                <Button onPress={toggleAccept}>
-                        <Text>{this.state.accepting
-                      ? 'Accepting (cancel)...'
-                      : 'Accept Connection'}</Text>
-                </Button>
                 <Button onPress={toggleDiscovery}>
                         <Text>{this.state.discovering
                       ? 'Discovering (cancel)...'

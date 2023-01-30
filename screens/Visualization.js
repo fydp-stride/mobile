@@ -12,6 +12,7 @@ export default function Visualization({ navigation }) {
   // data
   const bluetoothData = useSelector(state => state.bluetoothData);
   const dispatch = useDispatch();
+  const MAX_FORCE_THRESHOLD = 200;
 
   // const [impulseData, setImpulseData] = useState([0]);
   const [forceData, setForceData] = useState([0]);
@@ -23,23 +24,23 @@ export default function Visualization({ navigation }) {
     datasets: [
       {
         data: bluetoothData.impulse,
-        color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
-        strokeWidth: 6 // optional
+        color: (opacity = 1) => `rgba(251, 154, 153, ${opacity})`, // optional
+        strokeWidth: 6, // optional
       },
       {
         data: [Math.min(...bluetoothData.impulse) * 0.8],
         withDots: false,
-        color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
-        strokeWidth: 6 // optional
+        color: (opacity = 1) => `rgba(251, 154, 153, ${opacity})`, // optional
+        strokeWidth: 6, // optional
       },
       {
         data: [Math.max(...bluetoothData.impulse)],
         withDots: false,
-        color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
-        strokeWidth: 6 // optional
+        color: (opacity = 1) => `rgba(251, 154, 153, ${opacity})`, // optional
+        strokeWidth: 6, // optional
       }
     ],
-    legend: ["Average impulse"] // optional
+    //legend: ["Average impulse"] // optional
   };
 
   const mockForceData = {
@@ -47,7 +48,27 @@ export default function Visualization({ navigation }) {
     datasets: [
       {
         data: bluetoothData.maxForce,
-        color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
+        color: (opacity = 1) => `rgba(93, 176, 117, ${opacity})`, // optional
+        colors: [
+          (opacity = 1) => {
+            return getForceColor(bluetoothData.maxForce[0])
+          },
+          (opacity = 1) => {
+            return getForceColor(bluetoothData.maxForce[1])
+          },
+          (opacity = 1) => {
+            return getForceColor(bluetoothData.maxForce[2])
+          },
+          (opacity = 1) => {
+            return getForceColor(bluetoothData.maxForce[3])
+          },
+          (opacity = 1) => {
+            return getForceColor(bluetoothData.maxForce[4])
+          },
+          (opacity = 1) => {
+            return getForceColor(bluetoothData.maxForce[5])
+          }
+        ],
         strokeWidth: 6 // optional
       },
     ],
@@ -61,34 +82,38 @@ export default function Visualization({ navigation }) {
 
   // style
   const chartConfig = {
-    backgroundGradientFrom: "#1E2923",
-    backgroundGradientFromOpacity: 0,
-    backgroundGradientTo: "#08130D",
-    backgroundGradientToOpacity: 0.5,
-    color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
+    backgroundGradientFrom: "#FFFFFF",
+    backgroundGradientFromOpacity: 1,
+    backgroundGradientTo: "#FFFFFF",
+    backgroundGradientToOpacity: 1,
+    color: (opacity = 1) => `rgba(74, 148, 96, ${opacity})`,
     strokeWidth: 2, // optional, default 3
-    barPercentage: 0.5,
-    useShadowColorFromDataset: false // optional
+    barPercentage: 1,
+    useShadowColorFromDataset: false, // optional
   };
 
   const renderImpulseData =
-    bluetoothData.impulse && <Layout style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+    <Layout style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: 'white', flex: 1 }}>
       <LineChart data={mockImpulseData}
         width={Dimensions.get("window").width}
-        height={300}
+        height={250}
         chartConfig={chartConfig}
         bezier
+        withShadow={false}
       />
     </Layout>
 
   const renderForceData =
-    bluetoothData.maxForce && <Layout style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+    <Layout style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: 'white', flex: 1 }}>
       <BarChart data={mockForceData}
         width={Dimensions.get("window").width}
-        height={300}
+        height={250}
         chartConfig={chartConfig}
         fromNumber={100}
         fromZero={true}
+        flatColor={true}
+        withCustomBarColorFromData={true}
+        showBarTops={false}
       />
     </Layout>
 
@@ -108,25 +133,6 @@ export default function Visualization({ navigation }) {
       payload: Math.random() * 300
     };
     dispatch(addImpulse(addImpulseAction));
-    //dispatch(setImpulseAxis());
-    // if (bluetoothData.impulse.length < 6) {
-    //   tempImpulseData = bluetoothData.impulse.slice();
-    // } else {
-    //   tempImpulseData = bluetoothData.impulse.slice(1);
-    // }
-    // tempImpulseData.push(Math.random() * 300);
-    // dispatch(setImpulse(tempImpulseData));
-
-    // setImpulseXaxis(prev => {
-    //   let tempAxis;
-    //   if (prev.length < 6) {
-    //     tempAxis = prev.slice();
-    //   } else {
-    //     tempAxis = prev.slice(1);
-    //   }
-    //   tempAxis.push(curTime);
-    //   return tempAxis;
-    // });
   }
 
   const addForcePoint = (datum) => {
@@ -136,35 +142,25 @@ export default function Visualization({ navigation }) {
       payload: Math.random() * 300
     };
     dispatch(addMaxForce(addMaxForceAction));
-    //dispatch(setMaxForceAxis());
-    
-    // if (bluetoothData.impulse.length < 6) {
-    //   tempMaxForceData = bluetoothData.maxForce.slice();
-    // } else {
-    //   tempMaxForceData = bluetoothData.maxForce.slice(1);
-    // }
-    // tempMaxForceData.push(Math.random() * 300);
-    // dispatch(setMaxForce(tempMaxForceData));
+  }
 
-    // setforceXaxis(prev => {
-    //   let tempAxis;
-    //   if (prev.length < 6) {
-    //     tempAxis = prev.slice();
-    //   } else {
-    //     tempAxis = prev.slice(1);
-    //   }
-    //   tempAxis.push(curTime);
-    //   return tempAxis;
-    // });
+  const getForceColor = (force) => {
+    if (force <= MAX_FORCE_THRESHOLD){
+      return `#5DB075`
+    }
+    return `#FF8A00`
   }
 
   let datum = 30;
   return (
-    <Layout style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+    <Layout style={{ justifyContent: 'center', backgroundColor: 'white', flex: 1 }}>
+      <Text style={{ color: "black", textAlign: 'center', fontSize: 25, margin: 20, fontWeight: 'bold' }}>Metrics</Text>
+      <Text style={{ color: "black", textAlign: 'left', fontSize: 15, marginLeft: 20, fontWeight: 'bold' }}>Total Impulse</Text>
       {renderImpulseData}
       <Button onPress={() => addImpulsePoint(datum)}>
         <Text>add data point</Text>
       </Button>
+      <Text style={{ color: "black", textAlign: 'left', fontSize: 15, marginLeft: 20, fontWeight: 'bold' }}>Maximum Force</Text>
       {renderForceData}
       <Button onPress={() => addForcePoint(datum)}>
         <Text>add data point</Text>
