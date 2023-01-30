@@ -2,7 +2,6 @@ import { Layout, Text, Button, Modal, Card, Input } from '@ui-kitten/components'
 import * as React from 'react';
 import { View, Image, ImageBackground } from 'react-native';
 import { StyleSheet } from 'react-native';
-import BluetoothTest from './BluetoothTest';
 import BluetoothClassic from './BluetoothClassic';
 
 export default function HomeScreen({ navigation }) {
