@@ -29,11 +29,13 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 
 import { Provider } from 'react-redux';
-import store from './screens/store/store';
+import { store, persistor } from './screens/store/store';
 
 import * as eva from '@eva-design/eva';
 import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
+
+import { PersistGate } from 'redux-persist/integration/react'
 
 import MainContainer from './mainContainer';
 
@@ -47,12 +49,14 @@ const App: () => Node = () => {
   return (
     <>
       <Provider store={store}>
-        <IconRegistry icons={EvaIconsPack} />
-        <NativeBaseProvider>
-          <ApplicationProvider {...eva} theme={eva.dark}>
-            <MainContainer />
-          </ApplicationProvider>
-        </NativeBaseProvider>
+        <PersistGate loading={null} persistor={persistor}>
+          <IconRegistry icons={EvaIconsPack} />
+          <NativeBaseProvider>
+            <ApplicationProvider {...eva} theme={eva.dark}>
+              <MainContainer />
+            </ApplicationProvider>
+          </NativeBaseProvider>
+        </PersistGate>
       </Provider>
     </>
   );
