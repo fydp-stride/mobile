@@ -65,8 +65,6 @@ export default function MainContainer() {
             let routeName = route.name;
             if (routeName === HomeName) {
               iconName = focused ? 'home' : 'home-outline';
-            } else if (routeName === BluetoothName) {
-              iconName = focused ? 'bluetooth' : 'bluetooth-outline';
             } else if (routeName === MapName) {
               iconName = focused ? 'map' : 'map-outline';
             } else if (routeName === SettingsName) {
@@ -78,7 +76,7 @@ export default function MainContainer() {
           },
         })}>
         <Screen name={HomeName} component={HomeScreen} />
-        <Screen name={BluetoothName} component={BluetoothClassic} />
+        {/* <Screen name={BluetoothName} component={BluetoothClassic} /> */}
         <Screen name={VisualizationName} component={Visualization} />
         <Screen name={MapName} component={MapHomeView} />
         {/* <Screen name={GeoName} component={GeoTest} /> */}
