@@ -14,7 +14,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 // screens
 import GeoTest from './screens/GeoTest';
 import MapHomeView from './screens/MapHomeView';
-import BluetoothTest from './screens/BluetoothTest';
 import BluetoothClassic from './screens/BluetoothClassic';
 import HomeScreen from './screens/HomeScreen';
 import SettingsScreen from './screens/SettingsScreen';
