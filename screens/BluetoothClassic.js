@@ -100,7 +100,7 @@ export default class BluetoothClassic extends React.Component {
 
   render() {
     return (
-      <Layout style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+      <Layout style={{ justifyContent: 'center', alignItems: 'center', flex: 1, padding: 10, borderRadius: 10 }}>
         <View style={getTheme(platform)}>
           <View>
             {!this.state.device ? (
