@@ -6,6 +6,10 @@
 /// - [>] / [||] changePace button.
 ///
 import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { connect } from 'react-redux';
+import { setState, setOdometer, setMarkers, setCoordinates } from './actions/geolocationActions';
+
 import {
   StyleSheet,
   View,
@@ -27,40 +31,55 @@ import Map, { COLORS } from './Map';
 
 import { Button, Card, Icon, Layout, List, Modal, Text } from '@ui-kitten/components';
 
-const HomeView = ({ route, navigation }) => {
-  const [enabled, setEnabled] = React.useState(false);
+const HomeView = (props, { route, navigation }) => {
+  let geolocationEnabled = props.geolocationData.enabled;
+  let odometer = props.geolocationData.odometer;
+  // let geoState = props.geolocationData.geoState;
   const [cannotStartVisible, setCannotStartVisible] = React.useState(false);
   const [isMoving, setIsMoving] = React.useState(false);
   const [location, setLocation] = React.useState<Location>(null);
-  const [odometer, setOdometer] = React.useState(0);
+  // const [odometer, setOdometer] = React.useState(0);
   const [motionActivityEvent, setMotionActivityEvent] = React.useState<MotionActivityEvent>(null);
   const [testClicks, setTestClicks] = React.useState(0);
   const [trackInterval, setTrackInterval] = React.useState<any>(null);
   const [locationSubscriber, setLocationSubscriber] = React.useState<any>(null);
+  const [minutes, setMinutes] = React.useState(0);
+  const [seconds, setSeconds] = React.useState(0);
+  const [startTime, setStartTime] = React.useState(1);
+  const [endTime, setEndTime] = React.useState(0);
+  
+  const dispatch = useDispatch();
+
+  const getTime = () => {
+    const time = Date.now();
+
+    if (!isMoving) {
+      // hasnt started yet
+    } else {
+      const display = time - startTime;
+      // console.log(display);
+      setMinutes(Math.floor((display / 1000 / 60) % 60));
+      setSeconds(Math.floor((display / 1000) % 60));
+    }
+
+  };
 
   /// Init BackgroundGeolocation when view renders.
   React.useEffect(() => {
     // Configure BackgroundGeolocation.ready().
     initBackgroundGeolocation();
     AppState.addEventListener('change', _handleAppStateChange);
+
+    // const interval = setInterval(() => getTime(), 1000);
+
+    // return () => clearInterval(interval);
   }, []);
 
-  /// Add a toggle <Switch> to top-right toolbar.
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <Switch onValueChange={onClickEnable} value={enabled} />
-      ),
-    });
-  }, [enabled]);
-
-  /// Location effect-handler
   React.useEffect(() => {
-    if (!location) return;
-    // setOdometer(location.odometer);
-
-  }, [location]);
-
+    const interval = setInterval(() => getTime(), 1000);
+    return () => clearInterval(interval);
+  }, [isMoving]);
+  
   const _handleAppStateChange = async nextAppState => {
     console.log('[_handleAppStateChange]', nextAppState);
     if (nextAppState === 'background') {
@@ -94,34 +113,28 @@ const HomeView = ({ route, navigation }) => {
       autoSync: true,
       maxDaysToPersist: 14,
       // Application
-      stopOnTerminate: false,
+      stopOnTerminate: true,
       startOnBoot: true,
       enableHeadless: true,
     });
 
-    setOdometer(state.odometer);
-    setEnabled(state.enabled);
+    // dispatch(setState(state));
+    BackgroundGeolocation.setOdometer(0);
+    dispatch(setOdometer(0));
     setIsMoving(state.isMoving || false); // <-- TODO re-define @prop isMoving? as REQUIRED in State
   };
 
-  /// <Switch> handler to toggle the plugin on/off.
-  const onClickEnable = async (value: boolean) => {
-    setEnabled(value);
-    if (value) {
-      BackgroundGeolocation.start();
-    } else {
-      BackgroundGeolocation.stop();
-      // Toggle the [ > ] / [ || ] button in bottom-toolbar back to [ > ]
-      setIsMoving(false);
-    }
-  };
-
-  const INTERVAL = 15000; // 10 s
+  const INTERVAL = 10000; // 10 s
   const startRecordingLoc = async () => {
-    if (!enabled) {
+    if (!geolocationEnabled) {
       setCannotStartVisible(true);
       return;
     }
+
+    dispatch(setOdometer(0));
+    dispatch(setMarkers([]));
+    dispatch(setCoordinates([]));
+    BackgroundGeolocation.setOdometer(0);
     const subscription = BackgroundGeolocation.onLocation((location) => {
       setLocation(location);
       console.log("[onLocation] success: ", location);
@@ -143,18 +156,21 @@ const HomeView = ({ route, navigation }) => {
           route_id: 123,
         },
       });
+      dispatch(setOdometer(cur.odometer));
       // console.log(cur);
     }, INTERVAL);
     setTrackInterval(interval);
-
+    setStartTime(Date.now());
   };
 
   const stopRecordingLoc = () => {
     BackgroundGeolocation.changePace(false);
+    // if (!locationSubscriber) return;
     locationSubscriber.remove();
     setLocationSubscriber(null);
     setIsMoving(false);
     clearInterval(trackInterval);
+    setEndTime(Date.now());
   };
 
   const data = [0, 1, 2]
@@ -199,7 +215,7 @@ const HomeView = ({ route, navigation }) => {
         </View>
       </View>
       <View style={{ backgroundColor: COLORS.green, flexDirection: 'column', width: '80%', position: 'relative', left: "10%", borderRadius: 20, paddingTop: 40, paddingBottom: 10 }}>
-        <Text style={{ alignSelf: 'center', fontSize: 25 }}>25:11</Text>
+        <Text style={{ alignSelf: 'center', fontSize: 25 }}>{minutes}:{("0" + seconds).slice(-2)}</Text>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <View style={{ flexDirection: 'column', alignItems: 'center', marginLeft: 10 }}>
             <Text>Avg. Angle</Text>
@@ -211,7 +227,7 @@ const HomeView = ({ route, navigation }) => {
           </View>
           <View style={{ flexDirection: 'column', alignItems: 'center', marginRight: 10 }}>
             <Text>Distance</Text>
-            <Text>3.4km</Text>
+            <Text>{parseInt(odometer)}m</Text>
           </View>
         </View>
       </View>
@@ -220,7 +236,11 @@ const HomeView = ({ route, navigation }) => {
   );
 };
 
-export default HomeView;
+const mapStateToProps = (state) => {
+  return state;
+};
+
+export default connect(mapStateToProps)(HomeView);
 
 var styles = StyleSheet.create({
   container: {

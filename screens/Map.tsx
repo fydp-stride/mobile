@@ -8,9 +8,11 @@
 ///
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
+import { connect } from 'react-redux';
+import { setMarkers, setCoordinates } from './actions/geolocationActions';
 
 import MapView, { Marker, Polyline } from 'react-native-maps';
-
 import BackgroundGeolocation, {
   State,
   Location,
@@ -45,12 +47,17 @@ export const COLORS = {
 
 const Map = props => {
   /// MapView State.
-  const [markers, setMarkers] = React.useState<any[]>([]);
+  // const [markers, setMarkers] = React.useState<any[]>([]);
   const [showsUserLocation, setShowsUserLocation] = React.useState(false);
   const [tracksViewChanges, setTracksViewChanges] = React.useState(false);
   const [followsUserLocation, setFollowUserLocation] = React.useState(false);
   const [mapScrollEnabled, setMapScrollEnabled] = React.useState(false);
-  const [coordinates, setCoordinates] = React.useState<any[]>([]);
+  // const [coordinates, setCoordinates] = React.useState<any[]>([]);
+
+  let markers = props.geolocationData.markers;
+  let coordinates = props.geolocationData.coordinates;
+
+  const dispatch = useDispatch();
 
   /// BackgroundGeolocation Events.
   // const [location, setLocation] = React.useState<Location>(null);
@@ -127,6 +134,7 @@ const Map = props => {
   /// MapView Location marker-renderer.
   const renderMarkers = () => {
     let rs: any = [];
+    if (!markers) return;
     markers.map((marker: any) => {
       rs.push((
         <Marker
@@ -157,11 +165,11 @@ const Map = props => {
       }
     };
 
-    setMarkers(previous => [...previous, marker]);
-    setCoordinates(previous => [...previous, {
+    dispatch(setMarkers([...markers, marker]));
+    dispatch(setCoordinates([...coordinates, {
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
-    }]);
+    }]));
   };
 
   /// Map pan/drag handler.
@@ -172,8 +180,8 @@ const Map = props => {
 
   /// Clear all markers from the map when plugin is toggled off.
   const clearMarkers = () => {
-    setCoordinates([]);
-    setMarkers([]);
+    dispatch(setCoordinates([]));
+    dispatch(setMarkers([]));
   };
 
   return (
@@ -204,7 +212,11 @@ const Map = props => {
   );
 };
 
-export default Map;
+const mapStateToProps = (state) => {
+  return state;
+};
+
+export default connect(mapStateToProps)(Map);
 
 var styles = StyleSheet.create({
   map: {
