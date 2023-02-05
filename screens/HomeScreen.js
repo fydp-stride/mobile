@@ -7,7 +7,11 @@ import BluetoothClassic from './BluetoothClassic';
 export default function HomeScreen({ navigation }) {
   const [biometricsVisible, setBiometricsVisible] = React.useState(false);
   const [bluetoothVisible, setBluetoothVisible] = React.useState(false);
-  const [value, setValue] = React.useState('');
+  const [height, setHeight] = React.useState('');
+  const [weight, setWeight] = React.useState('');
+  const [age, setAge] = React.useState('');
+
+  const re = /^[0-9\b]+$/;
 
   return (
     <Layout style={{ alignItems: 'center', flex: 1, backgroundColor: 'white' }}>
@@ -31,25 +35,37 @@ export default function HomeScreen({ navigation }) {
           <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
             <Text>Height</Text>
             <Input
-              placeholder='Place your Text'
-              value={value}
-              onChangeText={nextValue => setValue(nextValue)}
+              placeholder='Height'
+              value={height}
+              onChangeText={nextValue => {
+                if (nextValue === '' || re.test(nextValue)) {
+                  setHeight(nextValue);
+                }
+              }}
             />
           </View>
           <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
             <Text>Weight</Text>
             <Input
-              placeholder='Place your Text'
-              value={value}
-              onChangeText={nextValue => setValue(nextValue)}
+              placeholder='Weight'
+              value={weight}
+              onChangeText={nextValue => {
+                if (nextValue === '' || re.test(nextValue)) {
+                  setWeight(nextValue);
+                }
+              }}
             />
           </View>
           <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
             <Text>Age</Text>
             <Input
-              placeholder='Place your Text'
-              value={value}
-              onChangeText={nextValue => setValue(nextValue)}
+              placeholder='Age'
+              value={age}
+              onChangeText={nextValue => {
+                if (nextValue === '' || re.test(nextValue)) {
+                  setAge(nextValue);
+                }
+              }}
             />
           </View>
           <Button onPress={() => setBiometricsVisible(false)}>
