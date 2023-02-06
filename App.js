@@ -52,7 +52,7 @@ const App: () => Node = () => {
         <PersistGate loading={null} persistor={persistor}>
           <IconRegistry icons={EvaIconsPack} />
           <NativeBaseProvider>
-            <ApplicationProvider {...eva} theme={eva.dark}>
+            <ApplicationProvider {...eva} theme={eva.light}>
               <MainContainer />
             </ApplicationProvider>
           </NativeBaseProvider>
