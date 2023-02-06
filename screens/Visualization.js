@@ -12,7 +12,7 @@ export default function Visualization({ navigation }) {
   // data
   const bluetoothData = useSelector(state => state.bluetoothData);
   const dispatch = useDispatch();
-  const MAX_FORCE_THRESHOLD = 200;
+  const MAX_FORCE_THRESHOLD = 7000;
 
   // const [impulseData, setImpulseData] = useState([0]);
   const [forceData, setForceData] = useState([0]);

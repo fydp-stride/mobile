@@ -78,7 +78,7 @@ export default class BluetoothClassic extends React.Component {
    * Clear subscriptions
    */
   componentWillUnmount() {
-    console.log('App:componentWillUnmount removing subscriptions: enabled and distabled');
+    console.log('App:componentWillUnmount removing subscriptions: enabled and disabled');
     console.log('App:componentWillUnmount alternatively could have used stateChanged');
     this.enabledSubscription.remove();
     this.disabledSubscription.remove();
