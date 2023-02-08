@@ -1,8 +1,9 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import bluetoothReducer from '../reducers/bluetoothSlice';
-import geolocationReducer from '../reducers/geolocationReducer';
+import geolocationReducer, { initialState as geo } from '../reducers/geolocationReducer';
+import userDataReducer, { initialState as user } from '../reducers/userDataReducer';
 import {
-  persistStore, persistReducer, FLUSH,
+  createMigrate, persistStore, persistReducer, FLUSH,
   REHYDRATE,
   PAUSE,
   PERSIST,
@@ -12,15 +13,26 @@ import {
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+const migrations = {
+  0: state => {
+    return {
+      geolocationData: geo,
+      userData: user
+    };
+  },
+};
+
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['geolocationData']
+  whitelist: ['geolocationData', 'userData'],
+  // migrate: createMigrate(migrations, { debug: false }),
 }
 
 const reducers = combineReducers({
   bluetoothData: bluetoothReducer,
-  geolocationData: geolocationReducer
+  geolocationData: geolocationReducer,
+  userData: userDataReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, reducers);

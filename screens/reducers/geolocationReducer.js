@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 
-const initialState = {
+export const initialState = {
   enabled: false,
   // geolocationState: null,
   odometer: 0,
