@@ -7,15 +7,13 @@ export const initialState = {
 };
 
 const userDataReducer = (state = initialState, action) => {
+  console.log(state)
   switch (action.type) {
     case "SET_HEIGHT":
-      console.log(state)
       return { ...state, height: action.payload };
     case "SET_WEIGHT":
-      console.log(state)
       return { ...state, weight: action.payload };
     case "SET_AGE":
-      console.log(state)
       return { ...state, age: action.payload };
     default:
       return state;

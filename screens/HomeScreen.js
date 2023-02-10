@@ -4,22 +4,20 @@ import { View, Image, ImageBackground } from 'react-native';
 import { StyleSheet } from 'react-native';
 import BluetoothClassic from './BluetoothClassic';
 import SettingsScreen from './SettingsScreen';
+import { connect, bindActionCreators } from 'react-redux';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { setAge, setHeight, setWeight } from './actions/userDataActions';
 
-export default function HomeScreen({ navigation }, props) {
+function HomeScreen(props) {
   const [biometricsVisible, setBiometricsVisible] = React.useState(false);
   const [bluetoothVisible, setBluetoothVisible] = React.useState(false);
   const [settingsVisible, setSettingsVisible] = React.useState(false);
-  const [height, setHeight] = React.useState('');
-  const [weight, setWeight] = React.useState('');
-  const [age, setAge] = React.useState('');
 
-  // const dispatch = useDispatch();
-  // let height = props.userData.height;
-  // let weight = props.userData.weight;
-  // let age = props.userData.age;
+  const dispatch = useDispatch();
+  let height = props.userData.height;
+  let weight = props.userData.weight;
+  let age = props.userData.age;
 
   const re = /^[0-9\b]+$/;
 
@@ -50,11 +48,12 @@ export default function HomeScreen({ navigation }, props) {
               value={height}
               onChangeText={nextValue => {
                 if (nextValue === '' || re.test(nextValue)) {
-                  // dispatch(setHeight(nextValue));
-                  setHeight(nextValue);
+                  dispatch(setHeight(nextValue));
+                  // setHeight(nextValue);
                 }
               }}
             />
+            <Text>cm</Text>
           </View>
           <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
             <Text>Weight</Text>
@@ -63,11 +62,12 @@ export default function HomeScreen({ navigation }, props) {
               value={weight}
               onChangeText={nextValue => {
                 if (nextValue === '' || re.test(nextValue)) {
-                  // dispatch(setWeight(nextValue));
-                  setWeight(nextValue);
+                  dispatch(setWeight(nextValue));
+                  // setWeight(nextValue);
                 }
               }}
             />
+            <Text>kg</Text>
           </View>
           <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
             <Text>Age</Text>
@@ -76,8 +76,8 @@ export default function HomeScreen({ navigation }, props) {
               value={age}
               onChangeText={nextValue => {
                 if (nextValue === '' || re.test(nextValue)) {
-                  // dispatch(setAge(nextValue));
-                  setAge(nextValue);
+                  dispatch(setAge(nextValue));
+                  // setAge(nextValue);
                 }
               }}
             />
@@ -107,6 +107,12 @@ export default function HomeScreen({ navigation }, props) {
     </Layout>
   );
 }
+
+const mapStateToProps = (state) => {
+  return state;
+};
+
+export default connect(mapStateToProps)(HomeScreen);
 
 var styles = StyleSheet.create({
   button: {
