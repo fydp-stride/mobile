@@ -113,7 +113,7 @@ const Map = props => {
   /// Adds a location Marker to MapView
   ///
   const onLocation = () => {
-    console.log('[location] - ', props.location);
+    // console.log('[location] - ', props.location);
     if (!props.location.sample) {
       addMarker(props.location);
     }

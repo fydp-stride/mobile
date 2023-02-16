@@ -10,7 +10,7 @@ export const initialState = {
 };
 
 const geolocationReducer = (state = initialState, action) => {
-  console.log(state)
+  // console.log(state)
   switch (action.type) {
     case "TOGGLE_ENABLED":
       return { ...state, enabled: !state.enabled };

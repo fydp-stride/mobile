@@ -52,10 +52,6 @@ export default function MainContainer() {
               case MapName:
                 iconName = focused ? 'map' : 'map-outline';
                 break;
-
-              case SettingsName:
-                iconName = focused ? 'cog' : 'cog-outline';
-                break;
             }
             return <Ionicons name={iconName} size={size} color={color} />;
           },
@@ -64,7 +60,6 @@ export default function MainContainer() {
         <Screen name={SummaryRoute} component={SummaryScreen} />
         <Screen name={VisualizationName} component={Visualization} />
         <Screen name={MapName} component={MapHomeView} />
-        <Screen name={SettingsName} component={SettingsScreen} />
       </Navigator>
     </NavigationContainer>
   );
