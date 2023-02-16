@@ -3,13 +3,21 @@ import * as React from 'react';
 import { View, Image, ImageBackground } from 'react-native';
 import { StyleSheet } from 'react-native';
 import BluetoothClassic from './BluetoothClassic';
+import SettingsScreen from './SettingsScreen';
+import { connect, bindActionCreators } from 'react-redux';
 
-export default function HomeScreen({ navigation }) {
+import { useSelector, useDispatch } from 'react-redux';
+import { setAge, setHeight, setWeight } from './actions/userDataActions';
+
+function HomeScreen(props) {
   const [biometricsVisible, setBiometricsVisible] = React.useState(false);
   const [bluetoothVisible, setBluetoothVisible] = React.useState(false);
-  const [height, setHeight] = React.useState('');
-  const [weight, setWeight] = React.useState('');
-  const [age, setAge] = React.useState('');
+  const [settingsVisible, setSettingsVisible] = React.useState(false);
+
+  const dispatch = useDispatch();
+  let height = props.userData.height;
+  let weight = props.userData.weight;
+  let age = props.userData.age;
 
   const re = /^[0-9\b]+$/;
 
@@ -24,6 +32,7 @@ export default function HomeScreen({ navigation }) {
       <Text style={{ fontSize: 18, color: 'black', marginTop: 10, marginBottom: 30 }}>You are doing great today!</Text>
       <Button onPress={() => setBiometricsVisible(true)} style={styles.button}>Modify Biometrics</Button>
       <Button onPress={() => setBluetoothVisible(true)} style={styles.button}>Bluetooth Connection</Button>
+      <Button onPress={() => setSettingsVisible(true)} style={styles.button}>Settings</Button>
       <Button onPress={() => { console.log("3") }} style={styles.button}>Logout</Button>
 
       <Modal
@@ -39,10 +48,12 @@ export default function HomeScreen({ navigation }) {
               value={height}
               onChangeText={nextValue => {
                 if (nextValue === '' || re.test(nextValue)) {
-                  setHeight(nextValue);
+                  dispatch(setHeight(nextValue));
+                  // setHeight(nextValue);
                 }
               }}
             />
+            <Text>cm</Text>
           </View>
           <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
             <Text>Weight</Text>
@@ -51,10 +62,12 @@ export default function HomeScreen({ navigation }) {
               value={weight}
               onChangeText={nextValue => {
                 if (nextValue === '' || re.test(nextValue)) {
-                  setWeight(nextValue);
+                  dispatch(setWeight(nextValue));
+                  // setWeight(nextValue);
                 }
               }}
             />
+            <Text>kg</Text>
           </View>
           <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
             <Text>Age</Text>
@@ -63,7 +76,8 @@ export default function HomeScreen({ navigation }) {
               value={age}
               onChangeText={nextValue => {
                 if (nextValue === '' || re.test(nextValue)) {
-                  setAge(nextValue);
+                  dispatch(setAge(nextValue));
+                  // setAge(nextValue);
                 }
               }}
             />
@@ -82,9 +96,23 @@ export default function HomeScreen({ navigation }) {
         <BluetoothClassic />
       </Modal>
 
+      <Modal
+        visible={settingsVisible}
+        backdropStyle={styles.backdrop}
+        onBackdropPress={() => setSettingsVisible(false)}
+        style={styles.settings}>
+        <SettingsScreen />
+      </Modal>
+
     </Layout>
   );
 }
+
+const mapStateToProps = (state) => {
+  return state;
+};
+
+export default connect(mapStateToProps)(HomeScreen);
 
 var styles = StyleSheet.create({
   button: {
@@ -97,6 +125,10 @@ var styles = StyleSheet.create({
     flexDirection: 'column'
   },
   bluetooth: {
+    height: '70%',
+    width: '80%'
+  },
+  settings: {
     height: '70%',
     width: '80%'
   }

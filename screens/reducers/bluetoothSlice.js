@@ -28,7 +28,7 @@ export const bluetoothSlice = createSlice({
       // immutable state based off those changes
       //const temp = state.impulse;
       // For impulse, we want to accumulate all the impulses.
-      let accumulateImpulse = state.impulse[state.impulse.length - 1] + action.payload.payload;
+      const accumulateImpulse = state.impulse[state.impulse.length - 1] + action.payload.payload;
       state.impulse = [...state.impulse, accumulateImpulse].slice(-6);
       state.impulseAxis = [...state.impulseAxis, getCurrentTime()].slice(-6);
       // var sumImpulse = state.impulse[state.impulse.length - 1] + action.payload.payload;

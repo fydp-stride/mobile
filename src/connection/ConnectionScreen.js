@@ -46,6 +46,9 @@ class ConnectionScreen extends React.Component {
     this.state = {
       text: undefined,
       data: [],
+      accumulateImpulse: 0,
+      diffImpulse: 0,
+      currentMaxForce: 0,
       polling: false,
       connection: false,
       connectionOptions: {
@@ -82,7 +85,7 @@ class ConnectionScreen extends React.Component {
    * data based on the configuration.
    */
   componentDidMount() {
-    setTimeout(() => this.connect(), 0);
+    //setTimeout(() => this.connect(), 0);
   }
 
   async connect() {
@@ -150,6 +153,31 @@ class ConnectionScreen extends React.Component {
   initializeRead() {
     this.disconnectSubscription = RNBluetoothClassic.onDeviceDisconnected(() => this.disconnect(true));
 
+    const INTERVAL = 5000; //5 seconds
+    this.graphInterval = setInterval(() => {
+      if (this.state.diffImpulse > 0){
+        const addImpulseAction = {
+          type: 'bluetooth/addImpulse',
+          payload: this.state.accumulateImpulse
+        }
+        // add to global dispatcher
+        this.props.addImpulse(addImpulseAction);
+      }
+      
+      if (this.state.currentMaxForce > 0){
+        const addMaxForceAction = {
+          type: 'bluetooth/addMaxForce',
+          payload: this.state.currentMaxForce
+        }
+        // add to global dispatcher
+        this.props.addMaxForce(addMaxForceAction);
+      }
+      this.setState(
+        { currentMaxForce: 0,
+          accumulateImpulse: 0,
+          diffImpulse: 0})
+    }, INTERVAL);
+
     if (this.state.polling) {
       this.readInterval = setInterval(() => this.performRead(), 5000);
     } else {
@@ -168,6 +196,9 @@ class ConnectionScreen extends React.Component {
     }
     if (this.readSubscription) {
       this.readSubscription.remove();
+    }
+    if (this.graphInterval) {
+      clearInterval(this.graphInterval);
     }
   }
 
@@ -302,14 +333,15 @@ class ConnectionScreen extends React.Component {
             for (let i = 0; i < impulse_list.length;i++){
               if (impulse_list[i]){
                 let impulse_float = parseFloat(impulse_list[i]);
-                const addImpulseAction = {
-                  type: 'bluetooth/addImpulse',
-                  payload: impulse_float
-                }
-                // add to global dispatcher
-                this.props.addImpulse(addImpulseAction);
-                //this.props.setImpulseAxis();
-                
+                if (impulse_float && impulse_float != 0) {
+                  this.addImpulse(impulse_float);
+                  // const addImpulseAction = {
+                  //   type: 'bluetooth/addImpulse',
+                  //   payload: impulse_float
+                  // }
+                  // // add to global dispatcher
+                  // this.props.addImpulse(addImpulseAction);
+                }             
                 //console.log("added " + impulse_float + " to the impulse dispatcher.");
               }
             }
@@ -320,13 +352,15 @@ class ConnectionScreen extends React.Component {
             let max_force_highest = Math.max(parseFloat(max_force_list));
             //console.log("max_force_list: " + max_force_list)
             //console.log("max_force_highest: " + max_force_highest)
-            const addMaxForceAction = {
-              type: 'bluetooth/addMaxForce',
-              payload: max_force_highest
+            if (max_force_highest && max_force_highest > 0){
+              this.addForce(max_force_highest);
+              // const addMaxForceAction = {
+              //   type: 'bluetooth/addMaxForce',
+              //   payload: max_force_highest
+              // }
+              // // add to global dispatcher
+              // this.props.addMaxForce(addMaxForceAction);
             }
-            // add to global dispatcher
-            this.props.addMaxForce(addMaxForceAction);
-            //this.props.setMaxForceAxis();
             // for (let i = 0; i < max_force_list.length;i++){
             //   if (max_force_list[i]){
             //     let max_force_float = parseFloat(max_force_list[i]);
@@ -432,6 +466,20 @@ class ConnectionScreen extends React.Component {
 
   async addData(message) {
     this.setState({ data: [message, ...this.state.data] });
+  }
+
+  async addImpulse(impulse){
+    const accumulateImpulseTemp = this.state.accumulateImpulse + impulse;
+    const diffImpulseTemp = this.state.diffImpulse + impulse;
+    this.setState(
+      {accumulateImpulse: accumulateImpulseTemp,
+       diffImpulse: diffImpulseTemp}
+      )
+  }
+
+  async addForce(force){
+    const maxForce = Math.max(this.state.currentMaxForce, force);
+    this.setState({currentMaxForce: maxForce})
   }
 
   /**
