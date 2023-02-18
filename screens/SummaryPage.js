@@ -18,6 +18,7 @@ import RoutinesList from './summaryPageComponents/RoutinesList';
 
 export default function SummaryScreen({ navigation }) {
   const dateData = {
+    weekOf: "Feb 14-20",
     barColors: ["#dfe4ea", "#ced6e0", "#a4b0be"],
     labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
     datasets: [
