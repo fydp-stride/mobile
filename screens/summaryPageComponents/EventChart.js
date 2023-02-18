@@ -7,8 +7,8 @@ export default EventChart = props => {
   const chartConfig = {
     // backgroundGradientFrom: '#FFFFFF',
     // backgroundGradientTo: '#FFFFFF',
-    backgroundGradientFrom: 'gray',
-    backgroundGradientTo: 'gray',
+    backgroundGradientFrom: '#f0fceb',
+    backgroundGradientTo: '#f0fceb',
     color: (opacity = 1) => '#5DB075',
     fillShadowGradient: '#5DB075',
     fillShadowGradientOpacity: 1,
@@ -24,7 +24,7 @@ export default EventChart = props => {
   const renderWeeklyChart = () => {
     return (
       <View
-        style={{ backgroundColor: '#F5F5F5', borderRadius: 16, padding: 3 }}>
+        style={{ backgroundColor: '#FFFFFF', borderRadius: 16, padding: 3 }}>
         <View>
           <Text
             style={{
@@ -32,6 +32,7 @@ export default EventChart = props => {
               fontSize: 20,
               color: 'black',
               textAlign: 'center',
+              paddingVertical: 10
             }}>
             Week of {props.dateData.weekOf}
           </Text>
@@ -70,7 +71,7 @@ export default EventChart = props => {
 
     // TODO: need some serious logic handling here for out of bound
     const index = Math.round(event.nativeEvent.contentOffset.x / chartWidth);
-    flatListRef.current.scrollToIndex({ index, animated: true, duration: 1 });
+    flatListRef.current.scrollToIndex({ index, animated: true, duration: 1,  });
   };
 
   return (    
@@ -82,8 +83,9 @@ export default EventChart = props => {
         keyExtractor={keyExtractor}
         horizontal={true}
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ alignItems: 'center', paddingLeft: 6 }} // LMAOOOOO
+        contentContainerStyle={{ alignItems: 'center', paddingLeft: 7}} // LMAOOOOO
         onMomentumScrollEnd={onMomentumScrollEnd}
+        decelerationRate={'fast'}
       />
     </View>
   );

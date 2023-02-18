@@ -9,12 +9,14 @@ export default DateRoutine = ({ event }) => {
         flexDirection: 'row',
         alignItems: 'center',
         padding: 10,
-        backgroundColor: '#F5F5F5',
+        backgroundColor: '#f0fceb',
         borderRadius: 10,
-        margin: 5,
+        margin: 7,
+        marginHorizontal: 10,
+        justifyContent: 'space-between'
       }}>
-      <Text style={{ fontSize: 20, marginRight: 10 }}>🏃</Text>
-      <View style={{ flex: 1 }}>
+      <Text style={{ fontSize: 40, marginRight: 15 }}>🏃</Text>
+      <View style={{ flex: 0.9 }}>
         <Text style={{ fontWeight: 'bold', fontSize: 16, color: 'black'}}>
           {event.sessionName}
         </Text>
@@ -22,7 +24,7 @@ export default DateRoutine = ({ event }) => {
           {event.distance} | {event.duration}
         </Text>
       </View>
-      <View style={{ backgroundColor: '#BEBEBE', borderRadius: 5, padding: 5 }}>
+      <View style={{ backgroundColor: '#BEBEBE', borderRadius: 5, padding: 7, paddingVertical:10  }}>
         <Text>{event.date}</Text>
       </View>
     </View>
