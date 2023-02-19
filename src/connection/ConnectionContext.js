@@ -1,5 +1,5 @@
-import { createContext, useContext, useReducer } from 'react';
 import React from 'react';
+import { createContext, useContext, useReducer } from 'react';
 
 export const DeviceContext = createContext(null);
 export const DeviceDispatchContext = createContext(null);
