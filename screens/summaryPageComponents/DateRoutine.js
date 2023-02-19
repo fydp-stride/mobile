@@ -3,6 +3,7 @@ import * as React from 'react';
 
 
 export default DateRoutine = ({ event }) => {
+
   return (
     <View
       style={{
@@ -13,18 +14,26 @@ export default DateRoutine = ({ event }) => {
         borderRadius: 10,
         margin: 7,
         marginHorizontal: 10,
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
       }}>
-      <Text style={{ fontSize: 40, marginRight: 15 }}>🏃</Text>
+      <Text style={{ fontSize: 40, marginRight: 15 }}>
+        {event.sessionName.includes('Walk') ? '🚶🏻‍♂️' : '🏃'}
+      </Text>
       <View style={{ flex: 0.9 }}>
-        <Text style={{ fontWeight: 'bold', fontSize: 16, color: 'black'}}>
+        <Text style={{ fontWeight: 'bold', fontSize: 16, color: 'black' }}>
           {event.sessionName}
         </Text>
-        <Text style={{color: 'black'}}>
+        <Text style={{ color: 'black' }}>
           {event.distance} | {event.duration}
         </Text>
       </View>
-      <View style={{ backgroundColor: '#BEBEBE', borderRadius: 5, padding: 7, paddingVertical:10  }}>
+      <View
+        style={{
+          backgroundColor: '#BEBEBE',
+          borderRadius: 5,
+          padding: 7,
+          paddingVertical: 10,
+        }}>
         <Text>{event.date}</Text>
       </View>
     </View>
