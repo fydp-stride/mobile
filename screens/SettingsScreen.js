@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { TextInput } from 'react-native';
 import {
   BottomNavigation,
@@ -7,11 +7,15 @@ import {
   Layout,
   Text,
   Toggle,
+  Button
 } from '@ui-kitten/components';
 import BackgroundGeolocation from 'react-native-background-geolocation';
 import { connect, bindActionCreators } from 'react-redux';
 import { toggleEnabled } from './actions/geolocationActions';
 import { useSelector, useDispatch } from 'react-redux';
+
+// code for testing the notif
+import { useToast } from "react-native-toast-notifications";
 
 function HomeScreen(props) {
   // const [locationTrackingenabled, setLocationTrackingEnabled] = React.useState(false);
@@ -33,6 +37,14 @@ function HomeScreen(props) {
     // need to send this to the Redux store
     changeMaxThreshold(text);
   };
+
+  const toast = useToast();
+
+
+  const launchNotif = () => {
+    console.log('notif is launched')
+    toast.show("Hello World");
+  }
 
   return (
     <Layout
@@ -78,6 +90,12 @@ function HomeScreen(props) {
         <Text style={{ marginLeft:5 ,fontSize: 18 }}>
           N
         </Text>
+      </Layout>
+      <Layout style={{ flexDirection: 'row', paddingTop: 30, alignItems: 'center' }}>
+        <Text style={{ marginRight: 10, fontSize: 18 }}>
+          Test notification
+        </Text>
+        <Button onPress={launchNotif}>Launch</Button>
       </Layout>
     </Layout>
   );
