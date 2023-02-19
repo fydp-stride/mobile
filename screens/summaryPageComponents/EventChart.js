@@ -24,10 +24,10 @@ export default EventChart = props => {
           <Text
             style={{
               fontWeight: 'bold',
-              fontSize: 20,
+              fontSize: 27,
               color: 'black',
               textAlign: 'center',
-              paddingVertical: 10,
+              paddingVertical: 20,
             }}>
             Week of {item.weekOf}
           </Text>
@@ -49,8 +49,8 @@ export default EventChart = props => {
           }}
           withHorizontalLabels={false}
           xLabelsOffset={8}
-          verticalLabelRotation={360 - 35}
           yAxisInterval={1}
+          verticalLabelRotation={360 - 35}
           backgroundColor={'#F5F5F5'}
         />
       </View>
@@ -59,14 +59,16 @@ export default EventChart = props => {
 
   const keyExtractor = (item, index) => index.toString();
   const chartWidth = Dimensions.get('window').width - 20; 
+  const leftMargin = (Dimensions.get('window').width - chartWidth) / 2;
 
   const flatListRef = useRef(null);
   const onMomentumScrollEnd = event => {
     const index = Math.round(event.nativeEvent.contentOffset.x / chartWidth);
+    // this is also the index we use to filter components
     // console.log(
     //   `dividing ${event.nativeEvent.contentOffset.x} by ${chartWidth}. Getting index: ${index}`,
     // );
-    flatListRef.current.scrollToIndex({ index, animated: true, duration: 1 });
+    flatListRef.current.scrollToIndex({ index, animated: true });
   };
 
   return (
@@ -78,7 +80,7 @@ export default EventChart = props => {
         keyExtractor={keyExtractor}
         horizontal={true}
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ alignItems: 'center', paddingLeft: 7 }}
+        contentContainerStyle={{ alignItems: 'center', justifyContent: 'center', marginLeft: 7}} // IDFK why
         onMomentumScrollEnd={onMomentumScrollEnd}
         decelerationRate={'fast'}
       />
