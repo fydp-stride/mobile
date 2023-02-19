@@ -24,10 +24,12 @@ export default EventChart = props => {
           <Text
             style={{
               fontWeight: 'bold',
-              fontSize: 27,
-              color: 'black',
-              textAlign: 'center',
-              paddingVertical: 20,
+              fontSize: 15,
+              color: 'gray',
+              textAlign: 'left',
+              paddingTop: 10 ,
+              paddingBottom: 20,
+              marginLeft: 5
             }}>
             Week of {item.weekOf}
           </Text>

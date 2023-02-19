@@ -24,14 +24,14 @@ export default DateRoutine = ({ event }) => {
           {event.sessionName}
         </Text>
         <Text style={{ color: 'black' }}>
-          {event.distance} | {event.duration}
+          ⧟ {event.distance} | 🕘 {event.duration}
         </Text>
       </View>
       <View
         style={{
           backgroundColor: '#BEBEBE',
-          borderRadius: 5,
-          padding: 7,
+          borderRadius: 9,
+          paddingHorizontal: 20,
           paddingVertical: 10,
         }}>
         <Text>{event.date}</Text>

@@ -30,8 +30,8 @@ export default function SummaryScreen({ navigation }) {
 
   const weekArrays = [
     {
-      weekOf: "Jan 31 - Feb 6",
-      barColors: ["#dfe4ea", "#ced6e0", "#a4b0be"],
+      weekOf: 'Jan 31 - Feb 6',
+      barColors: ['#dfe4ea', '#ced6e0', '#a4b0be'],
       labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
       datasets: [
         {
@@ -40,8 +40,8 @@ export default function SummaryScreen({ navigation }) {
       ],
     },
     {
-      weekOf: "Feb 7-13",
-      barColors: ["#dfe4ea", "#ced6e0", "#a4b0be"],
+      weekOf: 'Feb 7-13',
+      barColors: ['#dfe4ea', '#ced6e0', '#a4b0be'],
       labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
       datasets: [
         {
@@ -50,8 +50,8 @@ export default function SummaryScreen({ navigation }) {
       ],
     },
     {
-      weekOf: "Feb 14-20",
-      barColors: ["#dfe4ea", "#ced6e0", "#a4b0be"],
+      weekOf: 'Feb 14-20',
+      barColors: ['#dfe4ea', '#ced6e0', '#a4b0be'],
       labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
       datasets: [
         {
@@ -59,7 +59,7 @@ export default function SummaryScreen({ navigation }) {
         },
       ],
     },
-  ]
+  ];
 
   const DATE_EVENTS = [
     {
@@ -137,8 +137,41 @@ export default function SummaryScreen({ navigation }) {
   ];
   // some event dates:
   return (
-    <View style={{backgroundColor: 'white', height: Dimensions.get("window").height}}>
-      <EventChart monthData={weekArrays}/>
+    <View
+      style={{
+        backgroundColor: 'white',
+        height: Dimensions.get('window').height,
+      }}>
+      <Text
+        style={{
+          fontWeight: 'bold',
+          fontSize: 30,
+          color: 'black',
+          textAlign: 'left',
+          marginLeft: 14,
+          marginTop: 25,
+        }}>
+        Weekly Summary
+      </Text>
+      <EventChart monthData={weekArrays} />
+      <View
+        style={{
+          borderRadius: 10,
+          paddingBottom: 10,
+        }}>
+        <Text
+          style={{
+            fontWeight: 'bold',
+            fontSize: 15,
+            color: 'gray',
+            textAlign: 'left',
+            paddingTop: 10,
+            paddingBottom: 5,
+            marginLeft: 15,
+          }}>
+          Running Historty
+        </Text>
+      </View>
       <RoutinesList eventData={DATE_EVENTS} />
     </View>
   );
