@@ -15,15 +15,20 @@ import getTheme from '../native-base-theme/components';
 import platform from '../native-base-theme/variables/platform';
 import ConnectionScreen from '../src/connection/ConnectionScreen';
 import DeviceListScreen from '../src/device-list/DeviceListScreen';
+import {useDevice, useDeviceDispatch} from '../src/connection/ConnectionContext';
 
 export default class BluetoothClassic extends React.Component {
   constructor(props) {
     super(props);
 
+    const device = useDevice();
+    this.dispatch = useDeviceDispatch();
+
     this.state = {
-      device: undefined,
+      device: device,
       bluetoothEnabled: true,
     };
+    console.log("Current Device in constructor", this.state.device);
   }
 
   /**
@@ -37,6 +42,10 @@ export default class BluetoothClassic extends React.Component {
    */
   selectDevice = (device) => {
     //console.log('App::selectDevice() called with: ', device);
+    this.dispatch({
+      type: 'connect',
+      device: device
+    });
     this.setState({ device });
   };
 
@@ -92,6 +101,10 @@ export default class BluetoothClassic extends React.Component {
   onStateChanged(stateChangedEvent) {
     console.log('App::onStateChanged event used for onBluetoothEnabled and onBluetoothDisabled');
 
+    this.dispatch({
+      type: 'disconnect',
+      device: null
+    });
     this.setState({
       bluetoothEnabled: stateChangedEvent.enabled,
       device: stateChangedEvent.enabled ? this.state.device : undefined,
