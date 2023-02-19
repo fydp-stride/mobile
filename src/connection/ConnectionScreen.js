@@ -22,6 +22,7 @@ import {
   Right,
 } from 'native-base';
 import { Buffer } from 'buffer';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 
 
@@ -565,7 +566,7 @@ class ConnectionScreen extends React.Component {
         <View iosBarStyle="light-content">
           <View>
             <Button transparent onPress={this.props.onBack}>
-              <Icon type="Ionicons" name="arrow-back" />
+              <Ionicons name="chevron-back" size={20} color='black' />
               <Text> Back</Text>
             </Button>
           </View>
@@ -575,7 +576,7 @@ class ConnectionScreen extends React.Component {
           </View>
           <View>
             <Button transparent onPress={() => this.toggleConnection()}>
-              <Icon type="Ionicons" name={toggleIcon} />
+              <Ionicons name={toggleIcon} size={20} color='black' />
               <Text> {this.state.connection?"Disconnect":"Connect"}</Text>
             </Button>
           </View>
