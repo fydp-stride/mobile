@@ -12,6 +12,7 @@ import {
 import BackgroundGeolocation from 'react-native-background-geolocation';
 import { connect, bindActionCreators } from 'react-redux';
 import { toggleEnabled } from './actions/geolocationActions';
+import { setThreshold } from './actions/userDataActions';
 import { useSelector, useDispatch } from 'react-redux';
 
 // code for testing the notif
@@ -20,10 +21,11 @@ import { useToast } from "react-native-toast-notifications";
 function HomeScreen(props) {
   // const [locationTrackingenabled, setLocationTrackingEnabled] = React.useState(false);
 
-  const [maxThreshold, changeMaxThreshold] = useState("");
+  // const [maxThreshold, changeMaxThreshold] = useState("");
 
   const dispatch = useDispatch();
   let geolocationEnabled = props.geolocationData.enabled;
+  let maxThreshold = props.userData.threshold;
 
   useEffect(() => {
     if (geolocationEnabled) {
@@ -35,7 +37,8 @@ function HomeScreen(props) {
 
   const onKeyPress = text => {
     // need to send this to the Redux store
-    changeMaxThreshold(text);
+    dispatch(setThreshold(text));
+    // changeMaxThreshold(text);
   };
 
   const toast = useToast();
@@ -57,15 +60,17 @@ function HomeScreen(props) {
         flexDirection: 'column',
       }}>
       <Layout style={{ flexDirection: 'row', padding: 5 }}>
-        <Text style={{ marginRight: 10, fontSize: 18 }}>Location Tracking</Text>
+        <Text style={{ marginRight: 10, fontSize: 18 }}>
+          Location Tracking
+        </Text>
         <Toggle
           checked={geolocationEnabled}
           onChange={() => dispatch(toggleEnabled())}
         />
       </Layout>
       <Layout
-        style={{ flexDirection: 'row', paddingTop: 20, alignItems: 'center' }}>
-        <Text style={{ marginRight: 10, fontSize: 18 }}>
+        style={{ flexDirection: 'row', paddingTop: 20, alignItems: 'center', maxWidth: '100%' }}>
+        <Text style={{ marginRight: 10, fontSize: 18, maxWidth: '60%' }}>
           Maximum force threshold
         </Text>
         <TextInput

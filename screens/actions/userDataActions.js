@@ -18,3 +18,10 @@ export const setAge = (payload) => (
     payload: payload
   }
 );
+
+export const setThreshold = (payload) => (
+  {
+    type: 'SET_THRESHOLD',
+    payload: payload
+  }
+);

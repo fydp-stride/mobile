@@ -7,7 +7,7 @@ import {
   Input,
 } from '@ui-kitten/components';
 import * as React from 'react';
-import { View, Image, ImageBackground } from 'react-native';
+import { View, Image, ImageBackground, TextInput } from 'react-native';
 import { StyleSheet } from 'react-native';
 import BluetoothClassic from './BluetoothClassic';
 import SettingsScreen from './SettingsScreen';
@@ -16,7 +16,7 @@ import { connect, bindActionCreators } from 'react-redux';
 import { useSelector, useDispatch } from 'react-redux';
 import { setAge, setHeight, setWeight } from './actions/userDataActions';
 
-import {useDevice, useDeviceDispatch} from '../src/connection/ConnectionContext';
+import { useDevice, useDeviceDispatch } from '../src/connection/ConnectionContext';
 
 function HomeScreen(props) {
   const [biometricsVisible, setBiometricsVisible] = React.useState(false);
@@ -56,7 +56,7 @@ function HomeScreen(props) {
           backgroundColor: 'black',
           justifyContent: 'center',
         }}></View>
-      <Text style={{ fontSize: 30, color: 'black', marginTop: 70 }}>
+      <Text style={{ fontSize: 30, color: 'black', marginTop: '5%' }}>
         Welcome Back, Bob
       </Text>
       <Text
@@ -64,7 +64,7 @@ function HomeScreen(props) {
           fontSize: 18,
           color: 'black',
           marginTop: 10,
-          marginBottom: 30,
+          marginBottom: '7%',
         }}>
         You are doing great today!
       </Text>
@@ -98,15 +98,27 @@ function HomeScreen(props) {
               alignItems: 'center',
             }}>
             <Text>Height</Text>
-            <Input
-              placeholder="Height"
-              value={height}
+            <TextInput
+              style={{
+                color: 'black',
+                underlineColorAndroid: 'black',
+                borderRadius: 16,
+                height: 'auto',
+                width: 60,
+                textAlign: 'center',
+                fontSize: 16,
+              }}
+              editable
+              blurOnSubmit
+              keyboardType="numeric"
+              numberOfLines={1}
+              maxLength={3}
               onChangeText={nextValue => {
                 if (nextValue === '' || re.test(nextValue)) {
                   dispatch(setHeight(nextValue));
-                  // setHeight(nextValue);
                 }
               }}
+              value={height}
             />
             <Text>cm</Text>
           </View>
@@ -117,15 +129,28 @@ function HomeScreen(props) {
               alignItems: 'center',
             }}>
             <Text>Weight</Text>
-            <Input
-              placeholder="Weight"
-              value={weight}
+            <TextInput
+              style={{
+                color: 'black',
+                underlineColorAndroid: 'black',
+                borderRadius: 16,
+                height: 'auto',
+                width: 60,
+                textAlign: 'center',
+                fontSize: 16,
+              }}
+              editable
+              blurOnSubmit
+              keyboardType="numeric"
+              numberOfLines={1}
+              maxLength={3}
+              placeholder='weight'
               onChangeText={nextValue => {
                 if (nextValue === '' || re.test(nextValue)) {
                   dispatch(setWeight(nextValue));
-                  // setWeight(nextValue);
                 }
               }}
+              value={weight}
             />
             <Text>kg</Text>
           </View>
@@ -136,15 +161,28 @@ function HomeScreen(props) {
               alignItems: 'center',
             }}>
             <Text>Age</Text>
-            <Input
-              placeholder="Age"
-              value={age}
+            <TextInput
+              style={{
+                color: 'black',
+                underlineColorAndroid: 'black',
+                borderRadius: 16,
+                height: 'auto',
+                width: 60,
+                textAlign: 'center',
+                fontSize: 16,
+              }}
+              editable
+              blurOnSubmit
+              keyboardType="numeric"
+              numberOfLines={1}
+              maxLength={3}
+              placeholder='age'
               onChangeText={nextValue => {
                 if (nextValue === '' || re.test(nextValue)) {
                   dispatch(setAge(nextValue));
-                  // setAge(nextValue);
                 }
               }}
+              value={age}
             />
           </View>
           <Button onPress={() => setBiometricsVisible(false)}>OK</Button>
@@ -182,7 +220,7 @@ var styles = StyleSheet.create({
     borderWidth: 0,
     borderRadius: 100,
     width: '60%',
-    marginBottom: 20,
+    marginBottom: '5%',
   },
   backdrop: {
     backgroundColor: 'rgba(0, 0, 0, 0.5)',

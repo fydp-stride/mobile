@@ -3,7 +3,8 @@ import { combineReducers } from 'redux';
 export const initialState = {
   height: "",
   weight: "",
-  age: ""
+  age: "",
+  threshold: ""
 };
 
 const userDataReducer = (state = initialState, action) => {
@@ -15,6 +16,8 @@ const userDataReducer = (state = initialState, action) => {
       return { ...state, weight: action.payload };
     case "SET_AGE":
       return { ...state, age: action.payload };
+    case "SET_THRESHOLD":
+      return { ...state, threshold: action.payload };
     default:
       return state;
   }
