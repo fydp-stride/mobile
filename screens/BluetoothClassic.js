@@ -20,11 +20,10 @@ export default class BluetoothClassic extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      // If it's connected the show device right away.
       device: props.device,
       bluetoothEnabled: true,
     };
-    console.log("Current Device in constructor", this.state.device);
-    this.deviceDispatch = props.deviceDispatch;
   }
 
   /**
@@ -38,10 +37,6 @@ export default class BluetoothClassic extends React.Component {
    */
   selectDevice = (device) => {
     //console.log('App::selectDevice() called with: ', device);
-    this.deviceDispatch({
-      type: 'connect',
-      device: device
-    });
     this.setState({ device });
   };
 
@@ -96,11 +91,6 @@ export default class BluetoothClassic extends React.Component {
    */
   onStateChanged(stateChangedEvent) {
     console.log('App::onStateChanged event used for onBluetoothEnabled and onBluetoothDisabled');
-
-    this.deviceDispatch({
-      type: 'disconnect',
-      device: null
-    });
     this.setState({
       bluetoothEnabled: stateChangedEvent.enabled,
       device: stateChangedEvent.enabled ? this.state.device : undefined,
@@ -120,7 +110,8 @@ export default class BluetoothClassic extends React.Component {
             ) : (
               <ConnectionScreen
                 device={this.state.device}
-                onBack={() => this.setState({ device: undefined })} />
+                onBack={() => this.setState({ device: undefined })}
+                deviceDispatch={this.props.deviceDispatch} />
             )}
           </View>
         </View>

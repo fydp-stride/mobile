@@ -85,69 +85,82 @@ class ConnectionScreen extends React.Component {
    * data based on the configuration.
    */
   componentDidMount() {
-    //setTimeout(() => this.connect(), 0);
+    // if(this.props.device) {
+    //   setTimeout(() => this.connect(), 0);
+    // }
   }
 
   async connect() {
-    try {
-      let connection = await this.props.device.isConnected();
-      if (!connection) {
-        this.addData({
-          data: `Attempting connection to ${this.props.device.address}`,
-          timestamp: new Date(),
-          type: 'error',
-        });
+    this.props.deviceDispatch({
+      type: 'connect',
+      device: this.props.device
+    });
 
-        //console.log(this.state.connectionOptions);
-        connection = await this.props.device.connect(this.state.connectionOptions);
+    // try {
+    //   let connection = await this.props.device.isConnected();
+    //   if (!connection) {
+    //     this.addData({
+    //       data: `Attempting connection to ${this.props.device.address}`,
+    //       timestamp: new Date(),
+    //       type: 'error',
+    //     });
 
-        this.addData({
-          data: 'Connection successful',
-          timestamp: new Date(),
-          type: 'info',
-        });
-      } else {
-        this.addData({
-          data: `Connected to ${this.props.device.address}`,
-          timestamp: new Date(),
-          type: 'error',
-        });
-      }
+    //     //console.log(this.state.connectionOptions);
+    //     connection = await this.props.device.connect(this.state.connectionOptions);
 
-      this.setState({ connection });
-      this.initializeRead();
-    } catch (error) {
-      this.addData({
-        data: `Connection failed: ${error.message}`,
-        timestamp: new Date(),
-        type: 'error',
-      });
-    }
+    //     this.addData({
+    //       data: 'Connection successful',
+    //       timestamp: new Date(),
+    //       type: 'info',
+    //     });
+    //   } else {
+    //     this.addData({
+    //       data: `Connected to ${this.props.device.address}`,
+    //       timestamp: new Date(),
+    //       type: 'error',
+    //     });
+    //   }
+
+    //   this.setState({ connection });
+    //   this.initializeRead();
+    // } catch (error) {
+    //   this.addData({
+    //     data: `Connection failed: ${error.message}`,
+    //     timestamp: new Date(),
+    //     type: 'error',
+    //   });
+    // }
   }
 
   async disconnect(disconnected) {
-    try {
-      if (!disconnected) {
-        disconnected = await this.props.device.disconnect();
-      }
-
-      this.addData({
-        data: 'Disconnected',
-        timestamp: new Date(),
-        type: 'info',
-      });
-
-      this.setState({ connection: !disconnected });
-    } catch (error) {
-      this.addData({
-        data: `Disconnect failed: ${error.message}`,
-        timestamp: new Date(),
-        type: 'error',
+    if (!disconnected) {
+      this.props.deviceDispatch({
+        type: 'disconnect',
+        device: this.props.device
       });
     }
+    // try {
+    //   if (!disconnected) {
+    //     disconnected = await this.props.device.disconnect();
+    //   }
+
+    //   this.addData({
+    //     data: 'Disconnected',
+    //     timestamp: new Date(),
+    //     type: 'info',
+    //   });
+
+    //   this.setState({ connection: !disconnected });
+    // } catch (error) {
+    //   this.addData({
+    //     data: `Disconnect failed: ${error.message}`,
+    //     timestamp: new Date(),
+    //     type: 'error',
+    //   });
+    // }
 
     // Clear the reads, so that they don't get duplicated
-    this.uninitializeRead();
+    // this.uninitializeRead();
   }
 
   initializeRead() {
@@ -288,7 +301,7 @@ class ConnectionScreen extends React.Component {
       }
 
       // This may create a buffer greater than the length.
-      for (x = i; x < message.length; x++){
+      for (let x = i; x < message.length; x++){
         this.buffer += message.charAt(x);
         i++;
         // Ensures buffer is of length (max) this.length
