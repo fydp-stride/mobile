@@ -16,6 +16,8 @@ import { connect, bindActionCreators } from 'react-redux';
 import { useSelector, useDispatch } from 'react-redux';
 import { setAge, setHeight, setWeight } from './actions/userDataActions';
 
+import {useDevice, useDeviceDispatch} from '../src/connection/ConnectionContext';
+
 function HomeScreen(props) {
   const [biometricsVisible, setBiometricsVisible] = React.useState(false);
   const [bluetoothVisible, setBluetoothVisible] = React.useState(false);
@@ -27,6 +29,10 @@ function HomeScreen(props) {
   let age = props.userData.age;
 
   const re = /^[0-9\b]+$/;
+
+  // Hacky way to use useContext under a functional component that can then be "imported" to a class component.
+  const device = useDevice();
+  const deviceDispatch = useDeviceDispatch();
 
   return (
     <Layout style={{ alignItems: 'center', flex: 1, backgroundColor: 'white' }}>
@@ -150,7 +156,7 @@ function HomeScreen(props) {
         backdropStyle={styles.backdrop}
         onBackdropPress={() => setBluetoothVisible(false)}
         style={styles.bluetooth}>
-        <BluetoothClassic />
+        <BluetoothClassic device={device} deviceDispatch={deviceDispatch} />
       </Modal>
 
       <Modal

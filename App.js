@@ -40,6 +40,8 @@ import { PersistGate } from 'redux-persist/integration/react';
 
 import MainContainer from './mainContainer';
 
+import { ConnectionProvider } from './src/connection/ConnectionContext.js';
+
 const App: () => Node = () => {
   // const isDarkMode = useColorScheme() === 'dark';
 
@@ -53,11 +55,13 @@ const App: () => Node = () => {
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
             <IconRegistry icons={EvaIconsPack} />
-            <NativeBaseProvider>
-              <ApplicationProvider {...eva} theme={eva.light}>
-                <MainContainer />
-              </ApplicationProvider>
-            </NativeBaseProvider>
+              <ConnectionProvider>
+                <NativeBaseProvider>
+                  <ApplicationProvider {...eva} theme={eva.light}>
+                    <MainContainer />
+                  </ApplicationProvider>
+                </NativeBaseProvider>
+              </ConnectionProvider>
           </PersistGate>
         </Provider>
       </ToastProvider>
