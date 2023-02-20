@@ -6,6 +6,7 @@
  * @flow strict-local
  */
 
+import { ToastProvider } from 'react-native-toast-notifications';
 import React from 'react';
 import { Node } from 'react';
 import {
@@ -35,7 +36,7 @@ import * as eva from '@eva-design/eva';
 import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
 
-import { PersistGate } from 'redux-persist/integration/react'
+import { PersistGate } from 'redux-persist/integration/react';
 
 import MainContainer from './mainContainer';
 
@@ -50,18 +51,20 @@ const App: () => Node = () => {
 
   return (
     <>
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <IconRegistry icons={EvaIconsPack} />
-          <ConnectionProvider>
-            <NativeBaseProvider>
-              <ApplicationProvider {...eva} theme={eva.light}>
-                <MainContainer />
-              </ApplicationProvider>
-            </NativeBaseProvider>
-          </ConnectionProvider>
-        </PersistGate>
-      </Provider>
+      <ToastProvider>
+        <Provider store={store}>
+          <PersistGate loading={null} persistor={persistor}>
+            <IconRegistry icons={EvaIconsPack} />
+              <ConnectionProvider>
+                <NativeBaseProvider>
+                  <ApplicationProvider {...eva} theme={eva.light}>
+                    <MainContainer />
+                  </ApplicationProvider>
+                </NativeBaseProvider>
+              </ConnectionProvider>
+          </PersistGate>
+        </Provider>
+      </ToastProvider>
     </>
   );
 };

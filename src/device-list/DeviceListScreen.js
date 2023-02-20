@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import { Button, Text, Layout, Toggle} from '@ui-kitten/components';
+import { Button, Text, Layout, Toggle } from '@ui-kitten/components';
 import {
   Body,
   Container,
@@ -18,6 +18,7 @@ import {
   Header,
   Title,
 } from 'native-base';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 /**
  * See https://reactnative.dev/docs/permissionsandroid for more information
@@ -34,7 +35,7 @@ const requestAccessFineLocationPermission = async () => {
       buttonNeutral: 'Ask Me Later',
       buttonNegative: 'Cancel',
       buttonPositive: 'OK',
-    }
+    },
   );
   return granted === PermissionsAndroid.RESULTS.GRANTED;
 };
@@ -75,7 +76,7 @@ export default class DeviceListScreen extends React.Component {
   /**
    * Gets the currently bonded devices.
    */
-  getBondedDevices = async (unloading) => {
+  getBondedDevices = async unloading => {
     console.log('DeviceListScreen::getBondedDevices');
     try {
       let bonded = await RNBluetoothClassic.getBondedDevices();
@@ -112,8 +113,11 @@ export default class DeviceListScreen extends React.Component {
         let unpaired = await RNBluetoothClassic.startDiscovery();
 
         let index = devices.findIndex(d => !d.bonded);
-        if (index >= 0) { devices.splice(index, devices.length - index, ...unpaired); }
-        else { devices.push(...unpaired); }
+        if (index >= 0) {
+          devices.splice(index, devices.length - index, ...unpaired);
+        } else {
+          devices.push(...unpaired);
+        }
 
         Toast.show({
           text: `Found ${unpaired.length} unpaired devices.`,
@@ -142,7 +146,8 @@ export default class DeviceListScreen extends React.Component {
 
   requestEnabled = async () => {
     try {
-      this.props.bluetoothEnabled = await RNBluetoothClassic.requestBluetoothEnabled();
+      this.props.bluetoothEnabled =
+        await RNBluetoothClassic.requestBluetoothEnabled();
       this.componentDidMount();
     } catch (error) {
       Toast.show({
@@ -162,7 +167,8 @@ export default class DeviceListScreen extends React.Component {
       : () => this.startDiscovery();
 
     return (
-      <Layout style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
+      <Layout
+        style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
         <View iosBarStyle="light-content">
           {this.props.bluetoothEnabled ? (
             <View>
@@ -170,39 +176,37 @@ export default class DeviceListScreen extends React.Component {
                 <Text>Get Bonded Devices</Text>
               </Button>
             </View>
-          ) : (
-              undefined
-            )}
+          ) : undefined}
         </View>
         {this.props.bluetoothEnabled ? (
           <>
             {Platform.OS !== 'ios' ? (
               <View>
                 <Button onPress={toggleDiscovery}>
-                        <Text>{this.state.discovering
+                  <Text>
+                    {this.state.discovering
                       ? 'Discovering (cancel)...'
-                      : 'Discover Devices'}</Text>
+                      : 'Discover Devices'}
+                  </Text>
                 </Button>
               </View>
-            ) : (
-                undefined
-              )}
-              <View style={styles.body}>
-                <Text style={styles.titleText} >Devices</Text>
-              </View>
-              <DeviceList
+            ) : undefined}
+            <View style={styles.body}>
+              <Text style={styles.titleText}>Devices</Text>
+            </View>
+            <DeviceList
               devices={this.state.devices}
               onPress={this.props.selectDevice}
             />
           </>
         ) : (
-            <View style={styles.center}>
-              <Text>Bluetooth is OFF</Text>
-              <Button onPress={() => this.requestEnabled()}>
-                <Text>Enable Bluetooth</Text>
-              </Button>
-            </View>
-          )}
+          <View style={styles.center}>
+            <Text>Bluetooth is OFF</Text>
+            <Button onPress={() => this.requestEnabled()}>
+              <Text>Enable Bluetooth</Text>
+            </Button>
+          </View>
+        )}
       </Layout>
     );
   }
@@ -236,8 +240,8 @@ export const DeviceList = ({ devices, onPress, onLongPress }) => {
 };
 
 export const DeviceListItem = ({ device, onPress, onLongPress }) => {
-  let bgColor = device.connected ? '#0f0' : '#fff';
-  let icon = device.bonded ? 'ios-bluetooth' : 'ios-cellular';
+  let bgColor = device.connected ? 'blue' : 'gray';
+  let icon = device.bonded ? 'bluetooth' : 'cellular';
 
   return (
     <TouchableOpacity
@@ -245,7 +249,7 @@ export const DeviceListItem = ({ device, onPress, onLongPress }) => {
       onLongPress={() => onLongPress(device)}
       style={styles.deviceListItem}>
       <View style={styles.deviceListItemIcon}>
-        <Icon type="Ionicons" name={icon} color={bgColor} />
+        <Ionicons name={icon} size={20} color={bgColor} />
       </View>
       <View>
         <Text>{device.name}</Text>
@@ -274,6 +278,6 @@ const styles = StyleSheet.create({
   },
   titleText: {
     fontSize: 20,
-    fontWeight: "bold"
+    fontWeight: 'bold',
   },
 });

@@ -1,27 +1,22 @@
-
 import React, { useRef } from 'react';
 import { FlatList, View, Text, Dimensions } from 'react-native';
 import { LineChart, BarChart, StackedBarChart } from 'react-native-chart-kit';
 
 export default EventChart = props => {
   const chartConfig = {
-    // backgroundGradientFrom: '#FFFFFF',
-    // backgroundGradientTo: '#FFFFFF',
     backgroundGradientFrom: '#f0fceb',
     backgroundGradientTo: '#f0fceb',
     color: (opacity = 1) => '#5DB075',
     fillShadowGradient: '#5DB075',
     fillShadowGradientOpacity: 1,
-    barPercentage: 0.6, // percentage of available width each bar should be
+    barPercentage: 0.6,
     propsForVerticalLabels: {
       fontSize: 16,
     },
     barRadius: 10,
   };
 
-  const weeklyCharts = [];
-
-  const renderWeeklyChart = () => {
+  const renderWeeklyChart = ({ item }) => {
     return (
       <View
         style={{ backgroundColor: '#FFFFFF', borderRadius: 16, padding: 3 }}>
@@ -29,16 +24,18 @@ export default EventChart = props => {
           <Text
             style={{
               fontWeight: 'bold',
-              fontSize: 20,
-              color: 'black',
-              textAlign: 'center',
-              paddingVertical: 10
+              fontSize: 15,
+              color: 'gray',
+              textAlign: 'left',
+              paddingTop: 10 ,
+              paddingBottom: 20,
+              marginLeft: 5
             }}>
-            Week of {props.dateData.weekOf}
+            Week of {item.weekOf}
           </Text>
         </View>
         <BarChart
-          data={props.dateData}
+          data={item}
           width={Dimensions.get('window').width - 20}
           height={240}
           chartConfig={chartConfig}
@@ -54,8 +51,8 @@ export default EventChart = props => {
           }}
           withHorizontalLabels={false}
           xLabelsOffset={8}
-          verticalLabelRotation={360 - 35}
           yAxisInterval={1}
+          verticalLabelRotation={360 - 35}
           backgroundColor={'#F5F5F5'}
         />
       </View>
@@ -63,27 +60,29 @@ export default EventChart = props => {
   };
 
   const keyExtractor = (item, index) => index.toString();
-  const numWeeks = 5;
-  const chartWidth = Dimensions.get('window').width - 20; // Set the width of the chart
-  
-  const flatListRef = useRef(null);
-  const onMomentumScrollEnd = (event) => {
+  const chartWidth = Dimensions.get('window').width - 20; 
+  const leftMargin = (Dimensions.get('window').width - chartWidth) / 2;
 
-    // TODO: need some serious logic handling here for out of bound
+  const flatListRef = useRef(null);
+  const onMomentumScrollEnd = event => {
     const index = Math.round(event.nativeEvent.contentOffset.x / chartWidth);
-    flatListRef.current.scrollToIndex({ index, animated: true, duration: 1,  });
+    // this is also the index we use to filter components
+    // console.log(
+    //   `dividing ${event.nativeEvent.contentOffset.x} by ${chartWidth}. Getting index: ${index}`,
+    // );
+    flatListRef.current.scrollToIndex({ index, animated: true });
   };
 
-  return (    
+  return (
     <View>
-       <FlatList
-       ref={flatListRef}
-        data={new Array(numWeeks)}
+      <FlatList
+        ref={flatListRef}
+        data={props.monthData}
         renderItem={renderWeeklyChart}
         keyExtractor={keyExtractor}
         horizontal={true}
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ alignItems: 'center', paddingLeft: 7}} // LMAOOOOO
+        contentContainerStyle={{ alignItems: 'center', justifyContent: 'center', marginLeft: 7}} // IDFK why
         onMomentumScrollEnd={onMomentumScrollEnd}
         decelerationRate={'fast'}
       />
