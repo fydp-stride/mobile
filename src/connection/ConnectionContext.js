@@ -16,6 +16,7 @@ export function ConnectionProvider({ children }) {
 	const BATT_CMD = 0x04;
 	const WEIGHT_CMD = 0x05;
 	const RESPONSE_CMD = 0x06;
+	const CALIBRATE_CMD = 0x07;
 	// variable device will hold a device information that is bluetooth CONNECTED.
 	// device is initially null
 	const [device, dispatch] = useReducer(deviceReducer, null);
@@ -42,6 +43,14 @@ export function ConnectionProvider({ children }) {
 			case 'disconnect': {
 				disconnect(action);
 				return null;
+			}
+			case 'write_weight': {
+				writeWeight(device, action.weight);
+				return device;
+			}
+			case 'write_calibrate': {
+				writeCalibrate(device);
+				return device;
 			}
 		}
 	}
@@ -126,6 +135,9 @@ export function ConnectionProvider({ children }) {
 		}
 	}
 		
+	// CURRENT LIMITATION: Might Receive a large buffer size (such as 180), and nothing will be done until I receive exactly
+	// 180 bytes of data. Because of this, the bluetooth side might send less than 180 even though it's intended to send 180,
+	// and this causes the program to hang (or not function as intended)
 	async function onReceivedData(event) {
 		event.timestamp = new Date();
 		
@@ -184,6 +196,8 @@ export function ConnectionProvider({ children }) {
 		  //buffer.push(message.substring(i));
 	
 		  // More messages incoming!
+		  //console.log("Buffer length: ", buffer.length);
+		  //console.log("Expected length: ", length);
 		  if (buffer.length < length){
 			break;
 		  }
@@ -235,8 +249,13 @@ export function ConnectionProvider({ children }) {
 				dispatchGlobal(setBattery(battPerc));
 				//console.log("set battery " + battPerc + " to the battery dispatcher.");
 				break;
+			case RESPONSE_CMD:
+				//console.log("buffer: ", buffer);
+				//console.log("buffer size: ", buffer.length);
+				bluetoothLatencyTest(buffer);
+				break;
 			default:
-			  console.log(`Invalid Packet`);
+			  console.log(`Invalid Packet: ${cmd}`);
 		  }
 		  // Reset this current message for next message
 		  cmd = undefined;
@@ -256,6 +275,90 @@ export function ConnectionProvider({ children }) {
 	
 	async function addForceLocal(force){
 		currentMaxForce = Math.max(currentMaxForce, force);
+	}
+
+	async function writeWeight(device, weight){
+		var float_arr = new Float32Array(1);
+		float_arr[0] = weight;
+		var binary_arr = new Int8Array(float_arr.buffer); 
+		try{
+			await RNBluetoothClassic.writeToDevice(
+			  device.address,
+			  String.fromCharCode(SYNC_BYTE),
+			  "ascii",
+			);
+			await RNBluetoothClassic.writeToDevice(
+			  device.address,
+			  String.fromCharCode(WEIGHT_CMD),
+			  "ascii",
+			);
+			await RNBluetoothClassic.writeToDevice(
+			  device.address,
+			  String.fromCharCode(binary_arr.length),
+			  "ascii",
+			);
+			await RNBluetoothClassic.writeToDevice(
+			  device.address,
+			  String.fromCharCode(...binary_arr),
+			  "ascii",
+			);
+			console.log("Successfully write weight to bluetooth");
+		  } catch (error){
+			console.log("Writing to bluetooth error: ", error);
+		  }
+	}
+
+	async function writeCalibrate(device){
+		try{
+			await RNBluetoothClassic.writeToDevice(
+			  device.address,
+			  String.fromCharCode(SYNC_BYTE),
+			  "ascii",
+			);
+			await RNBluetoothClassic.writeToDevice(
+			  device.address,
+			  String.fromCharCode(CALIBRATE_CMD),
+			  "ascii",
+			);
+			await RNBluetoothClassic.writeToDevice(
+			  device.address,
+			  String.fromCharCode(0),
+			  "ascii",
+			);
+			console.log("Successfully write calibration command to bluetooth");
+		  } catch (error){
+			console.log("Writing to bluetooth error: ", error);
+		  }
+	}
+
+	async function bluetoothLatencyTest(buffer){
+		var binary_arr = Int8Array.from(buffer);
+		//console.log(binary_arr);
+		try {
+			await RNBluetoothClassic.writeToDevice(
+				device.address,
+				String.fromCharCode(SYNC_BYTE),
+				"ascii",
+			);
+			await RNBluetoothClassic.writeToDevice(
+				device.address,
+				String.fromCharCode(RESPONSE_CMD),
+				"ascii",
+			);
+			await RNBluetoothClassic.writeToDevice(
+				device.address,
+				String.fromCharCode(binary_arr.length),
+				"ascii",
+			);
+			await RNBluetoothClassic.writeToDevice(
+				device.address,
+				String.fromCharCode(...binary_arr),
+				"ascii",
+			);
+			console.log("Successfully write response command to bluetooth");
+		} catch (error){
+			console.log("Writing to bluetooth error: ", error);
+		  }
 	}
 
 	return (

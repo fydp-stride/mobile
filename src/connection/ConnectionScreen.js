@@ -70,14 +70,12 @@ class ConnectionScreen extends React.Component {
    */
   async componentWillUnmount() {
     if (this.state.connection) {
-      try {
-        await this.props.device.disconnect();
-      } catch (error) {
-        // Unable to disconnect from device
-      }
+      // try {
+      //   await this.props.device.disconnect();
+      // } catch (error) {
+      //   // Unable to disconnect from device
+      // }
     }
-
-    this.uninitializeRead();
   }
 
   /**
@@ -96,41 +94,7 @@ class ConnectionScreen extends React.Component {
       type: 'connect',
       device: this.props.device
     });
-
-    // try {
-    //   let connection = await this.props.device.isConnected();
-    //   if (!connection) {
-    //     this.addData({
-    //       data: `Attempting connection to ${this.props.device.address}`,
-    //       timestamp: new Date(),
-    //       type: 'error',
-    //     });
-
-    //     //console.log(this.state.connectionOptions);
-    //     connection = await this.props.device.connect(this.state.connectionOptions);
-
-    //     this.addData({
-    //       data: 'Connection successful',
-    //       timestamp: new Date(),
-    //       type: 'info',
-    //     });
-    //   } else {
-    //     this.addData({
-    //       data: `Connected to ${this.props.device.address}`,
-    //       timestamp: new Date(),
-    //       type: 'error',
-    //     });
-    //   }
-
-    //   this.setState({ connection });
-    //   this.initializeRead();
-    // } catch (error) {
-    //   this.addData({
-    //     data: `Connection failed: ${error.message}`,
-    //     timestamp: new Date(),
-    //     type: 'error',
-    //   });
-    // }
+    this.setState({ connection: true });
   }
 
   async disconnect(disconnected) {
@@ -139,80 +103,7 @@ class ConnectionScreen extends React.Component {
         type: 'disconnect',
         device: this.props.device
       });
-    }
-    // try {
-    //   if (!disconnected) {
-    //     disconnected = await this.props.device.disconnect();
-    //   }
-
-    //   this.addData({
-    //     data: 'Disconnected',
-    //     timestamp: new Date(),
-    //     type: 'info',
-    //   });
-
-    //   this.setState({ connection: !disconnected });
-    // } catch (error) {
-    //   this.addData({
-    //     data: `Disconnect failed: ${error.message}`,
-    //     timestamp: new Date(),
-    //     type: 'error',
-    //   });
-    // }
-
-    // Clear the reads, so that they don't get duplicated
-    // this.uninitializeRead();
-  }
-
-  initializeRead() {
-    this.disconnectSubscription = RNBluetoothClassic.onDeviceDisconnected(() => this.disconnect(true));
-
-    const INTERVAL = 5000; //5 seconds
-    this.graphInterval = setInterval(() => {
-      if (this.state.diffImpulse > 0){
-        const addImpulseAction = {
-          type: 'bluetooth/addImpulse',
-          payload: this.state.accumulateImpulse
-        }
-        // add to global dispatcher
-        this.props.addImpulse(addImpulseAction);
-      }
-      
-      if (this.state.currentMaxForce > 0){
-        const addMaxForceAction = {
-          type: 'bluetooth/addMaxForce',
-          payload: this.state.currentMaxForce
-        }
-        // add to global dispatcher
-        this.props.addMaxForce(addMaxForceAction);
-      }
-      this.setState(
-        { currentMaxForce: 0,
-          accumulateImpulse: 0,
-          diffImpulse: 0})
-    }, INTERVAL);
-
-    if (this.state.polling) {
-      this.readInterval = setInterval(() => this.performRead(), 5000);
-    } else {
-      this.readSubscription = this.props.device.onDataReceived(data =>
-        this.onReceivedData(data)
-      );
-    }
-  }
-
-  /**
-   * Clear the reading functionality.
-   */
-  uninitializeRead() {
-    if (this.readInterval) {
-      clearInterval(this.readInterval);
-    }
-    if (this.readSubscription) {
-      this.readSubscription.remove();
-    }
-    if (this.graphInterval) {
-      clearInterval(this.graphInterval);
+      this.setState({ connection: false });
     }
   }
 
@@ -509,12 +400,6 @@ class ConnectionScreen extends React.Component {
         message
       );
 
-      this.addData({
-        timestamp: new Date(),
-        data: this.state.text,
-        type: 'sent',
-      });
-
       // let data = Buffer.alloc(10, 0xEF);
       // await this.props.device.write(data);
 
@@ -594,8 +479,18 @@ class ConnectionScreen extends React.Component {
             </Button>
           </View>
           <View>
-            <Button onPress={() => this.writeWeight()}>
+            <Button onPress={() => this.props.deviceDispatch({
+                type: 'write_weight',
+                weight: 99.99})
+              }>
               <Text> Send Weight Info </Text>
+            </Button>
+          </View>
+          <View>
+            <Button onPress={() => this.props.deviceDispatch({
+                type: 'write_calibrate'})
+              }>
+              <Text> Calibrate </Text>
             </Button>
           </View>
         </View>

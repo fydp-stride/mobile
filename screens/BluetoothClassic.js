@@ -108,6 +108,8 @@ export default class BluetoothClassic extends React.Component {
                 selectDevice={this.selectDevice}
               />
             ) : (
+              // Need to add support for ConnectedDevice by sending this down. This way, I can check if bluetooth
+              // Is connected or not.
               <ConnectionScreen
                 device={this.state.device}
                 onBack={() => this.setState({ device: undefined })}
