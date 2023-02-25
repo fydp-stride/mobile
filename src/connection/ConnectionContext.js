@@ -37,20 +37,32 @@ export function ConnectionProvider({ children }) {
 	function deviceReducer(device, action) {
 		switch (action.type) {
 			case 'connect': {	
-				connect(action);		
-				return action.device;
+				connect(action);
+				// Don't return device action.device yet since connection may fail		
+				return device;
 			}
 			case 'disconnect': {
 				disconnect(action);
-				return null;
+				// Don't return null device yet since disconnection may fail
+				return device;
 			}
 			case 'write_weight': {
-				writeWeight(device, action.weight);
+				if (device) {
+					writeWeight(device, action.weight);
+				}
 				return device;
 			}
 			case 'write_calibrate': {
-				writeCalibrate(device);
+				if (device) {
+					writeCalibrate(device);
+				}
 				return device;
+			}
+			case 'connected': {
+				return action.device;
+			}
+			case 'disconnected': {
+				return null;
 			}
 		}
 	}
@@ -68,7 +80,11 @@ export function ConnectionProvider({ children }) {
 				console.log("Attempting connection to ", action.device.address);
 				connection = await action.device.connect(connectionOptions);
 				console.log("Connection Successful");
-				initializeRead();
+				dispatch({
+					type: 'connected',
+					device: action.device
+				})
+				initializeRead(action.device);
 			} else {
 				console.log(action.device.address, " was already connected");
 			}
@@ -80,6 +96,11 @@ export function ConnectionProvider({ children }) {
 	async function disconnect(action) {
 		try {
 			let disconnect = await action.device.disconnect();
+			if (disconnect) {
+				dispatch({
+					type: 'disconnected'
+				})
+			}
 			console.log("Disconnected Bluetooth");
 		} catch (error) {
 			console.log("Disconnection failed: ", error.message);
@@ -88,7 +109,7 @@ export function ConnectionProvider({ children }) {
 		uninitializeRead();
 	}
 	
-	function initializeRead() {
+	function initializeRead(device) {
 		//disconnectSubscription = RNBluetoothClassic.onDeviceDisconnected(() => disconnect(true));
 		const INTERVAL = 5000; //5 seconds
 		let graphInt = setInterval(() => {

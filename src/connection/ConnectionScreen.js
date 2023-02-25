@@ -94,7 +94,7 @@ class ConnectionScreen extends React.Component {
       type: 'connect',
       device: this.props.device
     });
-    this.setState({ connection: true });
+    //this.setState({ connection: true });
   }
 
   async disconnect(disconnected) {
@@ -103,7 +103,7 @@ class ConnectionScreen extends React.Component {
         type: 'disconnect',
         device: this.props.device
       });
-      this.setState({ connection: false });
+      //this.setState({ connection: false });
     }
   }
 
@@ -416,7 +416,7 @@ class ConnectionScreen extends React.Component {
   }
 
   async toggleConnection() {
-    if (this.state.connection) {
+    if (this.props.deviceConnected) {
       this.disconnect();
     } else {
       this.connect();
@@ -455,7 +455,7 @@ class ConnectionScreen extends React.Component {
   }
   
   render() {
-    let toggleIcon = this.state.connection
+    let toggleIcon = this.props.deviceConnected
       ? 'radio-button-on'
       : 'radio-button-off';
 
@@ -475,7 +475,7 @@ class ConnectionScreen extends React.Component {
           <View>
             <Button transparent onPress={() => this.toggleConnection()}>
               <Ionicons name={toggleIcon} size={20} color='black' />
-              <Text> {this.state.connection?"Disconnect":"Connect"}</Text>
+              <Text> {this.props.deviceConnected ?"Disconnect":"Connect"}</Text>
             </Button>
           </View>
           <View>
@@ -512,12 +512,12 @@ class ConnectionScreen extends React.Component {
               </View>
             )}
           />
-          <InputArea
+          {/* <InputArea
             text={this.state.text}
             onChangeText={text => this.setState({ text })}
             onSend={() => this.sendData()}
-            disabled={!this.state.connection}
-          />
+            disabled={!this.props.deviceConnected}
+          /> */}
         </View>
       </View>
     );

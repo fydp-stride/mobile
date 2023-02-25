@@ -113,7 +113,8 @@ export default class BluetoothClassic extends React.Component {
               <ConnectionScreen
                 device={this.state.device}
                 onBack={() => this.setState({ device: undefined })}
-                deviceDispatch={this.props.deviceDispatch} />
+                deviceDispatch={this.props.deviceDispatch}
+                deviceConnected={this.props.device ? true: false} />
             )}
           </View>
         </View>
