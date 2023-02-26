@@ -12,7 +12,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 // screens
 import MapHomeView from './screens/MapHomeView';
 import HomeScreen from './screens/HomeScreen';
-import SettingsScreen from './screens/SettingsScreen';
+import MonitorScreen from './screens/MonitorScreen';
 import Visualization from './screens/Visualization';
 import SummaryScreen from './screens/SummaryPage';
 
@@ -20,7 +20,7 @@ import SummaryScreen from './screens/SummaryPage';
 const HomeName = 'Home';
 const VisualizationName = 'Visualization';
 const MapName = 'Map';
-const SettingsName = 'Settings';
+const MonitorName = 'Monitor';
 const SummaryRoute = 'Summary';
 
 const { Navigator, Screen } = createBottomTabNavigator();
@@ -52,6 +52,10 @@ export default function MainContainer() {
               case MapName:
                 iconName = focused ? 'map' : 'map-outline';
                 break;
+                
+              case MonitorName:
+                iconName = focused ? 'clipboard' : 'clipboard-outline';
+                break;
             }
             return <Ionicons name={iconName} size={size} color={color} />;
           },
@@ -60,6 +64,7 @@ export default function MainContainer() {
         <Screen name={SummaryRoute} component={SummaryScreen} />
         <Screen name={VisualizationName} component={Visualization} />
         <Screen name={MapName} component={MapHomeView} />
+        <Screen name={MonitorName} component={MonitorScreen} />
       </Navigator>
     </NavigationContainer>
   );

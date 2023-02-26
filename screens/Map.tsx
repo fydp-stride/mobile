@@ -68,7 +68,7 @@ const Map = props => {
   React.useEffect(() => {
     BackgroundGeolocation.getState().then((state: State) => {
       setEnabled(state.enabled);
-    });
+    }).catch((e) => { console.log(e) });
 
     const enabledSubscriber = BackgroundGeolocation.onEnabledChange(setEnabled);
 

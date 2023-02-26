@@ -137,7 +137,7 @@ const HomeView = (props, { route, navigation }) => {
     BackgroundGeolocation.setOdometer(0);
     const subscription = BackgroundGeolocation.onLocation((location) => {
       setLocation(location);
-      console.log("[onLocation] success: ", location);
+      console.log("[onLocation] success: ", location.coords);
     }, (error) => {
       console.log("[onLocation] ERROR: ", error);
     });
