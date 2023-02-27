@@ -15,6 +15,10 @@ import { toggleEnabled } from './actions/geolocationActions';
 import { setThreshold } from './actions/userDataActions';
 import { useSelector, useDispatch } from 'react-redux';
 
+import { useDevice } from '../src/connection/ConnectionContext';
+
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+
 // code for testing the notif
 import { useToast } from "react-native-toast-notifications";
 
@@ -26,7 +30,8 @@ function HomeScreen(props) {
 
   const toast = useToast();
 
-
+  const device = useDevice();
+  let bgColor = device ? 'blue' : 'gray';
 
   return (
     <>
@@ -60,6 +65,21 @@ function HomeScreen(props) {
               marginLeft: -2
             }}></View>
           </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              padding: 20,
+              backgroundColor: '#f0fceb',
+              borderRadius: 10,
+              margin: 7,
+              marginHorizontal: 10,
+              justifyContent: 'center',
+            }}>
+              <View>
+                <FontAwesome name={"bluetooth"} size={60} color={bgColor} />
+              </View>
+            </View>
         </View>
       </Layout>
     </>
