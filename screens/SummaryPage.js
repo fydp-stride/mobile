@@ -10,13 +10,16 @@ import * as React from 'react';
 import DateRoutine from './summaryPageComponents/DateRoutine';
 import EventChart from './summaryPageComponents/EventChart';
 import { Dimensions } from 'react-native';
+import { connect, bindActionCreators } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 // import Chart from '../components/Chart';
 
 import { View, ScrollView } from 'react-native';
 import RoutinesList from './summaryPageComponents/RoutinesList';
+import { setDateEvent, setWeekArray } from './actions/summaryDataActions';
 
-export default function SummaryScreen({ navigation }) {
+function SummaryPage(props) {
   // const dateData = {
   //   weekOf: "Feb 14-20",
   //   barColors: ["#dfe4ea", "#ced6e0", "#a4b0be"],
@@ -28,7 +31,13 @@ export default function SummaryScreen({ navigation }) {
   //   ],
   // };
 
-  const weekArrays = [
+  let [startTime, durationMillis] = props.geolocationData.time;
+  let DATE_EVENTS = props.summaryData.dateEvents;
+  let WEEK_ARRAY = props.summaryData.weekArrays;
+
+  const dispatch = useDispatch();
+
+  const mockWeekArrays = [
     {
       weekOf: 'Jan 31 - Feb 6',
       barColors: ['#dfe4ea', '#ced6e0', '#a4b0be'],
@@ -61,7 +70,9 @@ export default function SummaryScreen({ navigation }) {
     },
   ];
 
-  const DATE_EVENTS = [
+  console.log(props)
+
+  const mockDateEvents = [
     {
       date: '2023-02-16',
       sessionName: 'Morning Run',
@@ -135,7 +146,14 @@ export default function SummaryScreen({ navigation }) {
       duration: '45min',
     },
   ];
+
+  // React.useEffect(() => {
+  //   dispatch(setDateEvent(mockDateEvents));
+  //   dispatch(setWeekArray(mockWeekArrays));
+  // }, []);
+
   // some event dates:
+  
   return (
     <View
       style={{
@@ -153,7 +171,7 @@ export default function SummaryScreen({ navigation }) {
         }}>
         Weekly Summary
       </Text>
-      <EventChart monthData={weekArrays} />
+      <EventChart monthData={WEEK_ARRAY} />
       <View
         style={{
           borderRadius: 10,
@@ -176,3 +194,9 @@ export default function SummaryScreen({ navigation }) {
     </View>
   );
 }
+
+const mapStateToProps = state => {
+  return state;
+};
+
+export default connect(mapStateToProps)(SummaryPage);

@@ -8,7 +8,7 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { connect } from 'react-redux';
-import { setState, setOdometer, setMarkers, setCoordinates } from './actions/geolocationActions';
+import { setState, setOdometer, setMarkers, setCoordinates, setTime } from './actions/geolocationActions';
 
 import {
   StyleSheet,
@@ -32,8 +32,12 @@ import Map, { COLORS } from './Map';
 import { Button, Card, Icon, Layout, List, Modal, Text } from '@ui-kitten/components';
 
 const HomeView = (props, { route, navigation }) => {
-  let geolocationEnabled = props.geolocationData.enabled;
+  let geolocationEnabled = props.userData.geolocationEnabled;
   let odometer = props.geolocationData.odometer;
+
+  let maxForces = props.bluetoothData.maxForce;
+  let angles = props.bluetoothData.angle;
+
   // let geoState = props.geolocationData.geoState;
   const [cannotStartVisible, setCannotStartVisible] = React.useState(false);
   const [isMoving, setIsMoving] = React.useState(false);
@@ -47,7 +51,9 @@ const HomeView = (props, { route, navigation }) => {
   const [seconds, setSeconds] = React.useState(0);
   const [startTime, setStartTime] = React.useState(1);
   const [endTime, setEndTime] = React.useState(0);
-  
+
+  const MILLI = 1000;
+
   const dispatch = useDispatch();
 
   const getTime = () => {
@@ -58,7 +64,7 @@ const HomeView = (props, { route, navigation }) => {
     } else {
       const display = time - startTime;
       // console.log(display);
-      setMinutes(Math.floor((display / 1000 / 60) % 60));
+      setMinutes(Math.floor((display / 1000 / 60)));
       setSeconds(Math.floor((display / 1000) % 60));
     }
 
@@ -79,7 +85,7 @@ const HomeView = (props, { route, navigation }) => {
     const interval = setInterval(() => getTime(), 1000);
     return () => clearInterval(interval);
   }, [isMoving]);
-  
+
   const _handleAppStateChange = async nextAppState => {
     console.log('[_handleAppStateChange]', nextAppState);
     if (nextAppState === 'background') {
@@ -171,6 +177,9 @@ const HomeView = (props, { route, navigation }) => {
     setIsMoving(false);
     clearInterval(trackInterval);
     setEndTime(Date.now());
+    if (endTime - startTime > 60 * MILLI) { // dont record run unless its over 1 minute
+      dispatch(setTime([startTime, endTime - startTime]));
+    }
   };
 
   const data = [0, 1, 2]
@@ -219,11 +228,11 @@ const HomeView = (props, { route, navigation }) => {
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <View style={{ flexDirection: 'column', alignItems: 'center', marginLeft: 10 }}>
             <Text>Avg. Angle</Text>
-            <Text>34*</Text>
+            <Text>{(angles.reduce((partialSum, a) => partialSum + a, 0)) / angles.length}°</Text>
           </View>
           <View style={{ flexDirection: 'column', alignItems: 'center' }}>
             <Text>Avg. Force</Text>
-            <Text>535N</Text>
+            <Text>{(maxForces.reduce((partialSum, a) => partialSum + a, 0)) / maxForces.length}N</Text>
           </View>
           <View style={{ flexDirection: 'column', alignItems: 'center', marginRight: 10 }}>
             <Text>Distance</Text>

@@ -1,9 +1,3 @@
-export const toggleEnabled = () => (
-  {
-    type: 'TOGGLE_ENABLED',
-  }
-);
-
 export const setState = (payload) => (
   {
     type: 'SET_STATE',
