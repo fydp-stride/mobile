@@ -30,6 +30,7 @@ import BackgroundFetch from 'react-native-background-fetch';
 import Map, { COLORS } from './Map';
 
 import { Button, Card, Icon, Layout, List, Modal, Text } from '@ui-kitten/components';
+import { addDateEvent } from './actions/summaryDataActions';
 
 const HomeView = (props, { route, navigation }) => {
   let geolocationEnabled = props.userData.geolocationEnabled;
@@ -51,6 +52,12 @@ const HomeView = (props, { route, navigation }) => {
   const [seconds, setSeconds] = React.useState(0);
   const [startTime, setStartTime] = React.useState(1);
   const [endTime, setEndTime] = React.useState(0);
+
+  const timesOfDay = {
+    'Morning': [4, 12],
+    'Afternoon': [13, 18],
+    'Night': [19, 3]
+  };
 
   const MILLI = 1000;
 
@@ -169,6 +176,35 @@ const HomeView = (props, { route, navigation }) => {
     setStartTime(Date.now());
   };
 
+  const recordRoute = () => {
+    const startDate = new Date(startTime);
+    const hour = startDate.getHours();
+    let time = '';
+    if (hour > timesOfDay.Morning[0] && hour < timesOfDay.Afternoon[0]) {
+      time = 'Morning';
+    } else if (hour > timesOfDay.Afternoon[0] && hour < timesOfDay.Night[0]) {
+      time = 'Afternoon';
+    } else {
+      time = 'Night';
+    }
+
+    if ((maxForces.reduce((partialSum, a) => partialSum + a, 0) / maxForces.length) < 1000) {
+      time += ' Walk';
+    } else {
+      time += ' Run';
+    }
+
+    let newEvent = {
+      date: startDate.toISOString().split('T')[0],
+      sessionName: time,
+      distance: odometer.toString() + 'm',
+      duration: minutes.toString() + 'min'
+    };
+    console.log('newEvent', newEvent);
+
+    dispatch(addDateEvent(newEvent));
+  }
+
   const stopRecordingLoc = () => {
     BackgroundGeolocation.changePace(false);
     // if (!locationSubscriber) return;
@@ -176,10 +212,15 @@ const HomeView = (props, { route, navigation }) => {
     setLocationSubscriber(null);
     setIsMoving(false);
     clearInterval(trackInterval);
-    setEndTime(Date.now());
-    if (endTime - startTime > 60 * MILLI) { // dont record run unless its over 1 minute
-      dispatch(setTime([startTime, endTime - startTime]));
+    const endTimeNow = Date.now();
+    setEndTime(endTimeNow);
+    // console.log(endTimeNow, startTime, new Date(endTimeNow), new Date(startTime));
+    if (endTimeNow - startTime > 60 * MILLI) { // dont record run unless its over 1 minute
+      console.log(endTimeNow - startTime);
+      dispatch(setTime([startTime, endTimeNow - startTime]));
+      recordRoute();
     }
+
   };
 
   const data = [0, 1, 2]
