@@ -72,22 +72,22 @@ const Map = props => {
 
     const enabledSubscriber = BackgroundGeolocation.onEnabledChange(setEnabled);
 
-    const getLocation = async () => {
-      let loc = await BackgroundGeolocation.getCurrentPosition({
-        timeout: 30, // 30 second timeout to fetch location
-        maximumAge: 5000, // Accept the last-known-location if not older than 5000 ms.
-        desiredAccuracy: 10, // Try to fetch a location with an accuracy of `10` meters.
-        samples: 3, // How many location samples to attempt.
-        extras: {
-          // Custom meta-data.
-          route_id: 123,
-        },
-      });
-      console.log('[getLocation]', loc.coords);
-      setCenter(loc);
-    };
+    // const getLocation = async () => {
+    //   let loc = await BackgroundGeolocation.getCurrentPosition({
+    //     timeout: 30, // 30 second timeout to fetch location
+    //     maximumAge: 5000, // Accept the last-known-location if not older than 5000 ms.
+    //     desiredAccuracy: 10, // Try to fetch a location with an accuracy of `10` meters.
+    //     samples: 3, // How many location samples to attempt.
+    //     extras: {
+    //       // Custom meta-data.
+    //       route_id: 123,
+    //     },
+    //   });
+    //   console.log('[getLocation]', loc.coords);
+    //   setCenter(loc);
+    // };
 
-    getLocation().catch(e => console.error(e));
+    // getLocation().catch(e => console.error(e));
 
     return () => {
       // Important for with live-reload to remove BackgroundGeolocation event subscriptions.
