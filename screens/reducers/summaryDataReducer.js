@@ -2,12 +2,21 @@ import { combineReducers } from 'redux';
 
 export const initialState = {
   weekArrays: [{
-    weekOf: 'Jan 31 - Feb 6',
+    weekOf: 'Mar 6 - 12',
     barColors: ['#dfe4ea', '#ced6e0', '#a4b0be'],
     labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
     datasets: [
       {
-        data: [7, 6, 8, 5, 9, 7, 8],
+        data: [20, 30, 45, 15, 25, 10, 20],
+      },
+    ],
+  }, {
+    weekOf: 'Mar 13 - 19',
+    barColors: ['#dfe4ea', '#ced6e0', '#a4b0be'],
+    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    datasets: [
+      {
+        data: [7, 6, 8, 0, 0, 0, 0],
       },
     ],
   }],

@@ -64,7 +64,7 @@ function HomeScreen(props) {
           fontSize: 18,
           color: 'black',
           marginTop: 10,
-          marginBottom: '7%',
+          marginBottom: '10%',
         }}>
         You are doing great today!
       </Text>
@@ -77,13 +77,13 @@ function HomeScreen(props) {
       <Button onPress={() => setSettingsVisible(true)} style={styles.button}>
         Settings
       </Button>
-      <Button
+      {/* <Button
         onPress={() => {
           console.log('3');
         }}
         style={styles.button}>
         Logout
-      </Button>
+      </Button> */}
 
       <Modal
         visible={biometricsVisible}
@@ -113,6 +113,7 @@ function HomeScreen(props) {
               keyboardType="numeric"
               numberOfLines={1}
               maxLength={3}
+              placeholder='height'
               onChangeText={nextValue => {
                 if (nextValue === '' || re.test(nextValue)) {
                   dispatch(setHeight(nextValue));
@@ -220,7 +221,7 @@ var styles = StyleSheet.create({
     borderWidth: 0,
     borderRadius: 100,
     width: '60%',
-    marginBottom: '5%',
+    marginBottom: '6%',
   },
   backdrop: {
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
