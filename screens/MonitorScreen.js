@@ -25,7 +25,8 @@ import { useToast } from "react-native-toast-notifications";
 function HomeScreen(props) {
   const dispatch = useDispatch();
   const bluetoothData = useSelector(state => state.bluetoothData);
-  const battery = bluetoothData.battery === 0 ? 0 : bluetoothData.battery;
+  let battery = bluetoothData.battery === 0 ? 0 : bluetoothData.battery;
+  // battery = 49;
   const batteryPercentage = battery.toString() + "%";
 
   const toast = useToast();
@@ -51,7 +52,7 @@ function HomeScreen(props) {
             }}>
             <View style={styles.progressBar}>
               <View style={{ backgroundColor: "#8BED4F", width: `${batteryPercentage}`, justifyContent: 'center', alignItems: 'center' }} />
-              <View style={{ width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+              <View style={{ width: '100%', justifyContent: 'center', alignItems: 'center', position: 'absolute', top: '35%' }}>
                 <Text style={{ fontSize: 20 }}>{batteryPercentage}</Text>
               </View>
             </View>

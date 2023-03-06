@@ -2,6 +2,7 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import bluetoothReducer from '../reducers/bluetoothSlice';
 import geolocationReducer, { initialState as geo } from '../reducers/geolocationReducer';
 import userDataReducer, { initialState as user } from '../reducers/userDataReducer';
+import summaryDataReducer from '../reducers/summaryDataReducer';
 import {
   createMigrate, persistStore, persistReducer, FLUSH,
   REHYDRATE,
@@ -26,7 +27,7 @@ const migrations = {
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['geolocationData', 'userData'],
+  whitelist: ['userData', 'summaryData'],
   // migrate: createMigrate(migrations, { debug: false }),
   stateReconciler: autoMergeLevel2
 }
@@ -34,7 +35,8 @@ const persistConfig = {
 const reducers = combineReducers({
   bluetoothData: bluetoothReducer,
   geolocationData: geolocationReducer,
-  userData: userDataReducer
+  userData: userDataReducer,
+  summaryData: summaryDataReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, reducers);

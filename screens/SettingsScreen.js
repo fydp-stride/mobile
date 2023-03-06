@@ -11,7 +11,7 @@ import {
 } from '@ui-kitten/components';
 import BackgroundGeolocation from 'react-native-background-geolocation';
 import { connect, bindActionCreators } from 'react-redux';
-import { toggleEnabled } from './actions/geolocationActions';
+import { toggleEnabled } from './actions/userDataActions';
 import { setThreshold } from './actions/userDataActions';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -24,7 +24,7 @@ function HomeScreen(props) {
   // const [maxThreshold, changeMaxThreshold] = useState("");
 
   const dispatch = useDispatch();
-  let geolocationEnabled = props.geolocationData.enabled;
+  let geolocationEnabled = props.userData.geolocationEnabled;
   let maxThreshold = props.userData.threshold;
 
   useEffect(() => {

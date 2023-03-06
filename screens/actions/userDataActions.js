@@ -25,3 +25,12 @@ export const setThreshold = (payload) => (
     payload: payload
   }
 );
+
+export const toggleEnabled = (payload) => (
+  {
+    type: 'TOGGLE_ENABLED',
+    payload: payload
+  }
+);
+
+
