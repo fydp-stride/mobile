@@ -1,5 +1,5 @@
 import React from 'react';
-import { createContext, useContext, useReducer } from 'react';
+import { createContext, useContext, useReducer, useState } from 'react';
 import RNBluetoothClassic from 'react-native-bluetooth-classic';
 import { addImpulse, addMaxForce, addAngle, clearImpulse, clearMaxForce, 
 	clearAngle, setImpulse, setMaxForce, setBattery, setImpulseAxis, setMaxForceAxis } from '../../screens/reducers/bluetoothSlice';
@@ -19,50 +19,61 @@ export function ConnectionProvider({ children }) {
 	const CALIBRATE_CMD = 0x07;
 	// variable device will hold a device information that is bluetooth CONNECTED.
 	// device is initially null
-	const [device, dispatch] = useReducer(deviceReducer, null);
+	const [state, dispatch] = useReducer(deviceReducer, {
+		device: null,
+		graphInterval: null,
+		readSubscription: null
+	});
 	const dispatchGlobal = useDispatch();
+	const [timeMark, setTimeMark] = React.useState(new Date());
 
 	let accumulateImpulse = 0;
 	let diffImpulse = 0;
 	let currentMaxForce = 0;
-
-	let graphInterval = null;
-	let readSubscription = null;
 
 	let cmd = undefined;
 	let sync = undefined;
 	let length = 0;
 	let buffer = undefined;
 
-	function deviceReducer(device, action) {
+	function deviceReducer(state, action) {
 		switch (action.type) {
 			case 'connect': {	
 				connect(action);
 				// Don't return device action.device yet since connection may fail		
-				return device;
+				return state;
 			}
 			case 'disconnect': {
 				disconnect(action);
 				// Don't return null device yet since disconnection may fail
-				return device;
+				return state;
 			}
 			case 'write_weight': {
-				if (device) {
-					writeWeight(device, action.weight);
+				if (state) {
+					writeWeight(state.device, action.weight);
 				}
-				return device;
+				return state;
 			}
 			case 'write_calibrate': {
-				if (device) {
-					writeCalibrate(device);
+				if (state) {
+					writeCalibrate(state.device);
 				}
-				return device;
+				return state;
 			}
 			case 'connected': {
-				return action.device;
+				return {...state, device: action.device };
 			}
 			case 'disconnected': {
-				return null;
+				return {...state, device: null};
+			}
+			case 'initialize': {
+				return {...state, graphInterval: action.graphInterval, readSubscription: action.readSubscription }
+			}
+			case 'uninitialize': {
+				return {...state, graphInterval: null, readSubscription: null }
+			}
+			default: {
+				return state
 			}
 		}
 	}
@@ -97,22 +108,24 @@ export function ConnectionProvider({ children }) {
 		try {
 			let disconnect = await action.device.disconnect();
 			if (disconnect) {
-				dispatch({
-					type: 'disconnected'
-				})
+				
 			}
 			console.log("Disconnected Bluetooth");
 		} catch (error) {
 			console.log("Disconnection failed: ", error.message);
 		}
+		// Assume that device is disconnected if button is pressed.
+		dispatch({
+			type: 'disconnected'
+		})
 	
 		uninitializeRead();
 	}
 	
-	function initializeRead(device) {
+	async function initializeRead(device) {
 		//disconnectSubscription = RNBluetoothClassic.onDeviceDisconnected(() => disconnect(true));
 		const INTERVAL = 5000; //5 seconds
-		let graphInt = setInterval(() => {
+		graphInterval = setInterval(() => {
 		  if (diffImpulse > 0){
 			const addImpulseAction = {
 			  type: 'bluetooth/addImpulse',
@@ -138,22 +151,35 @@ export function ConnectionProvider({ children }) {
 		  currentMaxForce = 0;
 	
 		}, INTERVAL);
+
+		// setInterval(()=> {
+		// 	const endTime = new Date();
+		// 	//console.log(endTime.getTime() - timeMark.getTime());
+		// 	setTimeMark(new Date());
+		// }, 1000)
 	
-		let readSub = device.onDataReceived(event =>
+		readSubscription = device.onDataReceived(event =>
 			onReceivedData(event)
-		);
-		
-		graphInterval = graphInt;
-		readSubscription = readSub;
+		);	
+
+		dispatch({
+			type: 'initialize',
+			graphInterval: graphInterval,
+			readSubscription: readSubscription
+		})
 	}
 	
-	function uninitializeRead() {
-		if (readSubscription) {
-			readSubscription.remove();
+	async function uninitializeRead() {
+		if (state.readSubscription) {
+			state.readSubscription.remove();
 		}
-		if (graphInterval) {
-		  clearInterval(graphInterval);
+		if (state.graphInterval) {
+		  clearInterval(state.graphInterval);
 		}
+
+		dispatch({
+			type: 'uninitialize'
+		})
 	}
 		
 	// CURRENT LIMITATION: Might Receive a large buffer size (such as 180), and nothing will be done until I receive exactly
@@ -357,22 +383,22 @@ export function ConnectionProvider({ children }) {
 		//console.log(binary_arr);
 		try {
 			await RNBluetoothClassic.writeToDevice(
-				device.address,
+				state.device.address,
 				String.fromCharCode(SYNC_BYTE),
 				"ascii",
 			);
 			await RNBluetoothClassic.writeToDevice(
-				device.address,
+				state.device.address,
 				String.fromCharCode(RESPONSE_CMD),
 				"ascii",
 			);
 			await RNBluetoothClassic.writeToDevice(
-				device.address,
+				state.device.address,
 				String.fromCharCode(binary_arr.length),
 				"ascii",
 			);
 			await RNBluetoothClassic.writeToDevice(
-				device.address,
+				state.device.address,
 				String.fromCharCode(...binary_arr),
 				"ascii",
 			);
@@ -383,7 +409,7 @@ export function ConnectionProvider({ children }) {
 	}
 
 	return (
-	 <DeviceContext.Provider value={device}>
+	 <DeviceContext.Provider value={state.device}>
 	  <DeviceDispatchContext.Provider value={dispatch}>
 	  	{ children }
 	  </DeviceDispatchContext.Provider>

@@ -75,9 +75,10 @@ export default function Visualization({ navigation }) {
   };
 
   useEffect(() => {
-    var curTime = getCurrentTime();
-    setImpulseXaxis([curTime]);
-    setforceXaxis([curTime]);
+    // Currently None of these variables are used
+    // var curTime = getCurrentTime();
+    // setImpulseXaxis([curTime]);
+    // setforceXaxis([curTime]);
   }, []);
 
   // style
