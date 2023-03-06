@@ -77,8 +77,9 @@ function HomeScreen(props) {
               marginHorizontal: 10,
               justifyContent: 'center',
             }}>
-              <View>
+              <View style={{flexDirection: "row"}}>
                 <FontAwesome name={"bluetooth"} size={60} color={bgColor} />
+                <Text style={{ fontSize: 40 }}> {device? "Connected": "Disconnected"}</Text>
               </View>
             </View>
         </View>

@@ -9,7 +9,7 @@ export const initialState = {
 };
 
 const userDataReducer = (state = initialState, action) => {
-  console.log(state)
+  //console.log(state)
   switch (action.type) {
     case "SET_HEIGHT":
       return { ...state, height: action.payload };
