@@ -7,17 +7,23 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { selectBluetooth, setImpulse, setMaxForce, addImpulse, setImpulseAxis, addMaxForce ,setMaxForceAxis } from './reducers/bluetoothSlice';
 
+import { useToast } from "react-native-toast-notifications";
+
 export default function Visualization({ navigation }) {
 
   // data
   const bluetoothData = useSelector(state => state.bluetoothData);
   const dispatch = useDispatch();
+  // const MAX_FORCE_THRESHOLD = Number(useSelector(state => state.userData.threshold));
   const MAX_FORCE_THRESHOLD = 7000;
+
 
   // const [impulseData, setImpulseData] = useState([0]);
   const [forceData, setForceData] = useState([0]);
   const [impulseXaxis, setImpulseXaxis] = useState([]);
-  const [forceXaxis, setforceXaxis] = useState([])
+  const [forceXaxis, setforceXaxis] = useState([]);
+
+  const disguised_toast = useToast();
 
   const mockImpulseData = {
     labels: bluetoothData.impulseAxis,
@@ -28,7 +34,7 @@ export default function Visualization({ navigation }) {
         strokeWidth: 6, // optional
       },
       {
-        data: [Math.min(...bluetoothData.impulse) * 0.8],
+        data: [Math.min(...bluetoothData.impulse)],
         withDots: false,
         color: (opacity = 1) => `rgba(251, 154, 153, ${opacity})`, // optional
         strokeWidth: 6, // optional
@@ -79,7 +85,15 @@ export default function Visualization({ navigation }) {
     // var curTime = getCurrentTime();
     // setImpulseXaxis([curTime]);
     // setforceXaxis([curTime]);
-  }, []);
+    console.log("maxForce: ", bluetoothData.maxForce[bluetoothData.maxForce.length - 1])
+    if (MAX_FORCE_THRESHOLD <= bluetoothData.maxForce[bluetoothData.maxForce.length - 1]){
+      disguised_toast.show(`Force Exceeded: ${bluetoothData.maxForce[bluetoothData.maxForce.length - 1]} N`, {
+        type: "warning",
+        placement: "top", 
+        duration: 3000
+      });
+    }
+  }, [bluetoothData.maxForce, bluetoothData.impulse]);
 
   // style
   const chartConfig = {

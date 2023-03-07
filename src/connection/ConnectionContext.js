@@ -1,9 +1,9 @@
 import React from 'react';
-import { createContext, useContext, useReducer, useState } from 'react';
+import { createContext, useContext, useReducer, useRef, useEffect, useState } from 'react';
 import RNBluetoothClassic from 'react-native-bluetooth-classic';
 import { addImpulse, addMaxForce, addAngle, clearImpulse, clearMaxForce, 
 	clearAngle, setImpulse, setMaxForce, setBattery, setImpulseAxis, setMaxForceAxis } from '../../screens/reducers/bluetoothSlice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, batch } from 'react-redux';
 
 export const DeviceContext = createContext(null);
 export const DeviceDispatchContext = createContext(null);
@@ -22,10 +22,10 @@ export function ConnectionProvider({ children }) {
 	const [state, dispatch] = useReducer(deviceReducer, {
 		device: null,
 		graphInterval: null,
-		readSubscription: null
+		readSubscription: null,
+		run_started: false
 	});
 	const dispatchGlobal = useDispatch();
-	const [timeMark, setTimeMark] = React.useState(new Date());
 
 	let accumulateImpulse = 0;
 	let diffImpulse = 0;
@@ -36,7 +36,15 @@ export function ConnectionProvider({ children }) {
 	let length = 0;
 	let buffer = undefined;
 
+	// Should solve stale state issue
+	const runRef = useRef(state);
+	useEffect(() => {
+		runRef.current = state.run_started
+	}, [state.run_started])
+
 	function deviceReducer(state, action) {
+		//console.log(action.type);
+		//console.log(state);
 		switch (action.type) {
 			case 'connect': {	
 				connect(action);
@@ -71,6 +79,12 @@ export function ConnectionProvider({ children }) {
 			}
 			case 'uninitialize': {
 				return {...state, graphInterval: null, readSubscription: null }
+			}
+			case 'start_run': {
+				return {...state, run_started: true }
+			}
+			case 'stop_run': {
+				return {...state, run_started: false }
 			}
 			default: {
 				return state
@@ -125,42 +139,45 @@ export function ConnectionProvider({ children }) {
 	async function initializeRead(device) {
 		//disconnectSubscription = RNBluetoothClassic.onDeviceDisconnected(() => disconnect(true));
 		const INTERVAL = 5000; //5 seconds
-		graphInterval = setInterval(() => {
-		  if (diffImpulse > 0){
-			const addImpulseAction = {
-			  type: 'bluetooth/addImpulse',
-			  payload: accumulateImpulse
-			}
-			// add to global dispatcher
-			//console.log("addImpulse dispatcher");
-			dispatchGlobal(addImpulse(addImpulseAction));
-		  }
-		  
-		  if (currentMaxForce > 0){
-			const addMaxForceAction = {
-			  type: 'bluetooth/addMaxForce',
-			  payload: currentMaxForce
-			}
-			// add to global dispatcher
-			//console.log("add max force dispatcher");
-			dispatchGlobal(addMaxForce(addMaxForceAction));
-		  }
+		const graphInterval = setInterval(() => {
+		  const startTime = new Date();
+		  batch(() => {
+			if (diffImpulse > 0){
+				const addImpulseAction = {
+				  type: 'bluetooth/addImpulse',
+				  payload: accumulateImpulse
+				}
+				// add to global dispatcher
+				//console.log("addImpulse dispatcher");
+				dispatchGlobal(addImpulse(addImpulseAction));
+			  }
+			  
+			  if (currentMaxForce > 0){
+				const addMaxForceAction = {
+				  type: 'bluetooth/addMaxForce',
+				  payload: currentMaxForce
+				}
+				// add to global dispatcher
+				//console.log("add max force dispatcher");
+				dispatchGlobal(addMaxForce(addMaxForceAction));
+			  }
+		  })
+		  const endTime = new Date();
+		  //console.log(endTime.getTime() - startTime.getTime());
 	
 		  accumulateImpulse = 0;
 		  diffImpulse = 0;
 		  currentMaxForce = 0;
 	
 		}, INTERVAL);
-
-		// setInterval(()=> {
-		// 	const endTime = new Date();
-		// 	//console.log(endTime.getTime() - timeMark.getTime());
-		// 	setTimeMark(new Date());
-		// }, 1000)
 	
-		readSubscription = device.onDataReceived(event =>
-			onReceivedData(event)
-		);	
+		const readSubscription = device.onDataReceived(event => {
+			//console.log(runRef.current);
+			if (runRef.current){
+				// This parses the event (event.data is the message)
+				onReceivedData(event)
+			}
+		});	
 
 		dispatch({
 			type: 'initialize',

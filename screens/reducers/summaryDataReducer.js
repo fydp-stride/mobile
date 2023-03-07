@@ -35,7 +35,7 @@ export const initialState = {
 };
 
 const summaryDataReducer = (state = initialState, action) => {
-  console.log(state)
+  //console.log(state)
   switch (action.type) {
     case "SET_DATE_EVENT":
       return { ...state, dateEvents: action.payload };

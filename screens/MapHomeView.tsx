@@ -6,7 +6,7 @@
 /// - [>] / [||] changePace button.
 ///
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch, batch } from 'react-redux';
 import { connect } from 'react-redux';
 import { setState, setOdometer, setMarkers, setCoordinates, setTime } from './actions/geolocationActions';
 
@@ -32,12 +32,16 @@ import Map, { COLORS } from './Map';
 import { Button, Card, Icon, Layout, List, Modal, Text } from '@ui-kitten/components';
 import { addDateEvent } from './actions/summaryDataActions';
 
+import { useDeviceDispatch } from '../src/connection/ConnectionContext';
+
 const HomeView = (props, { route, navigation }) => {
   let geolocationEnabled = props.userData.geolocationEnabled;
   let odometer = props.geolocationData.odometer;
 
   let maxForces = props.bluetoothData.maxForce;
   let angles = props.bluetoothData.angle;
+
+  let deviceDispatch = useDeviceDispatch();
 
   // let geoState = props.geolocationData.geoState;
   const [cannotStartVisible, setCannotStartVisible] = React.useState(false);
@@ -143,10 +147,17 @@ const HomeView = (props, { route, navigation }) => {
       setCannotStartVisible(true);
       return;
     }
-
-    dispatch(setOdometer(0));
-    dispatch(setMarkers([]));
-    dispatch(setCoordinates([]));
+    batch(() => {
+      dispatch(setOdometer(0));
+      dispatch(setMarkers([]));
+      dispatch(setCoordinates([]));
+      if (deviceDispatch){
+        deviceDispatch({
+          type: 'start_run'
+        })
+      }
+    })
+    
     BackgroundGeolocation.setOdometer(0);
     const subscription = BackgroundGeolocation.onLocation((location) => {
       setLocation(location);
@@ -214,6 +225,11 @@ const HomeView = (props, { route, navigation }) => {
     clearInterval(trackInterval);
     const endTimeNow = Date.now();
     setEndTime(endTimeNow);
+    if (deviceDispatch) {
+      deviceDispatch({
+        type: 'stop_run'
+      })
+    }
     // console.log(endTimeNow, startTime, new Date(endTimeNow), new Date(startTime));
     if (endTimeNow - startTime > 60 * MILLI) { // dont record run unless its over 1 minute
       console.log(endTimeNow - startTime);

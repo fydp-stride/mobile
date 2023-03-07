@@ -12,3 +12,6 @@ https://reactnative.dev/docs/environment-setup
 
 # To start android run
 `npm run android`
+
+# To start android release run
+`npm run android-rel`
