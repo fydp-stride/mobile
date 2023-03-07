@@ -19,9 +19,16 @@ export const setAge = (payload) => (
   }
 );
 
-export const setThreshold = (payload) => (
+export const setForceThreshold = (payload) => (
   {
-    type: 'SET_THRESHOLD',
+    type: 'SET_FORCE_THRESHOLD',
+    payload: payload
+  }
+);
+
+export const setImpulseThreshold = (payload) => (
+  {
+    type: 'SET_IMPULSE_THRESHOLD',
     payload: payload
   }
 );

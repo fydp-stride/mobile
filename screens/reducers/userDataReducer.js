@@ -4,7 +4,8 @@ export const initialState = {
   height: "",
   weight: "",
   age: "",
-  threshold: "",
+  forceThreshold: "3000",
+  impulseThreshold: "3000000",
   geolocationEnabled: false
 };
 
@@ -17,8 +18,10 @@ const userDataReducer = (state = initialState, action) => {
       return { ...state, weight: action.payload };
     case "SET_AGE":
       return { ...state, age: action.payload };
-    case "SET_THRESHOLD":
-      return { ...state, threshold: action.payload };
+    case "SET_FORCE_THRESHOLD":
+      return { ...state, forceThreshold: action.payload };
+    case "SET_IMPULSE_THRESHOLD":
+      return { ...state, impulseThreshold: action.payload };
     case "TOGGLE_ENABLED":
       return { ...state, geolocationEnabled: !state.geolocationEnabled };
     default:

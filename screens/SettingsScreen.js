@@ -12,7 +12,7 @@ import {
 import BackgroundGeolocation from 'react-native-background-geolocation';
 import { connect, bindActionCreators } from 'react-redux';
 import { toggleEnabled } from './actions/userDataActions';
-import { setThreshold } from './actions/userDataActions';
+import { setForceThreshold, setImpulseThreshold } from './actions/userDataActions';
 import { useSelector, useDispatch } from 'react-redux';
 
 // code for testing the notif
@@ -25,7 +25,8 @@ function HomeScreen(props) {
 
   const dispatch = useDispatch();
   let geolocationEnabled = props.userData.geolocationEnabled;
-  let maxThreshold = props.userData.threshold;
+  let maxForceThreshold = props.userData.forceThreshold;
+  let maxImpulseThreshold = props.userData.impulseThreshold;
 
   useEffect(() => {
     if (geolocationEnabled) {
@@ -35,10 +36,12 @@ function HomeScreen(props) {
     }
   }, [geolocationEnabled]);
 
-  const onKeyPress = text => {
-    // need to send this to the Redux store
-    dispatch(setThreshold(text));
-    // changeMaxThreshold(text);
+  const onKeyPressForce = text => {
+    dispatch(setForceThreshold(text));
+  };
+
+  const onKeyPressImpulse = text => {
+    dispatch(setImpulseThreshold(text));
   };
 
   const toast = useToast();
@@ -89,8 +92,36 @@ function HomeScreen(props) {
           keyboardType="numeric"
           numberOfLines={1}
           maxLength={3}
-          onChangeText={text => onKeyPress(text)}
-          value={maxThreshold}
+          onChangeText={text => onKeyPressForce(text)}
+          value={maxForceThreshold}
+        />
+        <Text style={{ marginLeft:5 ,fontSize: 18 }}>
+          N
+        </Text>
+      </Layout>
+      <Layout
+        style={{ flexDirection: 'row', paddingTop: 20, alignItems: 'center', maxWidth: '100%' }}>
+        <Text style={{ marginRight: 10, fontSize: 18, maxWidth: '60%' }}>
+          Maximum impulse threshold
+        </Text>
+        <TextInput
+          style={{
+            color: 'black',
+            underlineColorAndroid: 'black',
+            backgroundColor: '#d5f2dd',
+            borderRadius: 16,
+            height: 'auto',
+            width: 60,
+            textAlign: 'center',
+            fontSize: 20,
+          }}
+          editable
+          blurOnSubmit
+          keyboardType="numeric"
+          numberOfLines={1}
+          maxLength={3}
+          onChangeText={text => onKeyPressImpulse(text)}
+          value={maxImpulseThreshold}
         />
         <Text style={{ marginLeft:5 ,fontSize: 18 }}>
           N

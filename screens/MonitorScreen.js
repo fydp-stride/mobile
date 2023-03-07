@@ -12,7 +12,6 @@ import {
 import BackgroundGeolocation from 'react-native-background-geolocation';
 import { connect, bindActionCreators } from 'react-redux';
 import { toggleEnabled } from './actions/geolocationActions';
-import { setThreshold } from './actions/userDataActions';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { useDevice } from '../src/connection/ConnectionContext';
