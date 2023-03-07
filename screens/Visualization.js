@@ -18,6 +18,9 @@ export default function Visualization({ navigation }) {
   const dispatch = useDispatch();
   // const MAX_FORCE_THRESHOLD = Number(useSelector(state => state.userData.threshold));
   const MAX_FORCE_THRESHOLD = 7000;
+  const MAX_IMPULSE_THRESHOLD = 30000;
+  const MAX_ANGLE_THRESHOLD = [5, 35];
+
 
   const disguised_toast = useToast();
 
@@ -89,7 +92,37 @@ export default function Visualization({ navigation }) {
         duration: 3000
       });
     }
-  }, [bluetoothData.maxForce, bluetoothData.impulse]);
+  }, [bluetoothData.maxForce]);
+
+  useEffect(() => {
+    // Currently None of these variables are used
+    // var curTime = getCurrentTime();
+    // setImpulseXaxis([curTime]);
+    // setforceXaxis([curTime]);
+    console.log("impulse: ", bluetoothData.impulse[bluetoothData.impulse.length - 1])
+    if (MAX_IMPULSE_THRESHOLD <= bluetoothData.impulse[bluetoothData.impulse.length - 1]){
+      disguised_toast.show(`Impulse Exceeded: ${bluetoothData.impulse[bluetoothData.impulse.length - 1]} N s`, {
+        type: "warning",
+        placement: "top", 
+        duration: 3000
+      });
+    }
+  }, [bluetoothData.impulse]);
+
+  useEffect(() => {
+    // Currently None of these variables are used
+    // var curTime = getCurrentTime();
+    // setImpulseXaxis([curTime]);
+    // setforceXaxis([curTime]);
+    console.log("angle: ", bluetoothData.angle[bluetoothData.angle.length - 1])
+    if (MAX_ANGLE_THRESHOLD[0] > bluetoothData.angle[bluetoothData.angle.length - 1] && bluetoothData.angle[bluetoothData.angle.length - 1] > MAX_ANGLE_THRESHOLD[1]){
+      disguised_toast.show(`Angle Exceeded: ${bluetoothData.angle[bluetoothData.angle.length - 1]}°`, {
+        type: "warning",
+        placement: "top", 
+        duration: 3000
+      });
+    }
+  }, [bluetoothData.angle]);
 
   // style
   const chartConfig = {

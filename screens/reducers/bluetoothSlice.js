@@ -47,9 +47,7 @@ export const bluetoothSlice = createSlice({
       state.maxForceAxis = [...state.maxForceAxis, getCurrentTime()].slice(-6);
     },
     addAngle: (state, action) => {
-      const temp = state.angle;
-      temp.push(action.payload.payload);
-      state.angle = temp;
+      state.angle = [...state.angle, action.payload.payload];
     },
     clearImpulse: state => {
       state.impulse = [];

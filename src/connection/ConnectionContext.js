@@ -30,6 +30,7 @@ export function ConnectionProvider({ children }) {
 	let accumulateImpulse = 0;
 	let diffImpulse = 0;
 	let currentMaxForce = 0;
+  // let currentAngle
 
 	let cmd = undefined;
 	let sync = undefined;
