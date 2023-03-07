@@ -13,15 +13,11 @@ export default function Visualization({ navigation }) {
 
   // data
   const bluetoothData = useSelector(state => state.bluetoothData);
+  const maxForce = bluetoothData.maxForce.slice(-6);
+  const impulse = bluetoothData.impulse.slice(-6);
   const dispatch = useDispatch();
   // const MAX_FORCE_THRESHOLD = Number(useSelector(state => state.userData.threshold));
   const MAX_FORCE_THRESHOLD = 7000;
-
-
-  // const [impulseData, setImpulseData] = useState([0]);
-  const [forceData, setForceData] = useState([0]);
-  const [impulseXaxis, setImpulseXaxis] = useState([]);
-  const [forceXaxis, setforceXaxis] = useState([]);
 
   const disguised_toast = useToast();
 
@@ -29,18 +25,18 @@ export default function Visualization({ navigation }) {
     labels: bluetoothData.impulseAxis,
     datasets: [
       {
-        data: bluetoothData.impulse,
+        data: impulse,
         color: (opacity = 1) => `rgba(251, 154, 153, ${opacity})`, // optional
         strokeWidth: 6, // optional
       },
       {
-        data: [Math.min(...bluetoothData.impulse)],
+        data: [Math.min(...impulse)],
         withDots: false,
         color: (opacity = 1) => `rgba(251, 154, 153, ${opacity})`, // optional
         strokeWidth: 6, // optional
       },
       {
-        data: [Math.max(...bluetoothData.impulse)],
+        data: [Math.max(...impulse)],
         withDots: false,
         color: (opacity = 1) => `rgba(251, 154, 153, ${opacity})`, // optional
         strokeWidth: 6, // optional
@@ -53,26 +49,26 @@ export default function Visualization({ navigation }) {
     labels: bluetoothData.maxForceAxis,
     datasets: [
       {
-        data: bluetoothData.maxForce,
+        data: maxForce,
         color: (opacity = 1) => `rgba(93, 176, 117, ${opacity})`, // optional
         colors: [
           (opacity = 1) => {
-            return getForceColor(bluetoothData.maxForce[0])
+            return getForceColor(maxForce[0])
           },
           (opacity = 1) => {
-            return getForceColor(bluetoothData.maxForce[1])
+            return getForceColor(maxForce[1])
           },
           (opacity = 1) => {
-            return getForceColor(bluetoothData.maxForce[2])
+            return getForceColor(maxForce[2])
           },
           (opacity = 1) => {
-            return getForceColor(bluetoothData.maxForce[3])
+            return getForceColor(maxForce[3])
           },
           (opacity = 1) => {
-            return getForceColor(bluetoothData.maxForce[4])
+            return getForceColor(maxForce[4])
           },
           (opacity = 1) => {
-            return getForceColor(bluetoothData.maxForce[5])
+            return getForceColor(maxForce[5])
           }
         ],
         strokeWidth: 6 // optional

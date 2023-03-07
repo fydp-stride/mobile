@@ -29,7 +29,7 @@ export const bluetoothSlice = createSlice({
       //const temp = state.impulse;
       // For impulse, we want to accumulate all the impulses.
       const accumulateImpulse = state.impulse[state.impulse.length - 1] + action.payload.payload;
-      state.impulse = [...state.impulse, accumulateImpulse].slice(-6);
+      state.impulse = [...state.impulse, accumulateImpulse];
       state.impulseAxis = [...state.impulseAxis, getCurrentTime()].slice(-6);
       // var sumImpulse = state.impulse[state.impulse.length - 1] + action.payload.payload;
       // temp.push(sumImpulse);
@@ -43,7 +43,7 @@ export const bluetoothSlice = createSlice({
       //}
     },
     addMaxForce: (state, action) => {
-      state.maxForce = [...state.maxForce, action.payload.payload].slice(-6);
+      state.maxForce = [...state.maxForce, action.payload.payload];
       state.maxForceAxis = [...state.maxForceAxis, getCurrentTime()].slice(-6);
     },
     addAngle: (state, action) => {
