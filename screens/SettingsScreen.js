@@ -7,7 +7,8 @@ import {
   Layout,
   Text,
   Toggle,
-  Button
+  Button,
+  View
 } from '@ui-kitten/components';
 import BackgroundGeolocation from 'react-native-background-geolocation';
 import { connect, bindActionCreators } from 'react-redux';
@@ -62,78 +63,83 @@ function HomeScreen(props) {
         borderRadius: 20,
         flexDirection: 'column',
       }}>
-      <Layout style={{ flexDirection: 'row', padding: 5 }}>
-        <Text style={{ marginRight: 10, fontSize: 18 }}>
+      <Layout style={{ flexDirection: 'row', alignItems: 'center', width: '100%' }}>
+        <Text style={{ marginRight: 10, fontSize: 18, maxWidth: '50%', flex: 5 }}>
           Location Tracking
         </Text>
         <Toggle
           checked={geolocationEnabled}
           onChange={() => dispatch(toggleEnabled())}
+          style={{ flex: 6 }}
         />
       </Layout>
       <Layout
-        style={{ flexDirection: 'row', paddingTop: 20, alignItems: 'center', maxWidth: '100%' }}>
-        <Text style={{ marginRight: 10, fontSize: 18, maxWidth: '60%' }}>
+        style={{ flexDirection: 'row', paddingTop: 20, alignItems: 'center', width: '100%' }}>
+        <Text style={{ marginRight: 10, fontSize: 18, maxWidth: '50%', flex: 5 }}>
           Maximum force threshold
         </Text>
-        <TextInput
-          style={{
-            color: 'black',
-            underlineColorAndroid: 'black',
-            backgroundColor: '#d5f2dd',
-            borderRadius: 16,
-            height: 'auto',
-            width: 60,
-            textAlign: 'center',
-            fontSize: 20,
-          }}
-          editable
-          blurOnSubmit
-          keyboardType="numeric"
-          numberOfLines={1}
-          maxLength={3}
-          onChangeText={text => onKeyPressForce(text)}
-          value={maxForceThreshold}
-        />
-        <Text style={{ marginLeft:5 ,fontSize: 18 }}>
-          N
-        </Text>
+        <Layout style={{ flexDirection: 'row', alignItems: 'center', flex: 6 }}>
+          <TextInput
+            style={{
+              color: 'black',
+              underlineColorAndroid: 'black',
+              backgroundColor: '#d5f2dd',
+              borderRadius: 16,
+              height: 'auto',
+              width: 70,
+              textAlign: 'center',
+              fontSize: 16,
+            }}
+            editable
+            blurOnSubmit
+            keyboardType="numeric"
+            numberOfLines={1}
+            maxLength={5}
+            onChangeText={text => onKeyPressForce(text)}
+            value={maxForceThreshold}
+          />
+          <Text style={{ marginLeft: 5, fontSize: 18 }}>
+            N
+          </Text>
+        </Layout>
       </Layout>
       <Layout
-        style={{ flexDirection: 'row', paddingTop: 20, alignItems: 'center', maxWidth: '100%' }}>
-        <Text style={{ marginRight: 10, fontSize: 18, maxWidth: '60%' }}>
+        style={{ flexDirection: 'row', paddingTop: 20, alignItems: 'center', width: '100%' }}>
+        <Text style={{ marginRight: 10, fontSize: 18, maxWidth: '50%', flex: 5 }}>
           Maximum impulse threshold
         </Text>
-        <TextInput
-          style={{
-            color: 'black',
-            underlineColorAndroid: 'black',
-            backgroundColor: '#d5f2dd',
-            borderRadius: 16,
-            height: 'auto',
-            width: 60,
-            textAlign: 'center',
-            fontSize: 20,
-          }}
-          editable
-          blurOnSubmit
-          keyboardType="numeric"
-          numberOfLines={1}
-          maxLength={3}
-          onChangeText={text => onKeyPressImpulse(text)}
-          value={maxImpulseThreshold}
-        />
-        <Text style={{ marginLeft:5 ,fontSize: 18 }}>
-          N
-        </Text>
+        <Layout style={{ flexDirection: 'row', alignItems: 'center', flex: 6 }}>
+          <TextInput
+            style={{
+              color: 'black',
+              underlineColorAndroid: 'black',
+              backgroundColor: '#d5f2dd',
+              borderRadius: 16,
+              height: 'auto',
+              width: 90,
+              textAlign: 'center',
+              fontSize: 16,
+            }}
+            editable
+            blurOnSubmit
+            keyboardType="numeric"
+            numberOfLines={1}
+            maxLength={9}
+            onChangeText={text => onKeyPressImpulse(text)}
+            value={maxImpulseThreshold}
+          />
+          <Text style={{ marginLeft: 5, fontSize: 18 }}>
+            Ns
+          </Text>
+        </Layout>
       </Layout>
-      <Layout style={{ flexDirection: 'row', paddingTop: 30, alignItems: 'center' }}>
+      {/* <Layout style={{ flexDirection: 'row', paddingTop: 30, alignItems: 'center' }}>
         <Text style={{ marginRight: 10, fontSize: 18 }}>
           Test notification
         </Text>
         <Button onPress={launchNotif}>Launch</Button>
-      </Layout>
-    </Layout>
+      </Layout> */}
+    </Layout >
   );
 }
 
