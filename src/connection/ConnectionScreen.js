@@ -142,7 +142,7 @@ class ConnectionScreen extends React.Component {
             <Button onPress={() => {
               this.props.deviceDispatch({
                 type: 'write_weight',
-                weight: weight ? parseFloat(this.props.userData.weight) : 80});
+                weight: this.props.userData.weight ? parseFloat(this.props.userData.weight) : 80});
             }
               }>
               <Text> Send Weight Info </Text>

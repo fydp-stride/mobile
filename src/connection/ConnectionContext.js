@@ -170,7 +170,7 @@ export function ConnectionProvider({ children }) {
 					type: 'bluetooth/addAngleRoll',
 					payload: currentAngleRoll
 				};
-				dispatch(addAngleRoll(addAngleRollAction));
+				dispatchGlobal(addAngleRoll(addAngleRollAction));
 			}
 
 			if(currentAnglePitch != 0){
@@ -178,7 +178,7 @@ export function ConnectionProvider({ children }) {
 					type: 'bluetooth/addAnglePitch',
 					payload: currentAnglePitch
 				};
-				dispatch(addAnglePitch(addAnglePitchAction));
+				dispatchGlobal(addAnglePitch(addAnglePitchAction));
 			}
 		  })
 		  //const endTime = new Date();
@@ -370,12 +370,14 @@ export function ConnectionProvider({ children }) {
 	}
 
 	function addAngleLocalRoll(angle){
+		//console.log("Incoming angle roll ", angle);
 		if (Math.abs(currentAngleRoll) < Math.abs(angle)){
 			currentAngleRoll = angle;
 		}
 	}
 
 	function addAngleLocalPitch(angle){
+		//console.log("Incoming angle pitch ", angle);
 		if (Math.abs(currentAnglePitch) < Math.abs(angle)){
 			currentAnglePitch = angle;
 		}

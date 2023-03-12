@@ -162,7 +162,7 @@ const HomeView = (props, { route, navigation }) => {
     BackgroundGeolocation.setOdometer(0);
     const subscription = BackgroundGeolocation.onLocation((location) => {
       setLocation(location);
-      console.log("[onLocation] success: ", location.coords);
+      //console.log("[onLocation] success: ", location.coords);
     }, (error) => {
       console.log("[onLocation] ERROR: ", error);
     });
@@ -286,7 +286,7 @@ const HomeView = (props, { route, navigation }) => {
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <View style={{ flexDirection: 'column', alignItems: 'center', marginLeft: 10 }}>
             <Text>Total Impulse</Text>
-            <Text>{impulses.reduce((partialSum, a) => partialSum + a, 0)}Ns</Text>
+            <Text>{impulses[impulses.length - 1]}Ns</Text>
           </View>
           <View style={{ flexDirection: 'column', alignItems: 'center' }}>
             <Text>Avg. Force</Text>

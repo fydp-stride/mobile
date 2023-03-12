@@ -31,10 +31,10 @@ function HomeScreen(props) {
   const toast = useToast();
 
   useEffect(() => {
-    if (battery <= 20) {
-      toast.show("The battery is low! Charge it soon.", {
+    if (battery > 0 && battery <= 95) {
+      toast.show(`Low Battery: ${battery}%`, {
         placement: "top", 
-        duration: 3000
+        duration: 4500
       });
     }
   }, [battery])

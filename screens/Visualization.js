@@ -159,7 +159,7 @@ export default function Visualization({ navigation }) {
       disguised_toast.show(`Force Exceeded: ${bluetoothData.maxForce[bluetoothData.maxForce.length - 1]} N`, {
         type: "warning",
         placement: "top", 
-        duration: 3000
+        duration: 4500
       });
     }
   }, [bluetoothData.maxForce]);
@@ -174,7 +174,7 @@ export default function Visualization({ navigation }) {
       disguised_toast.show(`Impulse Exceeded: ${bluetoothData.impulse[bluetoothData.impulse.length - 1]} N s`, {
         type: "warning",
         placement: "top", 
-        duration: 3000
+        duration: 4500
       });
     }
   }, [bluetoothData.impulse]);
@@ -185,11 +185,11 @@ export default function Visualization({ navigation }) {
     // setImpulseXaxis([curTime]);
     // setforceXaxis([curTime]);
     //console.log("angleRoll: ", bluetoothData.angleRoll[bluetoothData.angleRoll.length - 1])
-    if (MAX_ANGLE_ROLL_THRESHOLD[0] > bluetoothData.angleRoll[bluetoothData.angleRoll.length - 1] && bluetoothData.angleRoll[bluetoothData.angleRoll.length - 1] > MAX_ANGLE_ROLL_THRESHOLD[1]){
+    if (MAX_ANGLE_ROLL_THRESHOLD[0] > bluetoothData.angleRoll[bluetoothData.angleRoll.length - 1] || bluetoothData.angleRoll[bluetoothData.angleRoll.length - 1] > MAX_ANGLE_ROLL_THRESHOLD[1]){
       disguised_toast.show(`Angle Roll Exceeded: ${bluetoothData.angleRoll[bluetoothData.angleRoll.length - 1]}°`, {
         type: "warning",
         placement: "top", 
-        duration: 3000
+        duration: 4500
       });
     }
   }, [bluetoothData.angleRoll]);
@@ -200,11 +200,11 @@ export default function Visualization({ navigation }) {
     // setImpulseXaxis([curTime]);
     // setforceXaxis([curTime]);
     //console.log("angleRoll: ", bluetoothData.angleRoll[bluetoothData.angleRoll.length - 1])
-    if (MAX_ANGLE_PITCH_THRESHOLD[0] > bluetoothData.anglePitch[bluetoothData.anglePitch.length - 1] && bluetoothData.anglePitch[bluetoothData.anglePitch.length - 1] > MAX_ANGLE_PITCH_THRESHOLD[1]){
+    if (MAX_ANGLE_PITCH_THRESHOLD[0] > bluetoothData.anglePitch[bluetoothData.anglePitch.length - 1] || bluetoothData.anglePitch[bluetoothData.anglePitch.length - 1] > MAX_ANGLE_PITCH_THRESHOLD[1]){
       disguised_toast.show(`Angle Pitch Exceeded: ${bluetoothData.anglePitch[bluetoothData.anglePitch.length - 1]}°`, {
         type: "warning",
         placement: "top", 
-        duration: 3000
+        duration: 4500
       });
     }
   }, [bluetoothData.anglePitch]);
