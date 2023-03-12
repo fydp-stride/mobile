@@ -10,6 +10,14 @@ import { selectBluetooth, setImpulse, setMaxForce, addImpulse, setImpulseAxis, a
 import { useToast } from "react-native-toast-notifications";
 
 export default function Visualization({ navigation }) {
+  const getCurrentTime = () => {
+    var date = new Date();
+    var dateStr =
+      ("00" + date.getHours()).slice(-2) + ":" +
+      ("00" + date.getMinutes()).slice(-2) + ":" +
+      ("00" + date.getSeconds()).slice(-2);
+    return dateStr;
+  }
 
   // data
   const bluetoothData = useSelector(state => state.bluetoothData);
@@ -18,74 +26,131 @@ export default function Visualization({ navigation }) {
   const MAX_FORCE_THRESHOLD = 7000;
 
 
-  // const [impulseData, setImpulseData] = useState([0]);
+  const [impulseData, setImpulseData] = useState([0]);
   const [forceData, setForceData] = useState([0]);
-  const [impulseXaxis, setImpulseXaxis] = useState([]);
-  const [forceXaxis, setforceXaxis] = useState([]);
+  const [impulseXaxis, setImpulseXaxis] = useState([getCurrentTime()]);
+  const [forceXaxis, setforceXaxis] = useState([getCurrentTime()]);
 
   const disguised_toast = useToast();
 
   const mockImpulseData = {
-    labels: bluetoothData.impulseAxis,
+    labels: impulseXaxis,
     datasets: [
       {
-        data: bluetoothData.impulse,
+        data: impulseData,
         color: (opacity = 1) => `rgba(251, 154, 153, ${opacity})`, // optional
         strokeWidth: 6, // optional
       },
       {
-        data: [Math.min(...bluetoothData.impulse)],
+        data: [Math.min(...impulseData)],
         withDots: false,
         color: (opacity = 1) => `rgba(251, 154, 153, ${opacity})`, // optional
-        strokeWidth: 6, // optional
+        strokeWidth: 6, // optional8i766
       },
       {
-        data: [Math.max(...bluetoothData.impulse)],
+        data: [Math.max(...impulseData)],
         withDots: false,
         color: (opacity = 1) => `rgba(251, 154, 153, ${opacity})`, // optional
         strokeWidth: 6, // optional
       }
     ],
-    //legend: ["Average impulse"] // optional
+    //legend: ["Total impulse"] // optional
   };
 
   const mockForceData = {
-    labels: bluetoothData.maxForceAxis,
+    labels: forceXaxis,
     datasets: [
       {
-        data: bluetoothData.maxForce,
+        data: forceData,
         color: (opacity = 1) => `rgba(93, 176, 117, ${opacity})`, // optional
         colors: [
           (opacity = 1) => {
-            return getForceColor(bluetoothData.maxForce[0])
+            return getForceColor(forceData[forceData.length < 10 ? 0 : forceData.length-10])
           },
           (opacity = 1) => {
-            return getForceColor(bluetoothData.maxForce[1])
+            return getForceColor(forceData[forceData.length < 10 ? 1 : forceData.length-9])
           },
           (opacity = 1) => {
-            return getForceColor(bluetoothData.maxForce[2])
+            return getForceColor(forceData[forceData.length < 10 ? 2 : forceData.length-8])
           },
           (opacity = 1) => {
-            return getForceColor(bluetoothData.maxForce[3])
+            return getForceColor(forceData[forceData.length < 10 ? 3 : forceData.length-7])
           },
           (opacity = 1) => {
-            return getForceColor(bluetoothData.maxForce[4])
+            return getForceColor(forceData[forceData.length < 10 ? 4 : forceData.length-6])
           },
           (opacity = 1) => {
-            return getForceColor(bluetoothData.maxForce[5])
+            return getForceColor(forceData[forceData.length < 10 ? 5 : forceData.length-5])
+          },
+          (opacity = 1) => {
+            return getForceColor(forceData[forceData.length < 10 ? 6 : forceData.length-4])
+          },
+          (opacity = 1) => {
+            return getForceColor(forceData[forceData.length < 10 ? 7 : forceData.length-3])
+          },
+          (opacity = 1) => {
+            return getForceColor(forceData[forceData.length < 10 ? 8 : forceData.length-2])
+          },
+          (opacity = 1) => {
+            return getForceColor(forceData[forceData.length < 10 ? 9 : forceData.length-1])
           }
         ],
-        strokeWidth: 6 // optional
+        strokeWidth: 5 // optional
       },
     ],
   };
+
+  useEffect(() => {
+    // Always keep the first and last impulse
+    const impulse_labels = [];
+    const impulse_data = [];
+    const length = bluetoothData.impulse.length;
+    const interval = Math.ceil(bluetoothData.impulse.length  / 9);
+
+    for (let i = 0; i < length; i += interval){
+      impulse_labels.push(bluetoothData.impulseTime[i]);
+      impulse_data.push(bluetoothData.impulse[i]);
+    }
+
+    setImpulseData(impulse_data);
+    setImpulseXaxis(impulse_labels);
+    
+  }, [bluetoothData.impulse]);
+
+  useEffect(() => {
+    // Always keep the first and last impulse
+    const force_labels = [];
+    const force_data = [];
+    const length = bluetoothData.maxForce.length;
+    const interval = Math.ceil(length  / 9);
+    let counter = 0;
+    for (let i = 0; i < length; i += interval){
+      // Label every other timestamp since bar graph does not have formatXLabel
+      if (counter % 2 == 0){
+        force_labels.push(bluetoothData.maxForceTime[i]);
+      } else {
+        force_labels.push('');
+      }
+
+      // Show the maximum force exerted within this interval
+      const slice = bluetoothData.maxForce.slice(i, i + interval);
+      force_data.push(Math.max(...slice));
+      counter += 1;
+    }
+    // console.log("force_data length: ", force_data.length);
+    // console.log("force_labels length: ", force_labels.length);
+
+    setForceData(force_data);
+    setforceXaxis(force_labels);
+    
+  }, [bluetoothData.maxForce]);
 
   useEffect(() => {
     // Currently None of these variables are used
     // var curTime = getCurrentTime();
     // setImpulseXaxis([curTime]);
     // setforceXaxis([curTime]);
-    console.log("maxForce: ", bluetoothData.maxForce[bluetoothData.maxForce.length - 1])
+    //console.log("maxForce: ", bluetoothData.maxForce[bluetoothData.maxForce.length - 1])
     if (MAX_FORCE_THRESHOLD <= bluetoothData.maxForce[bluetoothData.maxForce.length - 1]){
       disguised_toast.show(`Force Exceeded: ${bluetoothData.maxForce[bluetoothData.maxForce.length - 1]} N`, {
         type: "warning",
@@ -103,8 +168,9 @@ export default function Visualization({ navigation }) {
     backgroundGradientToOpacity: 1,
     color: (opacity = 1) => `rgba(74, 148, 96, ${opacity})`,
     strokeWidth: 2, // optional, default 3
-    barPercentage: 1,
+    barPercentage: 0.5,
     useShadowColorFromDataset: false, // optional
+    decimalPlaces: 0,
   };
 
   const renderImpulseData =
@@ -115,6 +181,17 @@ export default function Visualization({ navigation }) {
         chartConfig={chartConfig}
         bezier
         withShadow={false}
+        formatXLabel={value =>
+          mockImpulseData.labels.length > 2
+            ? mockImpulseData.labels[0] == value ||
+            mockImpulseData.labels[2] && mockImpulseData.labels[2] == value ||
+            mockImpulseData.labels[4] && mockImpulseData.labels[4] == value ||
+            mockImpulseData.labels[6] && mockImpulseData.labels[6] == value ||
+            mockImpulseData.labels[8] && mockImpulseData.labels[8] == value
+              ? value
+              : ""
+            : value
+        }
       />
     </Layout>
 
@@ -131,15 +208,6 @@ export default function Visualization({ navigation }) {
         showBarTops={false}
       />
     </Layout>
-
-  const getCurrentTime = () => {
-    var date = new Date();
-    var dateStr =
-      ("00" + date.getHours()).slice(-2) + ":" +
-      ("00" + date.getMinutes()).slice(-2) + ":" +
-      ("00" + date.getSeconds()).slice(-2);
-    return dateStr;
-  }
 
   const addImpulsePoint = (datum) => {
     var curTime = getCurrentTime();

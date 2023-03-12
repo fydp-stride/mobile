@@ -15,10 +15,12 @@ export const bluetoothSlice = createSlice({
   initialState: {
     impulse: [0],
     maxForce: [0],
-    angle: [0],
+    totalMaxForce: 0,
+    angleRoll: [0],
+    anglePitch: [0],
     battery: 0,
-    impulseAxis: [getCurrentTime()],
-    maxForceAxis: [getCurrentTime()],
+    impulseTime: [getCurrentTime()],
+    maxForceTime: [getCurrentTime()],
   },
   reducers: {
     addImpulse: (state, action) => {
@@ -29,8 +31,8 @@ export const bluetoothSlice = createSlice({
       //const temp = state.impulse;
       // For impulse, we want to accumulate all the impulses.
       const accumulateImpulse = state.impulse[state.impulse.length - 1] + action.payload.payload;
-      state.impulse = [...state.impulse, accumulateImpulse].slice(-6);
-      state.impulseAxis = [...state.impulseAxis, getCurrentTime()].slice(-6);
+      state.impulse = [...state.impulse, accumulateImpulse];
+      state.impulseTime = [...state.impulseTime, getCurrentTime()];
       // var sumImpulse = state.impulse[state.impulse.length - 1] + action.payload.payload;
       // temp.push(sumImpulse);
       // state.impulse = temp;
@@ -43,13 +45,15 @@ export const bluetoothSlice = createSlice({
       //}
     },
     addMaxForce: (state, action) => {
-      state.maxForce = [...state.maxForce, action.payload.payload].slice(-6);
-      state.maxForceAxis = [...state.maxForceAxis, getCurrentTime()].slice(-6);
+      state.maxForce = [...state.maxForce, action.payload.payload];
+      state.maxForceTime = [...state.maxForceTime, getCurrentTime()];
+      state.totalMaxForce += action.payload.payload;
     },
-    addAngle: (state, action) => {
-      const temp = state.angle;
-      temp.push(action.payload.payload);
-      state.angle = temp;
+    addAngleRoll: (state, action) => {
+      state.angleRoll = [...state.angleRoll, action.payload.payload];
+    },
+    addAnglePitch: (state, action) => {
+      state.anglePitch = [...state.anglePitch, action.payload.payload];
     },
     clearImpulse: state => {
       state.impulse = [];
@@ -70,16 +74,16 @@ export const bluetoothSlice = createSlice({
       state.battery = action.payload;
     },
     setImpulseAxis: state => {
-      state.impulseAxis = [...state.impulseAxis, getCurrentTime()].slice(-6);
+      state.impulseTime = [...state.impulseTime, getCurrentTime()].slice(-6);
     },
     setMaxForceAxis: state => {
-      state.maxForceAxis = [...state.maxForceAxis, getCurrentTime()].slice(-6);
+      state.maxForceTime = [...state.maxForceTime, getCurrentTime()].slice(-6);
     }
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { addImpulse, addMaxForce, addAngle, clearImpulse, clearMaxForce,
+export const { addImpulse, addMaxForce, addAngleRoll, addAnglePitch, clearImpulse, clearMaxForce,
   clearAngle, setImpulse, setMaxForce, setBattery, setImpulseAxis, setMaxForceAxis } = bluetoothSlice.actions;
 
 export default bluetoothSlice.reducer;

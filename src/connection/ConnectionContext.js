@@ -1,8 +1,7 @@
 import React from 'react';
 import { createContext, useContext, useReducer, useRef, useEffect, useState } from 'react';
 import RNBluetoothClassic from 'react-native-bluetooth-classic';
-import { addImpulse, addMaxForce, addAngle, clearImpulse, clearMaxForce, 
-	clearAngle, setImpulse, setMaxForce, setBattery, setImpulseAxis, setMaxForceAxis } from '../../screens/reducers/bluetoothSlice';
+import { addImpulse, addMaxForce, addAngleRoll, addAnglePitch, setBattery } from '../../screens/reducers/bluetoothSlice';
 import { useDispatch, batch } from 'react-redux';
 
 export const DeviceContext = createContext(null);
@@ -12,11 +11,12 @@ export function ConnectionProvider({ children }) {
 	const SYNC_BYTE = 0xFF;
 	const IMPULSE_CMD = 0x01;
 	const MAX_FORCE_CMD = 0x02;
-	const ANGLE_CMD = 0x03;
+	const ANGLE_ROLL_CMD = 0x03;
 	const BATT_CMD = 0x04;
 	const WEIGHT_CMD = 0x05;
 	const RESPONSE_CMD = 0x06;
 	const CALIBRATE_CMD = 0x07;
+	const ANGLE_PITCH_CMD = 0x08;
 	// variable device will hold a device information that is bluetooth CONNECTED.
 	// device is initially null
 	const [state, dispatch] = useReducer(deviceReducer, {
@@ -30,6 +30,9 @@ export function ConnectionProvider({ children }) {
 	let accumulateImpulse = 0;
 	let diffImpulse = 0;
 	let currentMaxForce = 0;
+	let currentAngleRoll = 0;
+	let currentAnglePitch = 0;
+	
 
 	let cmd = undefined;
 	let sync = undefined;
@@ -57,13 +60,13 @@ export function ConnectionProvider({ children }) {
 				return state;
 			}
 			case 'write_weight': {
-				if (state) {
+				if (state.device) {
 					writeWeight(state.device, action.weight);
 				}
 				return state;
 			}
 			case 'write_calibrate': {
-				if (state) {
+				if (state.device) {
 					writeCalibrate(state.device);
 				}
 				return state;
@@ -140,34 +143,52 @@ export function ConnectionProvider({ children }) {
 		//disconnectSubscription = RNBluetoothClassic.onDeviceDisconnected(() => disconnect(true));
 		const INTERVAL = 5000; //5 seconds
 		const graphInterval = setInterval(() => {
-		  const startTime = new Date();
+		  //const startTime = new Date();
 		  batch(() => {
 			if (diffImpulse > 0){
 				const addImpulseAction = {
-				  type: 'bluetooth/addImpulse',
-				  payload: accumulateImpulse
-				}
+					type: 'bluetooth/addImpulse',
+					payload: Math.round(accumulateImpulse)
+				};
 				// add to global dispatcher
 				//console.log("addImpulse dispatcher");
 				dispatchGlobal(addImpulse(addImpulseAction));
-			  }
-			  
-			  if (currentMaxForce > 0){
+			}
+			
+			if (currentMaxForce > 0){
 				const addMaxForceAction = {
-				  type: 'bluetooth/addMaxForce',
-				  payload: currentMaxForce
-				}
+					type: 'bluetooth/addMaxForce',
+					payload: Math.round(currentMaxForce)
+				};
 				// add to global dispatcher
 				//console.log("add max force dispatcher");
 				dispatchGlobal(addMaxForce(addMaxForceAction));
-			  }
+			}
+
+			if (currentAngleRoll != 0){
+				const addAngleRollAction = {
+					type: 'bluetooth/addAngleRoll',
+					payload: currentAngleRoll
+				};
+				dispatch(addAngleRoll(addAngleRollAction));
+			}
+
+			if(currentAnglePitch != 0){
+				const addAnglePitchAction = {
+					type: 'bluetooth/addAnglePitch',
+					payload: currentAnglePitch
+				};
+				dispatch(addAnglePitch(addAnglePitchAction));
+			}
 		  })
-		  const endTime = new Date();
+		  //const endTime = new Date();
 		  //console.log(endTime.getTime() - startTime.getTime());
 	
 		  accumulateImpulse = 0;
 		  diffImpulse = 0;
 		  currentMaxForce = 0;
+		  currentAngleRoll = 0;
+		  currentAnglePitch = 0;
 	
 		}, INTERVAL);
 	
@@ -290,20 +311,27 @@ export function ConnectionProvider({ children }) {
 				  addForceLocal(max_force_highest);
 				}
 			  break;
-			case ANGLE_CMD:
+			case ANGLE_ROLL_CMD:
 				// OUT OF DATE! STILL USING dispatch DIRECTLY!
-				  let angle_list = buffer.split(",");
-				  let angle_float_list = [];
-				for (let i = 0; i < angle_list.length;i++){
-				  if (angle_list[i]){
-					let angle_float = parseFloat(angle_list[i]);
-					angle_float_list.push(angle_float)
-				  }
+				let angle_list_roll = buffer.split(",");
+				for (let i = 0; i < angle_list_roll.length;i++){
+					if (angle_list_roll[i]){
+						let angle_float = parseFloat(angle_list_roll[i]);
+						addAngleLocalRoll(angle_float);
+					}
 				}
-				// add to global dispatcher
-				dispatchGlobal(addAngle(angle_float_list));
 				//console.log("added " + angle_float_list + " to the angle dispatcher.");
 			  break;
+			case ANGLE_PITCH_CMD:
+				// OUT OF DATE! STILL USING dispatch DIRECTLY!
+				let angle_list_pitch = buffer.split(",");
+				for (let i = 0; i < angle_list_pitch.length;i++){
+					if (angle_list_pitch[i]){
+						let angle_float = parseFloat(angle_list_pitch[i]);
+						addAngleLocalPitch(angle_float)
+					}
+				}
+				break;
 			case BATT_CMD:
 				// OUT OF DATE!
 				// Convert 4 bytes into Float Data
@@ -332,14 +360,27 @@ export function ConnectionProvider({ children }) {
 		}
 	}
 
-	async function addImpulseLocal(impulse){
+	function addImpulseLocal(impulse){
 		accumulateImpulse = accumulateImpulse + impulse;
 		diffImpulse = diffImpulse + impulse;
 	}
 	
-	async function addForceLocal(force){
+	function addForceLocal(force){
 		currentMaxForce = Math.max(currentMaxForce, force);
 	}
+
+	function addAngleLocalRoll(angle){
+		if (Math.abs(currentAngleRoll) < Math.abs(angle)){
+			currentAngleRoll = angle;
+		}
+	}
+
+	function addAngleLocalPitch(angle){
+		if (Math.abs(currentAnglePitch) < Math.abs(angle)){
+			currentAnglePitch = angle;
+		}
+	}
+
 
 	async function writeWeight(device, weight){
 		var float_arr = new Float32Array(1);

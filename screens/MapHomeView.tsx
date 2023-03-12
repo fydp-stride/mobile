@@ -39,7 +39,7 @@ const HomeView = (props, { route, navigation }) => {
   let odometer = props.geolocationData.odometer;
 
   let maxForces = props.bluetoothData.maxForce;
-  let angles = props.bluetoothData.angle;
+  let angles = props.bluetoothData.angleRoll;
 
   let deviceDispatch = useDeviceDispatch();
 
@@ -284,12 +284,12 @@ const HomeView = (props, { route, navigation }) => {
         <Text style={{ alignSelf: 'center', fontSize: 25 }}>{minutes}:{("0" + seconds).slice(-2)}</Text>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <View style={{ flexDirection: 'column', alignItems: 'center', marginLeft: 10 }}>
-            <Text>Avg. Angle</Text>
-            <Text>{(angles.reduce((partialSum, a) => partialSum + a, 0)) / angles.length}°</Text>
+            <Text>Current Angle</Text>
+            <Text>{angles.slice(-1)}°</Text>
           </View>
           <View style={{ flexDirection: 'column', alignItems: 'center' }}>
             <Text>Avg. Force</Text>
-            <Text>{(maxForces.reduce((partialSum, a) => partialSum + a, 0)) / maxForces.length}N</Text>
+            <Text>{maxForces.length == 1 ? 0 : ((maxForces.reduce((partialSum, a) => partialSum + a, 0)) / (maxForces.length - 1)).toFixed(2)}N</Text>
           </View>
           <View style={{ flexDirection: 'column', alignItems: 'center', marginRight: 10 }}>
             <Text>Distance</Text>
