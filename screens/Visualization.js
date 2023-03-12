@@ -21,8 +21,6 @@ export default function Visualization({ navigation }) {
 
   // data
   const bluetoothData = useSelector(state => state.bluetoothData);
-  const maxForce = bluetoothData.maxForce.slice(-6);
-  const impulse = bluetoothData.impulse.slice(-6);
   const dispatch = useDispatch();
   // const MAX_FORCE_THRESHOLD = Number(useSelector(state => state.userData.threshold));
   const MAX_FORCE_THRESHOLD = 7000;
@@ -184,15 +182,15 @@ export default function Visualization({ navigation }) {
     // var curTime = getCurrentTime();
     // setImpulseXaxis([curTime]);
     // setforceXaxis([curTime]);
-    console.log("angle: ", bluetoothData.angle[bluetoothData.angle.length - 1])
-    if (MAX_ANGLE_THRESHOLD[0] > bluetoothData.angle[bluetoothData.angle.length - 1] && bluetoothData.angle[bluetoothData.angle.length - 1] > MAX_ANGLE_THRESHOLD[1]){
-      disguised_toast.show(`Angle Exceeded: ${bluetoothData.angle[bluetoothData.angle.length - 1]}°`, {
+    //console.log("angleRoll: ", bluetoothData.angleRoll[bluetoothData.angleRoll.length - 1])
+    if (MAX_ANGLE_THRESHOLD[0] > bluetoothData.angleRoll[bluetoothData.angleRoll.length - 1] && bluetoothData.angleRoll[bluetoothData.angleRoll.length - 1] > MAX_ANGLE_THRESHOLD[1]){
+      disguised_toast.show(`Angle Exceeded: ${bluetoothData.angleRoll[bluetoothData.angleRoll.length - 1]}°`, {
         type: "warning",
         placement: "top", 
         duration: 3000
       });
     }
-  }, [bluetoothData.angle]);
+  }, [bluetoothData.angleRoll]);
 
   // style
   const chartConfig = {
