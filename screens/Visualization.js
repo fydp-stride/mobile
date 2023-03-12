@@ -26,7 +26,8 @@ export default function Visualization({ navigation }) {
   // const MAX_FORCE_THRESHOLD = Number(useSelector(state => state.userData.threshold));
   const MAX_FORCE_THRESHOLD = userData.forceThreshold;
   const MAX_IMPULSE_THRESHOLD = userData.impulseThreshold;
-  const MAX_ANGLE_THRESHOLD = [5, 35]; // pitch (z-axis), roll (x-axis) thresholds
+  const MAX_ANGLE_ROLL_THRESHOLD = [0, 40]; // roll (x-axis) thresholds
+  const MAX_ANGLE_PITCH_THRESHOLD = [-20, 20] // pitch (y-axis) thresholds
 
 
   const [impulseData, setImpulseData] = useState([0]);
@@ -184,14 +185,29 @@ export default function Visualization({ navigation }) {
     // setImpulseXaxis([curTime]);
     // setforceXaxis([curTime]);
     //console.log("angleRoll: ", bluetoothData.angleRoll[bluetoothData.angleRoll.length - 1])
-    if (MAX_ANGLE_THRESHOLD[0] > bluetoothData.angleRoll[bluetoothData.angleRoll.length - 1] && bluetoothData.angleRoll[bluetoothData.angleRoll.length - 1] > MAX_ANGLE_THRESHOLD[1]){
-      disguised_toast.show(`Angle Exceeded: ${bluetoothData.angleRoll[bluetoothData.angleRoll.length - 1]}°`, {
+    if (MAX_ANGLE_ROLL_THRESHOLD[0] > bluetoothData.angleRoll[bluetoothData.angleRoll.length - 1] && bluetoothData.angleRoll[bluetoothData.angleRoll.length - 1] > MAX_ANGLE_ROLL_THRESHOLD[1]){
+      disguised_toast.show(`Angle Roll Exceeded: ${bluetoothData.angleRoll[bluetoothData.angleRoll.length - 1]}°`, {
         type: "warning",
         placement: "top", 
         duration: 3000
       });
     }
   }, [bluetoothData.angleRoll]);
+
+  useEffect(() => {
+    // Currently None of these variables are used
+    // var curTime = getCurrentTime();
+    // setImpulseXaxis([curTime]);
+    // setforceXaxis([curTime]);
+    //console.log("angleRoll: ", bluetoothData.angleRoll[bluetoothData.angleRoll.length - 1])
+    if (MAX_ANGLE_PITCH_THRESHOLD[0] > bluetoothData.anglePitch[bluetoothData.anglePitch.length - 1] && bluetoothData.anglePitch[bluetoothData.anglePitch.length - 1] > MAX_ANGLE_PITCH_THRESHOLD[1]){
+      disguised_toast.show(`Angle Pitch Exceeded: ${bluetoothData.anglePitch[bluetoothData.anglePitch.length - 1]}°`, {
+        type: "warning",
+        placement: "top", 
+        duration: 3000
+      });
+    }
+  }, [bluetoothData.anglePitch]);
 
   // style
   const chartConfig = {

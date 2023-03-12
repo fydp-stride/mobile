@@ -139,9 +139,11 @@ class ConnectionScreen extends React.Component {
             </Button>
           </View>
           <View>
-            <Button onPress={() => this.props.deviceDispatch({
+            <Button onPress={() => {
+              this.props.deviceDispatch({
                 type: 'write_weight',
-                weight: 99.99})
+                weight: weight ? parseFloat(this.props.userData.weight) : 80});
+            }
               }>
               <Text> Send Weight Info </Text>
             </Button>
@@ -217,7 +219,11 @@ const mapDispatchToProps = (dispatch) => {
   }
 };
 
-export default connect(null, mapDispatchToProps)(ConnectionScreen);
+const mapStateToProps = (state) => {
+  return state;
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ConnectionScreen);
 
 /**
  * TextInput and Button for sending
