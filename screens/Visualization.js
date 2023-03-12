@@ -21,34 +21,53 @@ export default function Visualization({ navigation }) {
 
   // data
   const bluetoothData = useSelector(state => state.bluetoothData);
+  const maxForce = bluetoothData.maxForce.slice(-6);
+  const impulse = bluetoothData.impulse.slice(-6);
   const dispatch = useDispatch();
   // const MAX_FORCE_THRESHOLD = Number(useSelector(state => state.userData.threshold));
   const MAX_FORCE_THRESHOLD = 7000;
+  const MAX_IMPULSE_THRESHOLD = 30000;
+  const MAX_ANGLE_THRESHOLD = [5, 35];
 
 
+<<<<<<< HEAD
   const [impulseData, setImpulseData] = useState([0]);
   const [forceData, setForceData] = useState([0]);
   const [impulseXaxis, setImpulseXaxis] = useState([getCurrentTime()]);
   const [forceXaxis, setforceXaxis] = useState([getCurrentTime()]);
 
+=======
+>>>>>>> 8314c83e5420e36dc8b1aab24f4c8226b1d86df8
   const disguised_toast = useToast();
 
   const mockImpulseData = {
     labels: impulseXaxis,
     datasets: [
       {
+<<<<<<< HEAD
         data: impulseData,
+=======
+        data: impulse,
+>>>>>>> 8314c83e5420e36dc8b1aab24f4c8226b1d86df8
         color: (opacity = 1) => `rgba(251, 154, 153, ${opacity})`, // optional
         strokeWidth: 6, // optional
       },
       {
+<<<<<<< HEAD
         data: [Math.min(...impulseData)],
+=======
+        data: [Math.min(...impulse)],
+>>>>>>> 8314c83e5420e36dc8b1aab24f4c8226b1d86df8
         withDots: false,
         color: (opacity = 1) => `rgba(251, 154, 153, ${opacity})`, // optional
         strokeWidth: 6, // optional8i766
       },
       {
+<<<<<<< HEAD
         data: [Math.max(...impulseData)],
+=======
+        data: [Math.max(...impulse)],
+>>>>>>> 8314c83e5420e36dc8b1aab24f4c8226b1d86df8
         withDots: false,
         color: (opacity = 1) => `rgba(251, 154, 153, ${opacity})`, // optional
         strokeWidth: 6, // optional
@@ -61,6 +80,7 @@ export default function Visualization({ navigation }) {
     labels: forceXaxis,
     datasets: [
       {
+<<<<<<< HEAD
         data: forceData,
         color: (opacity = 1) => `rgba(93, 176, 117, ${opacity})`, // optional
         colors: [
@@ -93,6 +113,28 @@ export default function Visualization({ navigation }) {
           },
           (opacity = 1) => {
             return getForceColor(forceData[forceData.length < 10 ? 9 : forceData.length-1])
+=======
+        data: maxForce,
+        color: (opacity = 1) => `rgba(93, 176, 117, ${opacity})`, // optional
+        colors: [
+          (opacity = 1) => {
+            return getForceColor(maxForce[0])
+          },
+          (opacity = 1) => {
+            return getForceColor(maxForce[1])
+          },
+          (opacity = 1) => {
+            return getForceColor(maxForce[2])
+          },
+          (opacity = 1) => {
+            return getForceColor(maxForce[3])
+          },
+          (opacity = 1) => {
+            return getForceColor(maxForce[4])
+          },
+          (opacity = 1) => {
+            return getForceColor(maxForce[5])
+>>>>>>> 8314c83e5420e36dc8b1aab24f4c8226b1d86df8
           }
         ],
         strokeWidth: 5 // optional
@@ -158,7 +200,37 @@ export default function Visualization({ navigation }) {
         duration: 3000
       });
     }
-  }, [bluetoothData.maxForce, bluetoothData.impulse]);
+  }, [bluetoothData.maxForce]);
+
+  useEffect(() => {
+    // Currently None of these variables are used
+    // var curTime = getCurrentTime();
+    // setImpulseXaxis([curTime]);
+    // setforceXaxis([curTime]);
+    console.log("impulse: ", bluetoothData.impulse[bluetoothData.impulse.length - 1])
+    if (MAX_IMPULSE_THRESHOLD <= bluetoothData.impulse[bluetoothData.impulse.length - 1]){
+      disguised_toast.show(`Impulse Exceeded: ${bluetoothData.impulse[bluetoothData.impulse.length - 1]} N s`, {
+        type: "warning",
+        placement: "top", 
+        duration: 3000
+      });
+    }
+  }, [bluetoothData.impulse]);
+
+  useEffect(() => {
+    // Currently None of these variables are used
+    // var curTime = getCurrentTime();
+    // setImpulseXaxis([curTime]);
+    // setforceXaxis([curTime]);
+    console.log("angle: ", bluetoothData.angle[bluetoothData.angle.length - 1])
+    if (MAX_ANGLE_THRESHOLD[0] > bluetoothData.angle[bluetoothData.angle.length - 1] && bluetoothData.angle[bluetoothData.angle.length - 1] > MAX_ANGLE_THRESHOLD[1]){
+      disguised_toast.show(`Angle Exceeded: ${bluetoothData.angle[bluetoothData.angle.length - 1]}°`, {
+        type: "warning",
+        placement: "top", 
+        duration: 3000
+      });
+    }
+  }, [bluetoothData.angle]);
 
   // style
   const chartConfig = {
