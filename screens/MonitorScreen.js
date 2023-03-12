@@ -31,11 +31,13 @@ function HomeScreen(props) {
   const toast = useToast();
 
   useEffect(() => {
-    toast.show("The battery is low! Charge it soon.", {
-      placement: "top", 
-      duration: 3000
-    });
-  }, [batteryPercentage])
+    if (battery <= 20) {
+      toast.show("The battery is low! Charge it soon.", {
+        placement: "top", 
+        duration: 3000
+      });
+    }
+  }, [battery])
 
   const device = useDevice();
   let bgColor = device ? 'blue' : 'gray';
