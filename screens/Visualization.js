@@ -30,44 +30,29 @@ export default function Visualization({ navigation }) {
   const MAX_ANGLE_THRESHOLD = [5, 35];
 
 
-<<<<<<< HEAD
   const [impulseData, setImpulseData] = useState([0]);
   const [forceData, setForceData] = useState([0]);
   const [impulseXaxis, setImpulseXaxis] = useState([getCurrentTime()]);
   const [forceXaxis, setforceXaxis] = useState([getCurrentTime()]);
 
-=======
->>>>>>> 8314c83e5420e36dc8b1aab24f4c8226b1d86df8
   const disguised_toast = useToast();
 
   const mockImpulseData = {
     labels: impulseXaxis,
     datasets: [
       {
-<<<<<<< HEAD
         data: impulseData,
-=======
-        data: impulse,
->>>>>>> 8314c83e5420e36dc8b1aab24f4c8226b1d86df8
         color: (opacity = 1) => `rgba(251, 154, 153, ${opacity})`, // optional
         strokeWidth: 6, // optional
       },
       {
-<<<<<<< HEAD
         data: [Math.min(...impulseData)],
-=======
-        data: [Math.min(...impulse)],
->>>>>>> 8314c83e5420e36dc8b1aab24f4c8226b1d86df8
         withDots: false,
         color: (opacity = 1) => `rgba(251, 154, 153, ${opacity})`, // optional
         strokeWidth: 6, // optional8i766
       },
       {
-<<<<<<< HEAD
         data: [Math.max(...impulseData)],
-=======
-        data: [Math.max(...impulse)],
->>>>>>> 8314c83e5420e36dc8b1aab24f4c8226b1d86df8
         withDots: false,
         color: (opacity = 1) => `rgba(251, 154, 153, ${opacity})`, // optional
         strokeWidth: 6, // optional
@@ -80,7 +65,6 @@ export default function Visualization({ navigation }) {
     labels: forceXaxis,
     datasets: [
       {
-<<<<<<< HEAD
         data: forceData,
         color: (opacity = 1) => `rgba(93, 176, 117, ${opacity})`, // optional
         colors: [
@@ -113,28 +97,6 @@ export default function Visualization({ navigation }) {
           },
           (opacity = 1) => {
             return getForceColor(forceData[forceData.length < 10 ? 9 : forceData.length-1])
-=======
-        data: maxForce,
-        color: (opacity = 1) => `rgba(93, 176, 117, ${opacity})`, // optional
-        colors: [
-          (opacity = 1) => {
-            return getForceColor(maxForce[0])
-          },
-          (opacity = 1) => {
-            return getForceColor(maxForce[1])
-          },
-          (opacity = 1) => {
-            return getForceColor(maxForce[2])
-          },
-          (opacity = 1) => {
-            return getForceColor(maxForce[3])
-          },
-          (opacity = 1) => {
-            return getForceColor(maxForce[4])
-          },
-          (opacity = 1) => {
-            return getForceColor(maxForce[5])
->>>>>>> 8314c83e5420e36dc8b1aab24f4c8226b1d86df8
           }
         ],
         strokeWidth: 5 // optional

@@ -32,11 +32,7 @@ export const bluetoothSlice = createSlice({
       // For impulse, we want to accumulate all the impulses.
       const accumulateImpulse = state.impulse[state.impulse.length - 1] + action.payload.payload;
       state.impulse = [...state.impulse, accumulateImpulse];
-<<<<<<< HEAD
       state.impulseTime = [...state.impulseTime, getCurrentTime()];
-=======
-      state.impulseAxis = [...state.impulseAxis, getCurrentTime()].slice(-6);
->>>>>>> 8314c83e5420e36dc8b1aab24f4c8226b1d86df8
       // var sumImpulse = state.impulse[state.impulse.length - 1] + action.payload.payload;
       // temp.push(sumImpulse);
       // state.impulse = temp;
