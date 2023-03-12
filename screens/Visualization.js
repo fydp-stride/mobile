@@ -21,11 +21,12 @@ export default function Visualization({ navigation }) {
 
   // data
   const bluetoothData = useSelector(state => state.bluetoothData);
+  const userData = useSelector(state => state.userData);
   const dispatch = useDispatch();
   // const MAX_FORCE_THRESHOLD = Number(useSelector(state => state.userData.threshold));
-  const MAX_FORCE_THRESHOLD = 7000;
-  const MAX_IMPULSE_THRESHOLD = 30000;
-  const MAX_ANGLE_THRESHOLD = [5, 35];
+  const MAX_FORCE_THRESHOLD = userData.forceThreshold;
+  const MAX_IMPULSE_THRESHOLD = userData.impulseThreshold;
+  const MAX_ANGLE_THRESHOLD = [5, 35]; // pitch (z-axis), roll (x-axis) thresholds
 
 
   const [impulseData, setImpulseData] = useState([0]);
