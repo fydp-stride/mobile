@@ -167,7 +167,7 @@ export default function Visualization({ navigation }) {
     // var curTime = getCurrentTime();
     // setImpulseXaxis([curTime]);
     // setforceXaxis([curTime]);
-    console.log("impulse: ", bluetoothData.impulse[bluetoothData.impulse.length - 1])
+    //console.log("impulse: ", bluetoothData.impulse[bluetoothData.impulse.length - 1])
     if (MAX_IMPULSE_THRESHOLD <= bluetoothData.impulse[bluetoothData.impulse.length - 1]){
       disguised_toast.show(`Impulse Exceeded: ${bluetoothData.impulse[bluetoothData.impulse.length - 1]} N s`, {
         type: "warning",
