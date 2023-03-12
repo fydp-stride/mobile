@@ -9,6 +9,7 @@ import React from 'react';
 import { useSelector, useDispatch, batch } from 'react-redux';
 import { connect } from 'react-redux';
 import { setState, setOdometer, setMarkers, setCoordinates, setTime } from './actions/geolocationActions';
+import { clearImpulse, clearMaxForce, clearAngle } from './reducers/bluetoothSlice';
 
 import {
   StyleSheet,
@@ -157,6 +158,10 @@ const HomeView = (props, { route, navigation }) => {
           type: 'start_run'
         })
       }
+      dispatch(clearImpulse());
+      dispatch(clearMaxForce());
+      dispatch(clearAngle());
+
     })
     
     BackgroundGeolocation.setOdometer(0);

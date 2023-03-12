@@ -196,6 +196,7 @@ export function ConnectionProvider({ children }) {
 			//console.log(runRef.current);
 			if (runRef.current){
 				// This parses the event (event.data is the message)
+				console.log(`${new Date().getTime()}`)
 				onReceivedData(event)
 			}
 		});	

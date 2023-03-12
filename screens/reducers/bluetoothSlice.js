@@ -58,13 +58,17 @@ export const bluetoothSlice = createSlice({
       //console.log(state.anglePitch[state.anglePitch.length - 1]);
     },
     clearImpulse: state => {
-      state.impulse = [];
+      state.impulse = [0];
+      state.impulseTime = [getCurrentTime()];
     },
     clearMaxForce: state => {
-      state.maxForce = [];
+      state.maxForce = [0];
+      state.maxForceTime = [getCurrentTime()];
+      state.totalMaxForce = 0;
     },
     clearAngle: state => {
-      state.angle = [];
+      state.angleRoll = [0];
+      state.anglePitch = [0];
     },
     setImpulse: (state, action) => {
       state.impulse = action.payload;
