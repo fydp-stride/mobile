@@ -15,3 +15,6 @@ https://reactnative.dev/docs/environment-setup
 
 # To start android release run
 `npm run android-rel`
+
+# To uninstall app
+`./gradlew uninstallDebug`

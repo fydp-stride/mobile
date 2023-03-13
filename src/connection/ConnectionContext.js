@@ -45,6 +45,19 @@ export function ConnectionProvider({ children }) {
 		runRef.current = state.run_started
 	}, [state.run_started])
 
+	useEffect(() => {
+		// This function will be called when the component mounts
+	
+		return () => {
+		  // This function will be called when the component unmounts
+		  // Put your "uninitialize" code here
+		  dispatch({
+			type: 'disconnect',
+			device: state.device
+		  });
+		};
+	  }, []);
+
 	function deviceReducer(state, action) {
 		//console.log(action.type);
 		//console.log(state);
@@ -196,7 +209,7 @@ export function ConnectionProvider({ children }) {
 			//console.log(runRef.current);
 			if (runRef.current){
 				// This parses the event (event.data is the message)
-				console.log(`${new Date().getTime()}`)
+				//console.log(`${new Date().getTime()}`)
 				onReceivedData(event)
 			}
 		});	
