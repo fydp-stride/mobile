@@ -40,4 +40,16 @@ export const toggleEnabled = (payload) => (
   }
 );
 
+export const setLastUsedDate = (payload) => (
+  {
+    type: 'SET_LAST_USED_DATE',
+    payload: payload
+  }
+);
 
+export const setDailyImpulse = (payload) => (
+  {
+    type: 'SET_DAILY_IMPULSE',
+    payload: payload
+  }
+);

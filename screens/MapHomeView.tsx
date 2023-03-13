@@ -34,6 +34,7 @@ import { Button, Card, Icon, Layout, List, Modal, Text } from '@ui-kitten/compon
 import { addDateEvent } from './actions/summaryDataActions';
 
 import { useDeviceDispatch } from '../src/connection/ConnectionContext';
+import { setDailyImpulse } from './actions/userDataActions';
 
 const HomeView = (props, { route, navigation }) => {
   let geolocationEnabled = props.userData.geolocationEnabled;
@@ -42,6 +43,7 @@ const HomeView = (props, { route, navigation }) => {
   let maxForces = props.bluetoothData.maxForce;
   let impulses = props.bluetoothData.impulse;
   let angles = props.bluetoothData.angleRoll;
+  let dailyImpulse = props.userData.dailyImpulse;
 
   let deviceDispatch = useDeviceDispatch();
 
@@ -214,12 +216,16 @@ const HomeView = (props, { route, navigation }) => {
     let newEvent = {
       date: startDate.toISOString().split('T')[0],
       sessionName: time,
-      distance: odometer.toString() + 'm',
-      duration: minutes.toString() + 'min'
+      distance: odometer,
+      duration: minutes,
+      impulse: impulses[impulses.length - 1]
     };
     console.log('newEvent', newEvent);
 
-    dispatch(addDateEvent(newEvent));
+    batch(() => {
+      dispatch(addDateEvent(newEvent));
+      dispatch(setDailyImpulse(dailyImpulse + impulses[impulses.length - 1]));
+    });
   }
 
   const stopRecordingLoc = () => {

@@ -16,7 +16,7 @@ export default DateRoutine = ({ event }) => {
         marginHorizontal: 10,
         justifyContent: 'space-between',
       }}>
-      <Text style={{ fontSize: 40, marginRight: 15 }}>
+      <Text style={{ fontSize: 40, marginRight: 10 }}>
         {event.sessionName.includes('Walk') ? '🚶🏻‍♂️' : '🏃'}
       </Text>
       <View style={{ flex: 0.9 }}>
@@ -24,8 +24,9 @@ export default DateRoutine = ({ event }) => {
           {event.sessionName}
         </Text>
         <Text style={{ color: 'black' }}>
-          ⧟ {event.distance} | 🕘 {event.duration}
+          ⧟ {event.distance}km | 🕘 {event.duration}min
         </Text>
+        <Text style={{ color: 'black' }}>🚀 {event.impulse}Ns</Text>
       </View>
       <View
         style={{

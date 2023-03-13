@@ -23,14 +23,16 @@ export const initialState = {
   dateEvents: [{
     date: '2023-02-16',
     sessionName: 'Morning Run',
-    distance: '5km',
-    duration: '30min',
+    distance: 5000,
+    duration: 30,
+    impulse: 1000000
   },
   {
     date: '2023-02-15',
     sessionName: 'Afternoon Walk',
-    distance: '2km',
-    duration: '20min',
+    distance: 2000,
+    duration: 20,
+    impulse: 2000000
   }],
 };
 

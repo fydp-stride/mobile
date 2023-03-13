@@ -11,18 +11,35 @@ import DateRoutine from './summaryPageComponents/DateRoutine';
 import EventChart from './summaryPageComponents/EventChart';
 import { Dimensions } from 'react-native';
 import { connect, bindActionCreators } from 'react-redux';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch, batch } from 'react-redux';
 
 // import Chart from '../components/Chart';
 
 import { View, ScrollView } from 'react-native';
 import RoutinesList from './summaryPageComponents/RoutinesList';
 import { setDateEvent, setWeekArray } from './actions/summaryDataActions';
+import { setDailyImpulse, setLastUsedDate } from './actions/userDataActions';
 
 function SummaryPage(props) {
   let [startTime, durationMillis] = props.geolocationData.time;
   let DATE_EVENTS = props.summaryData.dateEvents;
   let WEEK_ARRAY = props.summaryData.weekArrays;
+
+  let lastUsedDate = new Date(props.userData.lastUsedDate);
+  let dailyImpulse = props.userData.dailyImpulse;
+
+  let today = new Date();
+  React.useEffect(() => {
+    if(lastUsedDate.setHours(0,0,0,0) == today.setHours(0,0,0,0)) {
+      // Date equals today's date
+      // do nothing
+    } else {
+      batch(() => {
+        dispatch(setLastUsedDate(today));
+        dispatch(setDailyImpulse(0));
+      });
+    }
+  }, []);
 
   const dispatch = useDispatch();
   

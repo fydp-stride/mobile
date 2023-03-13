@@ -1,3 +1,4 @@
+import { act } from 'react-test-renderer';
 import { combineReducers } from 'redux';
 
 export const initialState = {
@@ -6,7 +7,9 @@ export const initialState = {
   age: "",
   forceThreshold: "3000",
   impulseThreshold: "3000000",
-  geolocationEnabled: false
+  geolocationEnabled: false,
+  lastUsedDate: "2000-01-01",
+  dailyImpulse: '0'
 };
 
 const userDataReducer = (state = initialState, action) => {
@@ -24,6 +27,10 @@ const userDataReducer = (state = initialState, action) => {
       return { ...state, impulseThreshold: action.payload };
     case "TOGGLE_ENABLED":
       return { ...state, geolocationEnabled: !state.geolocationEnabled };
+    case "SET_LAST_USED_DATE":
+      return { ...state, lastUsedDate: action.payload };
+    case "SET_DAILY_IMPULSE":
+      return { ...state, dailyImpulse: action.payload };
     default:
       return state;
   }

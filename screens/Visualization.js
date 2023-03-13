@@ -8,6 +8,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { selectBluetooth, setImpulse, setMaxForce, addImpulse, setImpulseAxis, addMaxForce ,setMaxForceAxis } from './reducers/bluetoothSlice';
 
 import { useToast } from "react-native-toast-notifications";
+import { setDailyImpulse } from './actions/userDataActions';
 
 export default function Visualization({ navigation }) {
   const getCurrentTime = () => {
@@ -18,6 +19,8 @@ export default function Visualization({ navigation }) {
       ("00" + date.getSeconds()).slice(-2);
     return dateStr;
   }
+
+  const NOTIF_DURATION = 4500;
 
   // data
   const bluetoothData = useSelector(state => state.bluetoothData);
@@ -105,6 +108,17 @@ export default function Visualization({ navigation }) {
   };
 
   useEffect(() => {
+    let currentImpulse = userData.dailyImpulse + bluetoothData.impulse[bluetoothData.impulse.length - 1];
+    if (currentImpulse >= MAX_IMPULSE_THRESHOLD){
+      disguised_toast.show(`Daily Impulse Exceeded: ${currentImpulse} Ns`, {
+        type: "warning",
+        placement: "top", 
+        duration: NOTIF_DURATION
+      });
+    }
+  }, [bluetoothData.impulse]);
+
+  useEffect(() => {
     // Always keep the first and last impulse
     const impulse_labels = [];
     const impulse_data = [];
@@ -159,7 +173,7 @@ export default function Visualization({ navigation }) {
       disguised_toast.show(`Force Exceeded: ${bluetoothData.maxForce[bluetoothData.maxForce.length - 1]} N`, {
         type: "warning",
         placement: "top", 
-        duration: 4500
+        duration: NOTIF_DURATION
       });
     }
   }, [bluetoothData.maxForce]);
@@ -174,7 +188,7 @@ export default function Visualization({ navigation }) {
       disguised_toast.show(`Impulse Exceeded: ${bluetoothData.impulse[bluetoothData.impulse.length - 1]} N s`, {
         type: "warning",
         placement: "top", 
-        duration: 4500
+        duration: NOTIF_DURATION
       });
     }
   }, [bluetoothData.impulse]);
@@ -189,7 +203,7 @@ export default function Visualization({ navigation }) {
       disguised_toast.show(`Angle Roll Exceeded: ${bluetoothData.angleRoll[bluetoothData.angleRoll.length - 1]}°`, {
         type: "warning",
         placement: "top", 
-        duration: 4500
+        duration: NOTIF_DURATION
       });
     }
   }, [bluetoothData.angleRoll]);
@@ -204,7 +218,7 @@ export default function Visualization({ navigation }) {
       disguised_toast.show(`Angle Pitch Exceeded: ${bluetoothData.anglePitch[bluetoothData.anglePitch.length - 1]}°`, {
         type: "warning",
         placement: "top", 
-        duration: 4500
+        duration: NOTIF_DURATION
       });
     }
   }, [bluetoothData.anglePitch]);
