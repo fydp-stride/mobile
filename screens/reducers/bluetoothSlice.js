@@ -51,11 +51,11 @@ export const bluetoothSlice = createSlice({
     },
     addAngleRoll: (state, action) => {
       state.angleRoll = [...state.angleRoll, action.payload.payload];
-      //console.log(state.angleRoll[state.angleRoll.length - 1]);
+      //console.log("roll: ", state.angleRoll[state.angleRoll.length - 1]);
     },
     addAnglePitch: (state, action) => {
       state.anglePitch = [...state.anglePitch, action.payload.payload];
-      //console.log(state.anglePitch[state.anglePitch.length - 1]);
+      //console.log("pitch: ", state.anglePitch[state.anglePitch.length - 1]);
     },
     clearImpulse: state => {
       state.impulse = [0];
