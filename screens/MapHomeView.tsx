@@ -214,7 +214,7 @@ const HomeView = (props, { route, navigation }) => {
     }
 
     let newEvent = {
-      date: startDate.toISOString().split('T')[0],
+      date: startDate.toLocaleString('sv', { timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone }),
       sessionName: time,
       distance: odometer,
       duration: minutes,

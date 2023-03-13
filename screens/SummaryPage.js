@@ -25,12 +25,12 @@ function SummaryPage(props) {
   let DATE_EVENTS = props.summaryData.dateEvents;
   let WEEK_ARRAY = props.summaryData.weekArrays;
 
-  let lastUsedDate = new Date(props.userData.lastUsedDate);
+  let lastUsedDate = new Date(props.userData.lastUsedDate).toLocaleDateString();
   let dailyImpulse = props.userData.dailyImpulse;
 
-  let today = new Date();
+  let today = new Date().toLocaleDateString();
   React.useEffect(() => {
-    if(lastUsedDate.setHours(0,0,0,0) == today.setHours(0,0,0,0)) {
+    if(lastUsedDate === today) {
       // Date equals today's date
       // do nothing
     } else {

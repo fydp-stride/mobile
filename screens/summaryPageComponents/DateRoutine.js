@@ -24,7 +24,7 @@ export default DateRoutine = ({ event }) => {
           {event.sessionName}
         </Text>
         <Text style={{ color: 'black' }}>
-          ⧟ {event.distance}km | 🕘 {event.duration}min
+          ⧟ {event.distance}m | 🕘 {event.duration}min
         </Text>
         <Text style={{ color: 'black' }}>🚀 {event.impulse}Ns</Text>
       </View>
