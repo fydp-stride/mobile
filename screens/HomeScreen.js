@@ -122,6 +122,7 @@ function HomeScreen(props) {
             }}>
             <Text>{useMetric ? "Metric" : "Imperial"}</Text>
             <Toggle
+              checked={useMetric}
               status='basic'
               onChange={() => 
                 useMetric ? dispatch(useImperialUnit()) : dispatch(useMetricUnit())
