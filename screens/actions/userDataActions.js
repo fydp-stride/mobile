@@ -53,3 +53,17 @@ export const setDailyImpulse = (payload) => (
     payload: payload
   }
 );
+
+export const useImperialUnit = (payload) => (
+  {
+    type: 'USE_IMPERIAL_UNIT',
+    payload: payload
+  }
+)
+
+export const useMetricUnit = (payload) => (
+  {
+    type: 'USE_METRIC_UNIT',
+    payload: payload
+  }
+)

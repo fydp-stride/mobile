@@ -1,8 +1,10 @@
 import { View, Text } from 'react-native';
 import * as React from 'react';
+import { useSelector } from 'react-redux';
 
 
 export default DateRoutine = ({ event }) => {
+  const useMetric = useSelector(state => state.userData.useMetric);
 
   return (
     <View
@@ -24,10 +26,10 @@ export default DateRoutine = ({ event }) => {
           {event.sessionName}
         </Text>
         <Text style={{ color: 'black', fontSize: 14 }}>
-          ⧟ {event.distance}m | 🕘 {event.duration}min
+          ⧟ {useMetric? event.distance : Math.floor(event.distance * 3.28)} {useMetric ? 'm' : 'ft'} | 🕘 {event.duration} min
         </Text>
-        <Text style={{ color: 'black', fontSize: 14 }}>🚀 {event.impulse}Ns</Text>
-        <Text style={{ color: 'black', fontSize: 14 }}>🦵 {event.maxForce}N</Text>
+        <Text style={{ color: 'black', fontSize: 14 }}>🚀 {event.impulse} Ns</Text>
+        <Text style={{ color: 'black', fontSize: 14 }}>🦵 {event.maxForce} N</Text>
       </View>
       <View
         style={{

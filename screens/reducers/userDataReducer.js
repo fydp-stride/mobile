@@ -9,7 +9,8 @@ export const initialState = {
   impulseThreshold: "3000000",
   geolocationEnabled: false,
   lastUsedDate: "2000-01-01",
-  dailyImpulse: '0'
+  dailyImpulse: '0',
+  useMetric: true
 };
 
 const userDataReducer = (state = initialState, action) => {
@@ -31,6 +32,10 @@ const userDataReducer = (state = initialState, action) => {
       return { ...state, lastUsedDate: action.payload };
     case "SET_DAILY_IMPULSE":
       return { ...state, dailyImpulse: action.payload };
+    case "USE_IMPERIAL_UNIT":
+      return { ...state, useMetric: false };
+    case "USE_METRIC_UNIT":
+      return { ...state, useMetric: true};
     default:
       return state;
   }

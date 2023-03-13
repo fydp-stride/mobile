@@ -4,9 +4,11 @@ import {
   Button,
   Modal,
   Card,
+  Toggle,
   Input,
 } from '@ui-kitten/components';
 import * as React from 'react';
+import {useEffect} from 'react';
 import { View, Image, ImageBackground, TextInput } from 'react-native';
 import { StyleSheet } from 'react-native';
 import BluetoothClassic from './BluetoothClassic';
@@ -14,7 +16,7 @@ import SettingsScreen from './SettingsScreen';
 import { connect, bindActionCreators } from 'react-redux';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { setAge, setHeight, setWeight } from './actions/userDataActions';
+import { setAge, setHeight, setWeight, useImperialUnit, useMetricUnit } from './actions/userDataActions';
 
 import { useDevice, useDeviceDispatch } from '../src/connection/ConnectionContext';
 
@@ -26,7 +28,28 @@ function HomeScreen(props) {
   const dispatch = useDispatch();
   let height = props.userData.height;
   let weight = props.userData.weight;
+  let useMetric = props.userData.useMetric;
   let age = props.userData.age;
+
+  const [heightFeets, setHeightFeets] = React.useState('');
+  const [heightInches, setHeightInches] = React.useState('');
+  const [weightLb, setWeightLb] = React.useState('');
+
+	useEffect(() => {
+    if (heightFeets == '' || heightInches == '') {
+      return
+    }
+    const h = parseFloat(heightFeets == '' ? 0 : heightFeets) * 30.48 + parseFloat(heightInches == '' ? 0 : heightInches) * 2.54;
+    dispatch(setHeight(h.toString()));
+	}, [heightFeets, heightInches]);
+
+  useEffect(() => {
+    if (weightLb == '') {
+      return
+    }
+    const w = parseFloat(weightLb == '' ? 0 : weightLb) * 0.45;
+    dispatch(setWeight(w.toString()));
+  }, [weightLb])
 
   const re = /^[0-9\b]+$/;
 
@@ -97,31 +120,104 @@ function HomeScreen(props) {
               display: 'flex',
               alignItems: 'center',
             }}>
-            <Text>Height</Text>
-            <TextInput
-              style={{
-                color: 'black',
-                underlineColorAndroid: 'black',
-                borderRadius: 16,
-                height: 'auto',
-                width: 60,
-                textAlign: 'center',
-                fontSize: 16,
-              }}
-              editable
-              blurOnSubmit
-              keyboardType="numeric"
-              numberOfLines={1}
-              maxLength={3}
-              placeholder='height'
-              onChangeText={nextValue => {
-                if (nextValue === '' || re.test(nextValue)) {
-                  dispatch(setHeight(nextValue));
-                }
-              }}
-              value={height}
+            <Text>{useMetric ? "Metric" : "Imperial"}</Text>
+            <Toggle
+              status='basic'
+              onChange={() => 
+                useMetric ? dispatch(useImperialUnit()) : dispatch(useMetricUnit())
+              }
+              style={{ flex: 6}} 
             />
-            <Text>cm</Text>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              display: 'flex',
+              alignItems: 'center',
+            }}>
+            <Text>Height</Text>
+            {
+              useMetric ?
+              <>
+                <TextInput
+                  style={{
+                    color: 'black',
+                    underlineColorAndroid: 'black',
+                    borderRadius: 16,
+                    height: 'auto',
+                    width: 60,
+                    textAlign: 'center',
+                    fontSize: 16,
+                  }}
+                  editable
+                  blurOnSubmit
+                  keyboardType="numeric"
+                  numberOfLines={1}
+                  maxLength={3}
+                  placeholder='cm'
+                  onChangeText={nextValue => {
+                    if (nextValue === '' || re.test(nextValue)) {
+                      dispatch(setHeight(nextValue));
+                    }
+                  }}
+                  value={height}
+                /> 
+                <Text>cm</Text> 
+              </>
+            :
+              <>
+                <TextInput
+                  style={{
+                    color: 'black',
+                    underlineColorAndroid: 'black',
+                    borderRadius: 16,
+                    height: 'auto',
+                    width: 60,
+                    textAlign: 'center',
+                    fontSize: 16,
+                  }}
+                  editable
+                  blurOnSubmit
+                  keyboardType="numeric"
+                  numberOfLines={1}
+                  maxLength={3}
+                  placeholder='feet'
+                  onChangeText={nextValue => {
+                    if (nextValue === '' || re.test(nextValue)) {
+                      setHeightFeets(nextValue);
+                    }
+                  }}
+                  value={heightFeets}
+                /> 
+                <Text>feet</Text>
+                <TextInput
+                  style={{
+                    color: 'black',
+                    underlineColorAndroid: 'black',
+                    borderRadius: 16,
+                    height: 'auto',
+                    width: 60,
+                    textAlign: 'center',
+                    fontSize: 16,
+                  }}
+                  editable
+                  blurOnSubmit
+                  keyboardType="numeric"
+                  numberOfLines={1}
+                  maxLength={3}
+                  placeholder='inch'
+                  onChangeText={nextValue => {
+                    if (nextValue === '' || re.test(nextValue)) {
+                      setHeightInches(nextValue);
+                    }
+                  }}
+                  value={heightInches}
+                /> 
+                <Text>inches</Text>
+              </>
+            }
+            
+            
           </View>
           <View
             style={{
@@ -148,12 +244,16 @@ function HomeScreen(props) {
               placeholder='weight'
               onChangeText={nextValue => {
                 if (nextValue === '' || re.test(nextValue)) {
-                  dispatch(setWeight(nextValue));
+                  if (useMetric) {
+                    dispatch(setWeight(nextValue));
+                  } else {
+                    setWeightLb(nextValue)
+                  }
                 }
               }}
-              value={weight}
+              value={useMetric ? weight : weightLb }
             />
-            <Text>kg</Text>
+            <Text>{useMetric ? "kg" : "lb"}</Text>
           </View>
           <View
             style={{

@@ -44,6 +44,7 @@ const HomeView = (props, { route, navigation }) => {
   let impulses = props.bluetoothData.impulse;
   let angles = props.bluetoothData.angleRoll;
   let dailyImpulse = props.userData.dailyImpulse;
+  let useMetric = props.userData.useMetric;
 
   let deviceDispatch = useDeviceDispatch();
 
@@ -299,15 +300,15 @@ const HomeView = (props, { route, navigation }) => {
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <View style={{ flexDirection: 'column', alignItems: 'center', marginLeft: 10 }}>
             <Text>Total Impulse</Text>
-            <Text>{impulses[impulses.length - 1]}Ns</Text>
+            <Text>{impulses[impulses.length - 1]} Ns</Text>
           </View>
           <View style={{ flexDirection: 'column', alignItems: 'center' }}>
             <Text>Avg. Force</Text>
-            <Text>{maxForces.length == 1 ? 0 : ((maxForces.reduce((partialSum, a) => partialSum + a, 0)) / (maxForces.length - 1)).toFixed(2)}N</Text>
+            <Text>{maxForces.length == 1 ? 0 : ((maxForces.reduce((partialSum, a) => partialSum + a, 0)) / (maxForces.length - 1)).toFixed(2)} N</Text>
           </View>
           <View style={{ flexDirection: 'column', alignItems: 'center', marginRight: 10 }}>
             <Text>Distance</Text>
-            <Text>{parseInt(odometer)}m</Text>
+            <Text>{useMetric? parseInt(odometer): Math.floor(parseInt(odometer) * 3.28)} {useMetric ? "m" : "ft" }</Text>
           </View>
         </View>
       </View>
