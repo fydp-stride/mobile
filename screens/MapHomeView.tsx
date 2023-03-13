@@ -219,7 +219,8 @@ const HomeView = (props, { route, navigation }) => {
       sessionName: time,
       distance: odometer,
       duration: minutes,
-      impulse: impulses[impulses.length - 1]
+      impulse: impulses[impulses.length - 1],
+      maxForce: maxForces[maxForces.length - 1]
     };
     console.log('newEvent', newEvent);
 

@@ -25,14 +25,16 @@ export const initialState = {
     sessionName: 'Morning Run',
     distance: 5000,
     duration: 30,
-    impulse: 1000000
+    impulse: 1000000,
+    maxForce: 10000
   },
   {
     date: '2023-02-15',
     sessionName: 'Afternoon Walk',
     distance: 2000,
     duration: 20,
-    impulse: 2000000
+    impulse: 2000000,
+    maxForce: 20000
   }],
 };
 

@@ -27,6 +27,7 @@ export default DateRoutine = ({ event }) => {
           ⧟ {event.distance}m | 🕘 {event.duration}min
         </Text>
         <Text style={{ color: 'black', fontSize: 14 }}>🚀 {event.impulse}Ns</Text>
+        <Text style={{ color: 'black', fontSize: 14 }}>🦵 {event.maxForce}N</Text>
       </View>
       <View
         style={{
