@@ -213,8 +213,9 @@ const HomeView = (props, { route, navigation }) => {
       time += ' Run';
     }
 
+    let dateStr = startDate.toLocaleString('sv', { timeZone: 'America/Toronto' });
     let newEvent = {
-      date: startDate.toLocaleString('sv', { timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone }),
+      date: dateStr.substring(0, dateStr.length - 3),
       sessionName: time,
       distance: odometer,
       duration: minutes,
@@ -243,7 +244,7 @@ const HomeView = (props, { route, navigation }) => {
       })
     }
     // console.log(endTimeNow, startTime, new Date(endTimeNow), new Date(startTime));
-    if (endTimeNow - startTime > 60 * MILLI) { // dont record run unless its over 1 minute
+    if (endTimeNow - startTime > 15 * MILLI) { // dont record run unless its over 1 minute
       console.log(endTimeNow - startTime);
       dispatch(setTime([startTime, endTimeNow - startTime]));
       recordRoute();
