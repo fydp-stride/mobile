@@ -65,9 +65,10 @@ function HomeScreen(props) {
           height: '35%',
           width: '100%',
           position: 'absolute',
+          borderRadius: 15
         }}></View>
       <Text
-        style={{ fontSize: 30, color: 'black', margin: 20, paddingBottom: 15 }}>
+        style={{ fontSize: 45, color: 'black', margin: 20, paddingBottom: 15, fontWeight:'bold' }}>
         Profile
       </Text>
       <View
@@ -78,8 +79,14 @@ function HomeScreen(props) {
           width: 155,
           backgroundColor: 'black',
           justifyContent: 'center',
-        }}></View>
-      <Text style={{ fontSize: 30, color: 'black', marginTop: '5%' }}>
+          
+        }}>
+          <Image source={{uri: "https://upload.wikimedia.org/wikipedia/commons/1/1c/Squirrel_posing.jpg"}} 
+        style={{height: '100%', width: '100%', borderRadius: 100}}></Image>
+        </View>
+        
+
+      <Text style={{ fontSize: 30, color: 'black', marginTop: '10%' }}>
         Welcome Back, Bob
       </Text>
       <Text
