@@ -8,7 +8,7 @@ import {
   Input,
 } from '@ui-kitten/components';
 import * as React from 'react';
-import {useEffect} from 'react';
+import { useEffect } from 'react';
 import { View, Image, ImageBackground, TextInput } from 'react-native';
 import { StyleSheet } from 'react-native';
 import BluetoothClassic from './BluetoothClassic';
@@ -16,9 +16,18 @@ import SettingsScreen from './SettingsScreen';
 import { connect, bindActionCreators } from 'react-redux';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { setAge, setHeight, setWeight, useImperialUnit, useMetricUnit } from './actions/userDataActions';
+import {
+  setAge,
+  setHeight,
+  setWeight,
+  useImperialUnit,
+  useMetricUnit,
+} from './actions/userDataActions';
 
-import { useDevice, useDeviceDispatch } from '../src/connection/ConnectionContext';
+import {
+  useDevice,
+  useDeviceDispatch,
+} from '../src/connection/ConnectionContext';
 
 function HomeScreen(props) {
   const [biometricsVisible, setBiometricsVisible] = React.useState(false);
@@ -35,21 +44,23 @@ function HomeScreen(props) {
   const [heightInches, setHeightInches] = React.useState('');
   const [weightLb, setWeightLb] = React.useState('');
 
-	useEffect(() => {
+  useEffect(() => {
     if (heightFeets == '' || heightInches == '') {
-      return
+      return;
     }
-    const h = parseFloat(heightFeets == '' ? 0 : heightFeets) * 30.48 + parseFloat(heightInches == '' ? 0 : heightInches) * 2.54;
+    const h =
+      parseFloat(heightFeets == '' ? 0 : heightFeets) * 30.48 +
+      parseFloat(heightInches == '' ? 0 : heightInches) * 2.54;
     dispatch(setHeight(h.toString()));
-	}, [heightFeets, heightInches]);
+  }, [heightFeets, heightInches]);
 
   useEffect(() => {
     if (weightLb == '') {
-      return
+      return;
     }
     const w = parseFloat(weightLb == '' ? 0 : weightLb) * 0.45;
     dispatch(setWeight(w.toString()));
-  }, [weightLb])
+  }, [weightLb]);
 
   const re = /^[0-9\b]+$/;
 
@@ -58,17 +69,23 @@ function HomeScreen(props) {
   const deviceDispatch = useDeviceDispatch();
 
   return (
-    <Layout style={{ alignItems: 'center', flex: 1, backgroundColor: 'white' }}>
-      <View
+    <Layout style={{ alignItems: 'center', flex: 1, backgroundColor: '#b7ed9a' }}>
+      {/* <View
         style={{
           backgroundColor: 'lightgreen',
           height: '35%',
           width: '100%',
           position: 'absolute',
           borderRadius: 15
-        }}></View>
+        }}></View> */}
       <Text
-        style={{ fontSize: 45, color: 'black', margin: 20, paddingBottom: 15, fontWeight:'bold' }}>
+        style={{
+          fontSize: 45,
+          color: 'black',
+          margin: 20,
+          paddingBottom: 15,
+          fontWeight: 'bold',
+        }}>
         Profile
       </Text>
       <View
@@ -79,41 +96,54 @@ function HomeScreen(props) {
           width: 155,
           backgroundColor: 'black',
           justifyContent: 'center',
-          
+          marginBottom: 10
         }}>
-          <Image source={{uri: "https://upload.wikimedia.org/wikipedia/commons/1/1c/Squirrel_posing.jpg"}} 
-        style={{height: '100%', width: '100%', borderRadius: 100}}></Image>
-        </View>
-        
+        <Image
+          source={{
+            uri: 'https://upload.wikimedia.org/wikipedia/commons/1/1c/Squirrel_posing.jpg',
+          }}
+          style={{ height: '100%', width: '100%', borderRadius: 100 }}></Image>
+      </View>
 
-      <Text style={{ fontSize: 30, color: 'black', marginTop: '10%' }}>
-        Welcome Back, Bob
-      </Text>
-      <Text
-        style={{
-          fontSize: 18,
-          color: 'black',
-          marginTop: 10,
-          marginBottom: '10%',
-        }}>
-        You are doing great today!
-      </Text>
-      <Button onPress={() => setBiometricsVisible(true)} style={styles.button}>
-        Modify Biometrics
-      </Button>
-      <Button onPress={() => setBluetoothVisible(true)} style={styles.button}>
-        Bluetooth Connection
-      </Button>
-      <Button onPress={() => setSettingsVisible(true)} style={styles.button}>
-        Settings
-      </Button>
-      {/* <Button
+      <View style={{
+        backgroundColor: 'white',
+        alignItems: 'center', 
+        flex: 0.95,
+        width: '94%',
+        borderRadius: 35,
+        marginTop: 30
+      }}>
+        <Text style={{ fontSize: 30, color: 'black', marginTop: '20%' }}>
+          Welcome Back, Bob
+        </Text>
+        <Text
+          style={{
+            fontSize: 18,
+            color: 'black',
+            marginTop: 10,
+            marginBottom: '10%',
+          }}>
+          You are doing great today!
+        </Text>
+        <Button
+          onPress={() => setBiometricsVisible(true)}
+          style={styles.button}>
+          Modify Biometrics
+        </Button>
+        <Button onPress={() => setBluetoothVisible(true)} style={styles.button}>
+          Bluetooth Connection
+        </Button>
+        <Button onPress={() => setSettingsVisible(true)} style={styles.button}>
+          Settings
+        </Button>
+        {/* <Button
         onPress={() => {
           console.log('3');
         }}
         style={styles.button}>
         Logout
       </Button> */}
+      </View>
 
       <Modal
         visible={biometricsVisible}
@@ -127,14 +157,16 @@ function HomeScreen(props) {
               display: 'flex',
               alignItems: 'center',
             }}>
-            <Text>{useMetric ? "Metric" : "Imperial"}</Text>
+            <Text>{useMetric ? 'Metric' : 'Imperial'}</Text>
             <Toggle
               checked={useMetric}
-              status='basic'
-              onChange={() => 
-                useMetric ? dispatch(useImperialUnit()) : dispatch(useMetricUnit())
+              status="basic"
+              onChange={() =>
+                useMetric
+                  ? dispatch(useImperialUnit())
+                  : dispatch(useMetricUnit())
               }
-              style={{ flex: 6}} 
+              style={{ flex: 6 }}
             />
           </View>
           <View
@@ -144,8 +176,7 @@ function HomeScreen(props) {
               alignItems: 'center',
             }}>
             <Text>Height</Text>
-            {
-              useMetric ?
+            {useMetric ? (
               <>
                 <TextInput
                   style={{
@@ -162,17 +193,17 @@ function HomeScreen(props) {
                   keyboardType="numeric"
                   numberOfLines={1}
                   maxLength={3}
-                  placeholder='cm'
+                  placeholder="cm"
                   onChangeText={nextValue => {
                     if (nextValue === '' || re.test(nextValue)) {
                       dispatch(setHeight(nextValue));
                     }
                   }}
                   value={height}
-                /> 
-                <Text>cm</Text> 
+                />
+                <Text>cm</Text>
               </>
-            :
+            ) : (
               <>
                 <TextInput
                   style={{
@@ -189,14 +220,14 @@ function HomeScreen(props) {
                   keyboardType="numeric"
                   numberOfLines={1}
                   maxLength={3}
-                  placeholder='feet'
+                  placeholder="feet"
                   onChangeText={nextValue => {
                     if (nextValue === '' || re.test(nextValue)) {
                       setHeightFeets(nextValue);
                     }
                   }}
                   value={heightFeets}
-                /> 
+                />
                 <Text>feet</Text>
                 <TextInput
                   style={{
@@ -213,19 +244,17 @@ function HomeScreen(props) {
                   keyboardType="numeric"
                   numberOfLines={1}
                   maxLength={3}
-                  placeholder='inch'
+                  placeholder="inch"
                   onChangeText={nextValue => {
                     if (nextValue === '' || re.test(nextValue)) {
                       setHeightInches(nextValue);
                     }
                   }}
                   value={heightInches}
-                /> 
+                />
                 <Text>inches</Text>
               </>
-            }
-            
-            
+            )}
           </View>
           <View
             style={{
@@ -249,19 +278,19 @@ function HomeScreen(props) {
               keyboardType="numeric"
               numberOfLines={1}
               maxLength={3}
-              placeholder='weight'
+              placeholder="weight"
               onChangeText={nextValue => {
                 if (nextValue === '' || re.test(nextValue)) {
                   if (useMetric) {
                     dispatch(setWeight(nextValue));
                   } else {
-                    setWeightLb(nextValue)
+                    setWeightLb(nextValue);
                   }
                 }
               }}
-              value={useMetric ? weight : weightLb }
+              value={useMetric ? weight : weightLb}
             />
-            <Text>{useMetric ? "kg" : "lb"}</Text>
+            <Text>{useMetric ? 'kg' : 'lb'}</Text>
           </View>
           <View
             style={{
@@ -285,7 +314,7 @@ function HomeScreen(props) {
               keyboardType="numeric"
               numberOfLines={1}
               maxLength={3}
-              placeholder='age'
+              placeholder="age"
               onChangeText={nextValue => {
                 if (nextValue === '' || re.test(nextValue)) {
                   dispatch(setAge(nextValue));
