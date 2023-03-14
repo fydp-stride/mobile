@@ -52,7 +52,7 @@ function SummaryPage(props) {
       <Text
         style={{
           fontWeight: 'bold',
-          fontSize: 30,
+          fontSize: 25  ,
           color: 'black',
           textAlign: 'left',
           marginLeft: 14,

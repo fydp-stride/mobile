@@ -2,13 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Dimensions } from 'react-native';
 import { BottomNavigation, BottomNavigationTab, Layout, Text, Button } from '@ui-kitten/components';
 import { LineChart, BarChart } from 'react-native-chart-kit';
-
 import { useSelector, useDispatch } from 'react-redux';
-
 import { selectBluetooth, setImpulse, setMaxForce, addImpulse, setImpulseAxis, addMaxForce ,setMaxForceAxis } from './reducers/bluetoothSlice';
-
 import { useToast } from "react-native-toast-notifications";
 import { setDailyImpulse } from './actions/userDataActions';
+import Sound from 'react-native-sound';
 
 export default function Visualization({ navigation }) {
   const getCurrentTime = () => {
@@ -39,6 +37,20 @@ export default function Visualization({ navigation }) {
   const [forceXaxis, setforceXaxis] = useState([getCurrentTime()]);
 
   const disguised_toast = useToast();
+  const ding = new Sound('confirm.wav', Sound.MAIN_BUNDLE, error => {
+    if (error) {
+      console.log('Failed to load the sound', error);
+      return;
+    }
+  });
+
+  const playSound = () => {
+    ding.play(success => {
+      if (!success) {
+        console.log('Failed to play the sound');
+      }
+    });
+  };
 
   const mockImpulseData = {
     labels: impulseXaxis,
@@ -110,6 +122,7 @@ export default function Visualization({ navigation }) {
   useEffect(() => {
     let currentImpulse = userData.dailyImpulse + bluetoothData.impulse[bluetoothData.impulse.length - 1];
     if (currentImpulse >= MAX_IMPULSE_THRESHOLD){
+      playSound();
       disguised_toast.show(`Daily Impulse Exceeded: ${currentImpulse} Ns`, {
         type: "warning",
         placement: "top", 
@@ -170,6 +183,7 @@ export default function Visualization({ navigation }) {
     // setforceXaxis([curTime]);
     //console.log("maxForce: ", bluetoothData.maxForce[bluetoothData.maxForce.length - 1])
     if (MAX_FORCE_THRESHOLD <= bluetoothData.maxForce[bluetoothData.maxForce.length - 1]){
+      playSound();
       disguised_toast.show(`Force Exceeded: ${bluetoothData.maxForce[bluetoothData.maxForce.length - 1]} N`, {
         type: "warning",
         placement: "top", 
@@ -185,6 +199,7 @@ export default function Visualization({ navigation }) {
     // setforceXaxis([curTime]);
     //console.log("impulse: ", bluetoothData.impulse[bluetoothData.impulse.length - 1])
     if (MAX_IMPULSE_THRESHOLD <= bluetoothData.impulse[bluetoothData.impulse.length - 1]){
+      playSound();
       disguised_toast.show(`Impulse Exceeded: ${bluetoothData.impulse[bluetoothData.impulse.length - 1]} N s`, {
         type: "warning",
         placement: "top", 
@@ -200,6 +215,7 @@ export default function Visualization({ navigation }) {
     // setforceXaxis([curTime]);
     //console.log("angleRoll: ", bluetoothData.angleRoll[bluetoothData.angleRoll.length - 1])
     if (MAX_ANGLE_ROLL_THRESHOLD[0] > bluetoothData.angleRoll[bluetoothData.angleRoll.length - 1] || bluetoothData.angleRoll[bluetoothData.angleRoll.length - 1] > MAX_ANGLE_ROLL_THRESHOLD[1]){
+      playSound();
       disguised_toast.show(`Angle Roll Exceeded: ${bluetoothData.angleRoll[bluetoothData.angleRoll.length - 1]}°`, {
         type: "warning",
         placement: "top", 
@@ -215,6 +231,7 @@ export default function Visualization({ navigation }) {
     // setforceXaxis([curTime]);
     //console.log("angleRoll: ", bluetoothData.angleRoll[bluetoothData.angleRoll.length - 1])
     if (MAX_ANGLE_PITCH_THRESHOLD[0] > bluetoothData.anglePitch[bluetoothData.anglePitch.length - 1] || bluetoothData.anglePitch[bluetoothData.anglePitch.length - 1] > MAX_ANGLE_PITCH_THRESHOLD[1]){
+      playSound();
       disguised_toast.show(`Angle Pitch Exceeded: ${bluetoothData.anglePitch[bluetoothData.anglePitch.length - 1]}°`, {
         type: "warning",
         placement: "top", 
