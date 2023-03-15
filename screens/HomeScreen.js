@@ -14,7 +14,7 @@ import { StyleSheet } from 'react-native';
 import BluetoothClassic from './BluetoothClassic';
 import SettingsScreen from './SettingsScreen';
 import { connect, bindActionCreators } from 'react-redux';
-
+import { colors } from '../colors'
 import { useSelector, useDispatch } from 'react-redux';
 import {
   setAge,
@@ -71,15 +71,7 @@ function HomeScreen(props) {
   var profilePic = require ('../profile.jpeg');
 
   return (
-    <Layout style={{ alignItems: 'center', flex: 1, backgroundColor: '#b7ed9a' }}>
-      {/* <View
-        style={{
-          backgroundColor: 'lightgreen',
-          height: '35%',
-          width: '100%',
-          position: 'absolute',
-          borderRadius: 15
-        }}></View> */}
+    <Layout style={{ alignItems: 'center', flex: 1, backgroundColor: colors.mainGreen }}>
       <Text
         style={{ fontSize: 45, color: 'black', margin: 20, paddingBottom: 15, fontWeight: 'bold' }}>
         Profile
@@ -88,6 +80,8 @@ function HomeScreen(props) {
         style={{
           borderWidth: 0,
           borderRadius: 100,
+          borderWidth: 0.5,
+          borderColor: colors.borderGreen,
           height: 155,
           width: 155,
           backgroundColor: 'black',
@@ -100,11 +94,13 @@ function HomeScreen(props) {
 
       <View style={{
         backgroundColor: 'white',
+        borderWidth: 0.5,
+        borderColor: colors.borderGreen,
         alignItems: 'center', 
         flex: 0.95,
         width: '94%',
         borderRadius: 35,
-        marginTop: 30
+        marginTop: 30,
       }}>
         <Text style={{ fontSize: 30, color: 'black', marginTop: '20%' }}>
           Welcome Back, Bob
@@ -129,13 +125,6 @@ function HomeScreen(props) {
         <Button onPress={() => setSettingsVisible(true)} style={styles.button}>
           Settings
         </Button>
-        {/* <Button
-        onPress={() => {
-          console.log('3');
-        }}
-        style={styles.button}>
-        Logout
-      </Button> */}
       </View>
 
       <Modal

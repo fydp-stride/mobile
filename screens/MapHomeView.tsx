@@ -295,7 +295,8 @@ const HomeView = (props, { route, navigation }) => {
           )}
         </View>
       </View>
-      <View style={{ backgroundColor: COLORS.green, flexDirection: 'column', width: '80%', position: 'relative', left: "10%", borderRadius: 20, paddingTop: 40, paddingBottom: 10 }}>
+      <View style={{ backgroundColor: COLORS.green, flexDirection: 'column', width: '80%', position: 'relative', left: "10%", borderRadius: 20, paddingTop: 40, paddingBottom: 10,         borderWidth: 0.5,
+        borderColor: '#78b870',}}>
         <Text style={{ alignSelf: 'center', fontSize: 25 }}>{minutes}:{("0" + seconds).slice(-2)}</Text>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <View style={{ flexDirection: 'column', alignItems: 'center', marginLeft: 10 }}>

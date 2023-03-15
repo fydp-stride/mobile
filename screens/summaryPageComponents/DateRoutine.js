@@ -1,7 +1,7 @@
 import { View, Text } from 'react-native';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
-
+import { colors } from '../../colors';
 
 export default DateRoutine = ({ event }) => {
   const useMetric = useSelector(state => state.userData.useMetric);
@@ -9,10 +9,12 @@ export default DateRoutine = ({ event }) => {
   return (
     <View
       style={{
+        borderWidth: 0.5,
+        borderColor: colors.borderGreen,
         flexDirection: 'row',
         alignItems: 'center',
         padding: 10,
-        backgroundColor: '#f0fceb',
+        backgroundColor: colors.lightGreen,
         borderRadius: 10,
         margin: 7,
         marginHorizontal: 10,
@@ -26,20 +28,25 @@ export default DateRoutine = ({ event }) => {
           {event.sessionName}
         </Text>
         <Text style={{ color: 'black', fontSize: 14 }}>
-          ⧟ {useMetric? event.distance : Math.floor(event.distance * 3.28)} {useMetric ? 'm' : 'ft'} | 🕘 {event.duration} min
+          ⧟ {useMetric ? event.distance : Math.floor(event.distance * 3.28)}{' '}
+          {useMetric ? 'm' : 'ft'} | 🕘 {event.duration} min
         </Text>
-        <Text style={{ color: 'black', fontSize: 14 }}>🚀 {event.impulse} Ns</Text>
-        <Text style={{ color: 'black', fontSize: 14 }}>🦵 {event.maxForce} N</Text>
+        <Text style={{ color: 'black', fontSize: 14 }}>
+          🚀 {event.impulse} Ns
+        </Text>
+        <Text style={{ color: 'black', fontSize: 14 }}>
+          🦵 {event.maxForce} N
+        </Text>
       </View>
       <View
         style={{
-          backgroundColor: '#BEBEBE',
+          backgroundColor: colors.borderGreen,
           borderRadius: 9,
           paddingHorizontal: 12,
           paddingVertical: 10,
         }}>
         <Text>{event.date}</Text>
-        <Text style={{textAlign: 'center'}}>{event.time}</Text>
+        <Text style={{ textAlign: 'center' }}>{event.time}</Text>
       </View>
     </View>
   );
