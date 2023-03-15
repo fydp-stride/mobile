@@ -8,6 +8,15 @@ import { useToast } from "react-native-toast-notifications";
 import { setDailyImpulse } from './actions/userDataActions';
 import Sound from 'react-native-sound';
 
+const ding = new Sound('confirm.wav', Sound.MAIN_BUNDLE, error => {
+  if (error) {
+    console.log('Failed to load the sound', error);
+    return;
+  }
+});
+
+ding.setVolume(0.1);
+
 export default function Visualization({ navigation }) {
   const getCurrentTime = () => {
     var date = new Date();
@@ -37,15 +46,9 @@ export default function Visualization({ navigation }) {
   const [forceXaxis, setforceXaxis] = useState([getCurrentTime()]);
 
   const disguised_toast = useToast();
-  const ding = new Sound('confirm.wav', Sound.MAIN_BUNDLE, error => {
-    if (error) {
-      console.log('Failed to load the sound', error);
-      return;
-    }
-  });
 
-  const playSound = () => {
-    ding.play(success => {
+  const playSound = async () => {
+    await ding.play(success => {
       if (!success) {
         console.log('Failed to play the sound');
       }
@@ -317,6 +320,7 @@ export default function Visualization({ navigation }) {
   let datum = 30;
   return (
     <Layout style={{ justifyContent: 'center', backgroundColor: 'white', flex: 1 }}>
+      {/* <Button onPress={playSound}></Button> */}
       <Text style={{ color: "black", textAlign: 'center', fontSize: 25, margin: 20, fontWeight: 'bold' }}>Metrics</Text>
       <Text style={{ color: "black", textAlign: 'left', fontSize: 15, marginLeft: 20, fontWeight: 'bold' }}>Total Impulse</Text>
       {renderImpulseData}
