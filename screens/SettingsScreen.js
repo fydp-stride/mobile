@@ -106,7 +106,7 @@ function HomeScreen(props) {
       <Layout
         style={{ flexDirection: 'row', paddingTop: 20, alignItems: 'center', width: '100%' }}>
         <Text style={{ marginRight: 10, fontSize: 18, maxWidth: '50%', flex: 5 }}>
-          Maximum impulse threshold
+          Daily impulse threshold
         </Text>
         <Layout style={{ flexDirection: 'row', alignItems: 'center', flex: 6 }}>
           <TextInput

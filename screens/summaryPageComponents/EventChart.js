@@ -54,6 +54,7 @@ export default EventChart = props => {
           yAxisInterval={1}
           verticalLabelRotation={360 - 35}
           backgroundColor={'#F5F5F5'}
+          showValuesOnTopOfBars={true}
         />
       </View>
     );

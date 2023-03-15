@@ -68,6 +68,8 @@ function HomeScreen(props) {
   const device = useDevice();
   const deviceDispatch = useDeviceDispatch();
 
+  var profilePic = require ('../profile.jpeg');
+
   return (
     <Layout style={{ alignItems: 'center', flex: 1, backgroundColor: '#b7ed9a' }}>
       {/* <View
@@ -79,13 +81,7 @@ function HomeScreen(props) {
           borderRadius: 15
         }}></View> */}
       <Text
-        style={{
-          fontSize: 45,
-          color: 'black',
-          margin: 20,
-          paddingBottom: 15,
-          fontWeight: 'bold',
-        }}>
+        style={{ fontSize: 45, color: 'black', margin: 20, paddingBottom: 15, fontWeight: 'bold' }}>
         Profile
       </Text>
       <View
@@ -96,12 +92,9 @@ function HomeScreen(props) {
           width: 155,
           backgroundColor: 'black',
           justifyContent: 'center',
-          marginBottom: 10
+
         }}>
-        <Image
-          source={{
-            uri: 'https://upload.wikimedia.org/wikipedia/commons/1/1c/Squirrel_posing.jpg',
-          }}
+        <Image source={profilePic}
           style={{ height: '100%', width: '100%', borderRadius: 100 }}></Image>
       </View>
 
@@ -160,11 +153,9 @@ function HomeScreen(props) {
             <Text>{useMetric ? 'Metric' : 'Imperial'}</Text>
             <Toggle
               checked={useMetric}
-              status="basic"
+              status='basic'
               onChange={() =>
-                useMetric
-                  ? dispatch(useImperialUnit())
-                  : dispatch(useMetricUnit())
+                useMetric ? dispatch(useImperialUnit()) : dispatch(useMetricUnit())
               }
               style={{ flex: 6 }}
             />

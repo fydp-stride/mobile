@@ -31,7 +31,7 @@ function HomeScreen(props) {
   const toast = useToast();
 
   useEffect(() => {
-    if (battery > 0 && battery <= 95) {
+    if (battery > 0 && battery <= 20) {
       toast.show(`Low Battery: ${battery}%`, {
         placement: "top", 
         duration: 4500

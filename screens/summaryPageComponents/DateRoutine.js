@@ -39,6 +39,7 @@ export default DateRoutine = ({ event }) => {
           paddingVertical: 10,
         }}>
         <Text>{event.date}</Text>
+        <Text style={{textAlign: 'center'}}>{event.time}</Text>
       </View>
     </View>
   );

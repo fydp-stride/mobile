@@ -4,7 +4,7 @@ import { ScrollView } from 'react-native';
 
 export default DateEventsList = ( props ) => {
   return (
-    <ScrollView>
+    <ScrollView contentContainerStyle={{paddingBottom: 80}}>
       {props.eventData.map((event, i) => (
         <DateRoutine key={i} event={event} />
       ))}
