@@ -1,11 +1,12 @@
 import React, { useRef } from 'react';
 import { FlatList, View, Text, Dimensions } from 'react-native';
 import { LineChart, BarChart, StackedBarChart } from 'react-native-chart-kit';
+import { colors } from '../../colors'
 
 export default EventChart = props => {
   const chartConfig = {
-    backgroundGradientFrom: '#f0fceb',
-    backgroundGradientTo: '#f0fceb',
+    backgroundGradientFrom: colors.lightGreen,
+    backgroundGradientTo: colors.lightGreen,
     color: (opacity = 1) => '#5DB075',
     fillShadowGradient: '#5DB075',
     fillShadowGradientOpacity: 1,
@@ -54,6 +55,7 @@ export default EventChart = props => {
           yAxisInterval={1}
           verticalLabelRotation={360 - 35}
           backgroundColor={'#F5F5F5'}
+          showValuesOnTopOfBars={true}
         />
       </View>
     );

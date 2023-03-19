@@ -41,6 +41,7 @@ const HomeView = (props, { route, navigation }) => {
   let odometer = props.geolocationData.odometer;
 
   let maxForces = props.bluetoothData.maxForce;
+  let totalMaxForce = props.bluetoothData.totalMaxForce;
   let impulses = props.bluetoothData.impulse;
   let angles = props.bluetoothData.angleRoll;
   let dailyImpulse = props.userData.dailyImpulse;
@@ -52,9 +53,6 @@ const HomeView = (props, { route, navigation }) => {
   const [cannotStartVisible, setCannotStartVisible] = React.useState(false);
   const [isMoving, setIsMoving] = React.useState(false);
   const [location, setLocation] = React.useState<Location>(null);
-  // const [odometer, setOdometer] = React.useState(0);
-  const [motionActivityEvent, setMotionActivityEvent] = React.useState<MotionActivityEvent>(null);
-  const [testClicks, setTestClicks] = React.useState(0);
   const [trackInterval, setTrackInterval] = React.useState<any>(null);
   const [locationSubscriber, setLocationSubscriber] = React.useState<any>(null);
   const [minutes, setMinutes] = React.useState(0);
@@ -208,20 +206,22 @@ const HomeView = (props, { route, navigation }) => {
       time = 'Night';
     }
 
-    if ((maxForces.reduce((partialSum, a) => partialSum + a, 0) / maxForces.length) < 1000) {
+    if ((maxForces.reduce((partialSum, a) => partialSum + a, 0) / maxForces.length) < 5000) {
       time += ' Walk';
     } else {
       time += ' Run';
     }
 
-    let dateStr = startDate.toLocaleString('sv', { timeZone: 'America/Toronto' });
+    let dateStr = startDate.toLocaleDateString('sv', { timeZone: 'America/Toronto' });
+    let timeStr = startDate.toLocaleTimeString('sv', { timeZone: 'America/Toronto' });
     let newEvent = {
-      date: dateStr.substring(0, dateStr.length - 3),
+      date: dateStr,
+      time: timeStr.substring(0, timeStr.length - 3),
       sessionName: time,
       distance: odometer,
       duration: minutes,
       impulse: impulses[impulses.length - 1],
-      maxForce: maxForces[maxForces.length - 1]
+      maxForce: (totalMaxForce / (maxForces.length - 1)).toFixed(2)
     };
     console.log('newEvent', newEvent);
 
@@ -295,7 +295,8 @@ const HomeView = (props, { route, navigation }) => {
           )}
         </View>
       </View>
-      <View style={{ backgroundColor: COLORS.green, flexDirection: 'column', width: '80%', position: 'relative', left: "10%", borderRadius: 20, paddingTop: 40, paddingBottom: 10 }}>
+      <View style={{ backgroundColor: COLORS.green, flexDirection: 'column', width: '80%', position: 'relative', left: "10%", borderRadius: 20, paddingTop: 40, paddingBottom: 10,         borderWidth: 0.5,
+        borderColor: '#78b870',}}>
         <Text style={{ alignSelf: 'center', fontSize: 25 }}>{minutes}:{("0" + seconds).slice(-2)}</Text>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <View style={{ flexDirection: 'column', alignItems: 'center', marginLeft: 10 }}>
@@ -304,7 +305,7 @@ const HomeView = (props, { route, navigation }) => {
           </View>
           <View style={{ flexDirection: 'column', alignItems: 'center' }}>
             <Text>Avg. Force</Text>
-            <Text>{maxForces.length == 1 ? 0 : ((maxForces.reduce((partialSum, a) => partialSum + a, 0)) / (maxForces.length - 1)).toFixed(2)} N</Text>
+            <Text>{maxForces.length == 1 ? 0 : (totalMaxForce / (maxForces.length - 1)).toFixed(2)} N</Text>
           </View>
           <View style={{ flexDirection: 'column', alignItems: 'center', marginRight: 10 }}>
             <Text>Distance</Text>

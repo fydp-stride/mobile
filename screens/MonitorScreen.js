@@ -13,9 +13,8 @@ import BackgroundGeolocation from 'react-native-background-geolocation';
 import { connect, bindActionCreators } from 'react-redux';
 import { toggleEnabled } from './actions/geolocationActions';
 import { useSelector, useDispatch } from 'react-redux';
-
+import { colors } from '../colors';
 import { useDevice } from '../src/connection/ConnectionContext';
-
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 // code for testing the notif
@@ -31,7 +30,7 @@ function HomeScreen(props) {
   const toast = useToast();
 
   useEffect(() => {
-    if (battery > 0 && battery <= 95) {
+    if (battery > 0 && battery <= 20) {
       toast.show(`Low Battery: ${battery}%`, {
         placement: "top", 
         duration: 4500
@@ -52,8 +51,10 @@ function HomeScreen(props) {
               flexDirection: 'row',
               alignItems: 'center',
               padding: 20,
-              backgroundColor: '#f0fceb',
+              backgroundColor: colors.mainGreen,
               borderRadius: 10,
+              borderWidth: 0.5,
+              borderColor: colors.borderGreen,
               margin: 7,
               marginHorizontal: 10,
               justifyContent: 'center',
@@ -65,7 +66,6 @@ function HomeScreen(props) {
               </View>
             </View>
             <View style={{
-              backgroundColor: '#f0fceb',
               backgroundColor: 'white',
               borderColor: '#000',
               borderWidth: 2,
@@ -79,11 +79,13 @@ function HomeScreen(props) {
               flexDirection: 'row',
               alignItems: 'center',
               padding: 20,
-              backgroundColor: '#f0fceb',
+              backgroundColor: colors.mainGreen,
               borderRadius: 10,
               margin: 7,
               marginHorizontal: 10,
               justifyContent: 'center',
+              borderWidth: 0.5,
+              borderColor: colors.borderGreen,
             }}>
               <View style={{flexDirection: "row"}}>
                 <FontAwesome name={"bluetooth"} size={60} color={bgColor} />

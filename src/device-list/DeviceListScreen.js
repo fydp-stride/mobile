@@ -217,15 +217,13 @@ export default class DeviceListScreen extends React.Component {
  *
  * @param {NativeDevice[]} devices
  * @param {function} onPress
- * @param {function} onLongPress
  */
-export const DeviceList = ({ devices, onPress, onLongPress }) => {
+export const DeviceList = ({ devices, onPress }) => {
   const renderItem = ({ item }) => {
     return (
       <DeviceListItem
         device={item}
         onPress={onPress}
-        onLongPress={onLongPress}
       />
     );
   };
@@ -239,14 +237,13 @@ export const DeviceList = ({ devices, onPress, onLongPress }) => {
   );
 };
 
-export const DeviceListItem = ({ device, onPress, onLongPress }) => {
+export const DeviceListItem = ({ device, onPress }) => {
   let bgColor = device.connected ? 'blue' : 'gray';
   let icon = device.bonded ? 'bluetooth' : 'cellular';
 
   return (
     <TouchableOpacity
       onPress={() => onPress(device)}
-      onLongPress={() => onLongPress(device)}
       style={styles.deviceListItem}>
       <View style={styles.deviceListItemIcon}>
         <Ionicons name={icon} size={20} color={bgColor} />

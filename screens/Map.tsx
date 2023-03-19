@@ -40,7 +40,7 @@ export const COLORS = {
   blue: '#337AB7',
   grey: '#404040',
   red: '#FE381E',
-  green: '#16BE42',
+  green: '#b7ed9a',
   dark: '#272727',
   polyline_color: 'rgba(0,179,253, 0.6)', //'#00B3FD'
 };

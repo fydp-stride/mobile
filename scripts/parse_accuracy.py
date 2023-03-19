@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import scipy.stats as stats
 import math
+import numpy as np
 
 arr = []
 for point in data:
@@ -12,6 +13,20 @@ for point in data:
     arr.append(accuracy)
 
 print('avg accuracy:', sum(arr) / len(arr), 'm over', len(arr), 'points')
+
+ymax = max(arr)
+def annot_max(x,y, ax=None):
+    xmax = x[np.argmax(y)]
+    ymax = max(y)
+    text= "Highest Inaccuracy={:.3f}m".format(ymax)
+    if not ax:
+        ax=plt.gca()
+    bbox_props = dict(boxstyle="square,pad=0.3", fc="w", ec="k", lw=0.72)
+    arrowprops=dict(arrowstyle="->",connectionstyle="angle,angleA=0,angleB=60")
+    kw = dict(xycoords='data',textcoords="axes fraction",
+              arrowprops=arrowprops, bbox=bbox_props, ha="left", va="top")
+    ax.annotate(text, xy=(xmax, ymax), xytext=(0.05,0.92), **kw)
+
 
 mu = sum(arr) / len(arr)
 variance = np.var(arr)

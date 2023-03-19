@@ -3,39 +3,54 @@ import { combineReducers } from 'redux';
 export const initialState = {
   weekArrays: [{
     weekOf: 'Mar 6 - 12',
+    weekDates: ['2023-03-06', '2023-03-12'],
     barColors: ['#dfe4ea', '#ced6e0', '#a4b0be'],
     labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
     datasets: [
       {
-        data: [20, 30, 45, 15, 25, 10, 20],
+        dates: ['2023-03-06', '2023-03-07', '2023-03-08', '2023-03-09', '2023-03-10', '2023-03-11', '2023-03-12'],
+        data: [0, 0, 0, 0, 0, 0, 0],
       },
     ],
   }, {
     weekOf: 'Mar 13 - 19',
+    weekDates: ['2023-03-13', '2023-03-19'],
     barColors: ['#dfe4ea', '#ced6e0', '#a4b0be'],
     labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
     datasets: [
       {
-        data: [7, 6, 8, 0, 0, 0, 0],
+        dates: ['2023-03-13', '2023-03-14', '2023-03-15', '2023-03-16', '2023-03-17', '2023-03-18', '2023-03-19'],
+        data: [0, 0, 0, 0, 0, 0, 0],
       },
     ],
   }],
   dateEvents: [{
-    date: '2023-02-16',
+    date: '2023-03-13',
+    time: '19:00',
+    sessionName: 'Night Walk',
+    distance: 3000,
+    duration: 40,
+    impulse: 500000,
+    maxForce: 5000
+  },
+  {
+    date: '2023-03-11',
+    time: '14:00',
+    sessionName: 'Afternoon Run',
+    distance: 2000,
+    duration: 20,
+    impulse: 2000000,
+    maxForce: 20000
+  },
+  {
+    date: '2023-03-06',
+    time: '07:00',
     sessionName: 'Morning Run',
     distance: 5000,
     duration: 30,
     impulse: 1000000,
     maxForce: 10000
-  },
-  {
-    date: '2023-02-15',
-    sessionName: 'Afternoon Walk',
-    distance: 2000,
-    duration: 20,
-    impulse: 2000000,
-    maxForce: 20000
-  }],
+  }]
 };
 
 const summaryDataReducer = (state = initialState, action) => {

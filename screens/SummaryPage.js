@@ -30,10 +30,11 @@ function SummaryPage(props) {
 
   let today = new Date().toLocaleDateString();
   React.useEffect(() => {
-    if(lastUsedDate === today) {
+    if (lastUsedDate === today) {
       // Date equals today's date
       // do nothing
     } else {
+      // calculate the total impulse
       batch(() => {
         dispatch(setLastUsedDate(today));
         dispatch(setDailyImpulse(0));
@@ -41,8 +42,50 @@ function SummaryPage(props) {
     }
   }, []);
 
+  React.useEffect(() => {
+    // calculate total impulse, go through date events first to create a dictionary
+    // console.log(DATE_EVENTS);
+    if (DATE_EVENTS) {
+      datesToImpulse = {}
+      for (let i = 0; i < DATE_EVENTS.length; i++) {
+        let item = DATE_EVENTS[i];
+        let curDate = item.date;
+        let curImpulse = item.impulse;
+        if (Object.keys(datesToImpulse).includes(curDate)) {
+          datesToImpulse[curDate] += curImpulse;
+        } else {
+          datesToImpulse[curDate] = curImpulse;
+        }
+      }
+      console.log(datesToImpulse);
+
+      // go through dictionary to populate WEEK_ARRAY
+      let WEEK_ARRAY_copy = JSON.parse(JSON.stringify(WEEK_ARRAY));
+      // console.log(WEEK_ARRAY_copy);
+      for (const date in datesToImpulse) {
+        let impulseValue = datesToImpulse[date]; // date: impulse
+        for (let i = 0; i < WEEK_ARRAY_copy.length; i++) {
+          let week = WEEK_ARRAY_copy[i]; // one of week array
+          // console.log(week);
+          // console.log(week.datasets);
+          // console.log(week.datasets[0].dates);
+          for (let j = 0; j < week.datasets[0].dates.length; j++) {
+            let day = week.datasets[0].dates[j]; // the date of the week, check if it is the same as date
+            // console.log(day, date)
+            if (date === day) {
+              WEEK_ARRAY_copy[i].datasets[0].data[j] = impulseValue;
+              console.log(WEEK_ARRAY_copy[i].datasets)
+            }
+          }
+        }
+      }
+      // console.log(WEEK_ARRAY_copy);
+      dispatch(setWeekArray(WEEK_ARRAY_copy));
+    }
+  }, [DATE_EVENTS]);
+
   const dispatch = useDispatch();
-  
+
   return (
     <View
       style={{
@@ -52,7 +95,7 @@ function SummaryPage(props) {
       <Text
         style={{
           fontWeight: 'bold',
-          fontSize: 30,
+          fontSize: 25  ,
           color: 'black',
           textAlign: 'left',
           marginLeft: 14,
@@ -76,7 +119,7 @@ function SummaryPage(props) {
             paddingBottom: 5,
             marginLeft: 15,
           }}>
-          Running Historty
+          Running History
         </Text>
       </View>
       <RoutinesList eventData={DATE_EVENTS} />
