@@ -2,6 +2,10 @@ data = [{"accuracy": 7.5, "altitude": 136.1, "altitude_accuracy": 1.3, "heading"
 
 import matplotlib.pyplot as plt
 
+import numpy as np
+import scipy.stats as stats
+import math
+
 arr = []
 for point in data:
     accuracy = point['accuracy']
@@ -9,11 +13,39 @@ for point in data:
 
 print('avg accuracy:', sum(arr) / len(arr), 'm over', len(arr), 'points')
 
-fig, ax = plt.subplots()
-ax.plot([x for x in range(len(arr))], arr)
-plt.axhline(y=sum(arr) / len(arr), color='r', linestyle='-', label='Average Accuracy')
-plt.legend()
-plt.title("Geolocation Accuracy")
-plt.ylabel('Point Accuracy (m)')
-plt.xlabel('Point')
+mu = sum(arr) / len(arr)
+variance = np.var(arr)
+sigma = math.sqrt(variance)
+
+x = np.linspace(mu - 3*sigma, mu + 3*sigma, 100)
+
+# plt.axline(y=sum(arr) / len(arr), color='r', linestyle='-', label='Average Accuracy')
+plt.title("Geolocation Accuracy, Gaussian Distribution")
+plt.xlabel('Point Accuracy (m)')
+plt.ylabel('Probability Density Function')
+
+pdf = stats.norm.pdf(x, mu, sigma)
+plt.plot(x, pdf, label=f'sigma={round(sigma, 3)}, mean={round(mu, 3)}')
+
+
+std_lim = 1.96 # 95% CI
+std_lim = 2.576 # 99% CI
+low = round(mu-std_lim*sigma, 3)
+high = round(mu+std_lim*sigma, 3)
+plt.axvline(x = low, color = 'r', label = '', linestyle="dashed")
+plt.axvline(x = high, color = 'r', label = '', linestyle="dashed")
+# plt.fill_between(arr, pdf, 0, where=(low < arr) & (arr < high))
+plt.text(low + 0.2, 0, low, ha='center')
+plt.text(high - 0.2, 0, high, ha='center')
+
+plt.legend(loc='upper right')
 plt.show()
+
+# fig, ax = plt.subplots()
+# ax.plot([x for x in range(len(arr))], arr)
+# plt.axhline(y=sum(arr) / len(arr), color='r', linestyle='-', label='Average Accuracy')
+# plt.legend()
+# plt.title("Geolocation Accuracy")
+# plt.ylabel('Point Accuracy (m)')
+# plt.xlabel('Point')
+# plt.show()
