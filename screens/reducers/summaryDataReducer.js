@@ -26,12 +26,28 @@ export const initialState = {
   }],
   dateEvents: [{
     date: '2023-03-13',
+    time: '20:00',
+    sessionName: 'Night Run',
+    distance: 5000,
+    duration: 40,
+    impulse: 260000,
+    maxForce: 9000
+  }, {
+    date: '2023-03-13',
+    time: '15:00',
+    sessionName: 'Afternoon Walk',
+    distance: 3500,
+    duration: 60,
+    impulse: 150000,
+    maxForce: 5500
+  }, {
+    date: '2023-03-12',
     time: '19:00',
     sessionName: 'Night Walk',
     distance: 3000,
     duration: 40,
-    impulse: 500000,
-    maxForce: 5000
+    impulse: 180000,
+    maxForce: 6000
   },
   {
     date: '2023-03-11',
@@ -39,8 +55,8 @@ export const initialState = {
     sessionName: 'Afternoon Run',
     distance: 2000,
     duration: 20,
-    impulse: 2000000,
-    maxForce: 20000
+    impulse: 1000000,
+    maxForce: 11000
   },
   {
     date: '2023-03-06',
